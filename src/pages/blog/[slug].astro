@@ -1,0 +1,43 @@
+---
+import { getCollection, render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { entrySlug, formatDate, isVisibleContent } from "../../utils/content";
+
+interface Props {
+  post: CollectionEntry<"blog">;
+}
+
+export async function getStaticPaths() {
+  const posts = (await getCollection("blog")).filter(isVisibleContent);
+
+  return posts.map((post) => ({
+    params: { slug: entrySlug(post.id) },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<BaseLayout title={post.data.title} description={post.data.description}>
+  <article>
+    <header class="section bg-site-subtle">
+      <div class="mx-auto max-w-3xl px-5 py-14">
+        <p class="eyebrow">{formatDate(post.data.date)}</p>
+        <h1>{post.data.title}</h1>
+        <p class="mt-5 text-xl leading-8 text-stone-700">{post.data.description}</p>
+        <div class="mt-6 flex flex-wrap gap-2">
+          {post.data.tags.map((tag) => <span class="tag">{tag}</span>)}
+        </div>
+      </div>
+    </header>
+
+    <div class="section mx-auto max-w-3xl px-5 py-14">
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </article>
+</BaseLayout>

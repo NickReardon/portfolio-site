@@ -1,0 +1,46 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site } from "../site.config";
+---
+
+<BaseLayout title="Contact" description={`Contact ${site.name}.`}>
+  <section class="section bg-site-subtle">
+    <div class="mx-auto max-w-4xl px-5 py-14">
+      <p class="eyebrow">Contact</p>
+      <h1>Get in touch</h1>
+      <p class="mt-5 text-xl leading-8 text-stone-700">
+        I am open to gameplay programming, technical design, and internship
+        conversations where reliable systems and fast iteration matter.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="mx-auto grid max-w-4xl gap-4 px-5 py-14 sm:grid-cols-2">
+      <a class="contact-link" href={`mailto:${site.email}`}>
+        <span>Email</span>
+        <strong>{site.email}</strong>
+      </a>
+      {
+        site.githubUrl && (
+          <a class="contact-link" href={site.githubUrl}>
+            <span>GitHub</span>
+            <strong>Project source and code samples</strong>
+          </a>
+        )
+      }
+      <a class="contact-link" href={site.linkedinUrl}>
+        <span>LinkedIn</span>
+        <strong>Professional profile</strong>
+      </a>
+      <a class="contact-link" href={site.itchUrl}>
+        <span>Itch.io</span>
+        <strong>Playable game jam builds</strong>
+      </a>
+      <a class="contact-link" href={site.resumeUrl}>
+        <span>Resume</span>
+        <strong>Download PDF</strong>
+      </a>
+    </div>
+  </section>
+</BaseLayout>

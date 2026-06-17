@@ -1,0 +1,37 @@
+---
+import { getCollection } from "astro:content";
+import ProjectCard from "../../components/ProjectCard.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { isVisibleContent, sortProjects } from "../../utils/content";
+
+const projects = (await getCollection("projects"))
+  .filter(isVisibleContent)
+  .sort(sortProjects);
+---
+
+<BaseLayout title="Projects" description="Portfolio projects and technical case studies.">
+  <section class="section bg-site-subtle">
+    <div class="mx-auto max-w-6xl px-5 py-14">
+      <p class="eyebrow">Projects</p>
+      <h1>Projects and case studies</h1>
+      <p class="mt-5 max-w-3xl text-xl leading-8 text-stone-700">
+        Selected Unreal Engine systems, game jam work, and implementation notes
+        focused on extensible gameplay and practical authoring workflows.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="mx-auto max-w-6xl px-5 py-14">
+      {
+        projects.length > 0 ? (
+          <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {projects.map((project) => <ProjectCard project={project} />)}
+          </div>
+        ) : (
+          <p class="empty-state">More project writeups are coming soon.</p>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>

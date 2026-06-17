@@ -1,4 +1,37 @@
-# Astro Starter Kit: Minimal
+# Portfolio Site
+
+Static Astro portfolio website for projects, devlogs, resume links, and contact
+links. The v1 architecture is intentionally simple: Astro, Tailwind 4, Markdown,
+GitHub, and Cloudflare Pages.
+
+## Commands
+
+```bash
+npm run dev
+npm run build
+npm run preview
+npm run check
+```
+
+## Content
+
+- Project markdown lives in `src/content/projects`.
+- Blog markdown lives in `src/content/blog`.
+- Draft entries can stay in the repo with `draft: true`; production builds exclude
+  them from lists and detail routes.
+- Replace `public/resume.pdf` with your real resume before launch.
+- Update social links and identity text in `src/site.config.ts` as needed.
+
+## Deploy To Cloudflare Pages
+
+Use these settings when importing the GitHub repository into Cloudflare Pages:
+
+- Production branch: `main`
+- Build command: `npm run build`
+- Build directory: `dist`
+
+After the first successful deploy, add the custom domain from the Cloudflare
+Pages project settings and choose a canonical apex or `www` URL.
 
 ```sh
 npm create astro@latest -- --template minimal

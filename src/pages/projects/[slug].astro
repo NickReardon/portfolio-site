@@ -1,0 +1,71 @@
+---
+import { getCollection, render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { entrySlug, formatDate, isVisibleContent } from "../../utils/content";
+
+interface Props {
+  project: CollectionEntry<"projects">;
+}
+
+export async function getStaticPaths() {
+  const projects = (await getCollection("projects")).filter(isVisibleContent);
+
+  return projects.map((project) => ({
+    params: { slug: entrySlug(project.id) },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+const links = [
+  { href: project.data.githubUrl, label: "GitHub" },
+  { href: project.data.videoUrl, label: "Video" },
+  { href: project.data.externalUrl, label: "Live Site" },
+].filter((link) => Boolean(link.href));
+---
+
+<BaseLayout title={project.data.title} description={project.data.description}>
+  <article>
+    <header class="section bg-site-subtle">
+      <div class="mx-auto grid max-w-6xl gap-10 px-5 py-14 lg:grid-cols-[1fr_380px]">
+        <div>
+          <p class="eyebrow">{formatDate(project.data.date)}</p>
+          <h1>{project.data.title}</h1>
+          <p class="mt-5 text-xl leading-8 text-stone-700">{project.data.description}</p>
+          <div class="mt-6 flex flex-wrap gap-2">
+            {project.data.tags.map((tag) => <span class="tag">{tag}</span>)}
+          </div>
+          {
+            links.length > 0 && (
+              <div class="mt-8 flex flex-wrap gap-3">
+                {links.map((link) => (
+                  <a class="button-secondary" href={link.href}>
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            )
+          }
+        </div>
+
+        {
+          project.data.coverImage && (
+            <img
+              src={project.data.coverImage}
+              alt=""
+              class="aspect-[16/10] w-full rounded-lg border border-stone-200 object-cover shadow-sm"
+            />
+          )
+        }
+      </div>
+    </header>
+
+    <div class="section mx-auto max-w-3xl px-5 py-14">
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </article>
+</BaseLayout>

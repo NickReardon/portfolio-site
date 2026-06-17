@@ -1,0 +1,26 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { entrySlug, formatDate } from "../utils/content";
+
+interface Props {
+  post: CollectionEntry<"blog">;
+}
+
+const { post } = Astro.props;
+const { data } = post;
+const slug = entrySlug(post.id);
+const href = `/blog/${slug}/`;
+---
+
+<article class="card p-5">
+  <a href={href} class="block space-y-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-600">
+    <div>
+      <p class="text-sm font-medium text-teal-700">{formatDate(data.date)}</p>
+      <h2 class="mt-1 text-xl font-semibold text-stone-950">{data.title}</h2>
+    </div>
+    <p class="text-sm leading-6 text-stone-650">{data.description}</p>
+    <div class="flex flex-wrap gap-2">
+      {data.tags.map((tag) => <span class="tag">{tag}</span>)}
+    </div>
+  </a>
+</article>
