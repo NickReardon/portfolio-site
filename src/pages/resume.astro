@@ -1,0 +1,119 @@
+---
+import { Download, ExternalLink, FileText, Mail } from "@lucide/astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { site } from "../site.config";
+---
+
+<BaseLayout title="Resume" description={`Resume for ${site.name}.`}>
+  <section class="section border-b border-stone-200 bg-site-subtle">
+    <div class="mx-auto grid max-w-6xl gap-8 px-5 py-12 sm:py-14 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
+      <div class="max-w-3xl">
+        <p class="eyebrow">Resume</p>
+        <h1>{site.name}</h1>
+        <p class="mt-5 text-xl leading-8 text-stone-700">
+          {site.role} focused on {site.focus}.
+        </p>
+      </div>
+
+      <div class="resume-actions">
+        <a class="button-primary" href={`mailto:${site.email}`}>
+          <Mail size={16} aria-hidden="true" />
+          Contact
+        </a>
+        <a class="button-secondary" href={site.resumePdfUrl} target="_blank" rel="noopener noreferrer">
+          <ExternalLink size={16} aria-hidden="true" />
+          Open PDF
+        </a>
+        <a class="button-secondary" href={site.resumePdfUrl} download>
+          <Download size={16} aria-hidden="true" />
+          Download PDF
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="resume-layout mx-auto grid max-w-6xl gap-8 px-5 py-14 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <div class="space-y-8">
+        <section class="resume-panel">
+          <p class="eyebrow">Profile</p>
+          <h2>Gameplay systems with practical authoring workflows.</h2>
+          <p>
+            Computer science student at California State University, Fullerton
+            building Unreal Engine gameplay systems with an emphasis on reliability,
+            usability, and clear extension points.
+          </p>
+        </section>
+
+        <section class="resume-panel">
+          <p class="eyebrow">Project Experience</p>
+          <div class="resume-entry">
+            <div>
+              <h2>Tethered</h2>
+              <p class="resume-meta">Unreal Engine, C++, Gameplay Tags</p>
+            </div>
+            <p>
+              Current Unreal Engine project focused on data-driven gameplay systems
+              and extendable combat architecture, including a combo-system approach
+              that maps combo steps to attacks through Gameplay Tags.
+            </p>
+          </div>
+
+          <div class="resume-entry">
+            <div>
+              <h2>Game Jam Projects</h2>
+              <p class="resume-meta">Iteration, authoring tools, playable builds</p>
+            </div>
+            <p>
+              Playable jam work including Last Oasis, A Totally Normal Bike Ride,
+              and Alien Survivors, with workflow helpers such as placement utilities
+              for repeated content-authoring tasks.
+            </p>
+          </div>
+        </section>
+
+        <section class="resume-panel">
+          <p class="eyebrow">Education</p>
+          <h2>California State University, Fullerton</h2>
+          <p>Computer science student focused on gameplay programming and technical systems work.</p>
+        </section>
+      </div>
+
+      <aside class="resume-sidebar">
+        <section>
+          <h2>Technical Focus</h2>
+          <div class="mt-4 flex flex-wrap gap-2">
+            <span class="tag">Unreal Engine</span>
+            <span class="tag">C++</span>
+            <span class="tag">Gameplay Tags</span>
+            <span class="tag">Gameplay Systems</span>
+            <span class="tag">Content Authoring</span>
+            <span class="tag">Game Jams</span>
+          </div>
+        </section>
+
+        <section>
+          <h2>Links</h2>
+          <div class="mt-4 grid gap-3">
+            <a class="resume-link" href={`mailto:${site.email}`}>
+              <Mail size={16} aria-hidden="true" />
+              Email
+            </a>
+            <a class="resume-link" href={site.linkedinUrl}>
+              <ExternalLink size={16} aria-hidden="true" />
+              LinkedIn
+            </a>
+            <a class="resume-link" href={site.itchUrl}>
+              <ExternalLink size={16} aria-hidden="true" />
+              Itch.io
+            </a>
+            <a class="resume-link" href={site.resumePdfUrl} target="_blank" rel="noopener noreferrer">
+              <FileText size={16} aria-hidden="true" />
+              PDF
+            </a>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>

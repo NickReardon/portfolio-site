@@ -304,6 +304,79 @@
     line-height: 1.4;
   }
 
+  .resume-actions {
+    display: grid;
+    gap: 0.75rem;
+    min-width: min(100%, 18rem);
+  }
+
+  .resume-panel {
+    border-left: 4px solid #134e4a;
+    background: white;
+    padding: 1.4rem;
+  }
+
+  .resume-panel p {
+    color: #55534d;
+    line-height: 1.7;
+    margin-top: 0.75rem;
+  }
+
+  .resume-entry {
+    border-top: 1px solid #d6d3d1;
+    display: grid;
+    gap: 0.75rem;
+    padding-top: 1.2rem;
+  }
+
+  .resume-entry + .resume-entry {
+    margin-top: 1.4rem;
+  }
+
+  .resume-meta {
+    color: #134e4a !important;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-top: 0.35rem !important;
+  }
+
+  .resume-sidebar {
+    align-self: start;
+    border: 1px solid #d6d3d1;
+    border-radius: 0.5rem;
+    background: white;
+    display: grid;
+    gap: 1.5rem;
+    padding: 1.25rem;
+  }
+
+  .resume-sidebar h2 {
+    font-size: 1.15rem;
+  }
+
+  .resume-link {
+    align-items: center;
+    border: 1px solid #d6d3d1;
+    border-radius: 0.45rem;
+    color: #292524;
+    display: inline-flex;
+    font-weight: 700;
+    gap: 0.5rem;
+    min-height: 2.55rem;
+    padding: 0.65rem 0.75rem;
+    text-decoration: none;
+    transition:
+      border-color 160ms ease,
+      color 160ms ease,
+      transform 160ms ease;
+  }
+
+  .resume-link:hover {
+    border-color: #134e4a;
+    color: #134e4a;
+    transform: translateY(-1px);
+  }
+
   .project-placeholder {
     align-items: end;
     background:
@@ -391,7 +464,8 @@
   .button-secondary:hover,
   .card:hover,
   .card:focus-within,
-  .contact-link:hover {
+  .contact-link:hover,
+  .resume-link:hover {
     transform: none;
   }
 }
