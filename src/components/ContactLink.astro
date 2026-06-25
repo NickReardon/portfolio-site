@@ -1,0 +1,16 @@
+---
+interface Props {
+  href: string;
+  label: string;
+  detail: string;
+  icon: any;
+}
+
+const { href, label, detail, icon: Icon } = Astro.props;
+---
+
+<a class="contact-link" href={href}>
+  <Icon size={20} aria-hidden="true" />
+  <span>{label}</span>
+  <strong>{detail}</strong>
+</a>

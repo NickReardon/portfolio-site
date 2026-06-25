@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Nicholas Reardon portfolio social card</title>
+  <desc id="desc">A clean portfolio card for Nicholas Reardon, gameplay programmer and computer science student.</desc>
+  <rect width="1200" height="630" fill="#f6f7f4"/>
+  <rect x="64" y="64" width="1072" height="502" rx="24" fill="#eef5f0" stroke="#d6d3d1" stroke-width="2"/>
+  <rect x="96" y="96" width="8" height="438" fill="#134e4a"/>
+  <text x="136" y="190" fill="#134e4a" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="30" font-weight="700" letter-spacing="8">PORTFOLIO</text>
+  <text x="136" y="300" fill="#1c1917" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="78" font-weight="750">Nicholas Reardon</text>
+  <text x="140" y="372" fill="#292524" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="34">Gameplay Programmer and Computer Science Student</text>
+  <text x="140" y="434" fill="#55534d" font-family="Inter, Segoe UI, Arial, sans-serif" font-size="28">Unreal Engine, C++, data-driven gameplay systems, and authoring workflows</text>
+  <circle cx="1012" cy="164" r="48" fill="#134e4a"/>
+  <path d="M988 166h48M1012 142v48" stroke="#f6f7f4" stroke-width="8" stroke-linecap="round"/>
+</svg>

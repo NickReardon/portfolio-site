@@ -21,7 +21,12 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 ---
 
-<BaseLayout title={post.data.title} description={post.data.description}>
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  image={post.data.coverImage}
+  type="article"
+>
   <article>
     <header class="section bg-site-subtle">
       <div class="mx-auto max-w-3xl px-5 py-14">

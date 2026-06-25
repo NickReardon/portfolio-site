@@ -4,6 +4,7 @@ description: "Notes on shaping a portfolio around gameplay systems without makin
 date: 2026-06-17
 tags: ["Devlog", "Astro"]
 coverImage: "/images/blog/portfolio-devlog.svg"
+coverAlt: "Diagram of portfolio development with markdown cards and deployment flow."
 draft: false
 ---
 

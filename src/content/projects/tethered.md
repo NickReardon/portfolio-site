@@ -4,6 +4,7 @@ description: "Current Unreal Engine project focused on data-driven gameplay syst
 date: 2026-01-25
 tags: ["Unreal Engine", "C++", "Gameplay Tags", "Gameplay Systems"]
 coverImage: "/images/projects/tethered-placeholder.svg"
+coverAlt: "Diagram showing Tethered gameplay system flow from input to gameplay tags, combos, attacks, and feedback."
 featured: true
 draft: false
 ---

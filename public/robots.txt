@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://nick-reardon.com/sitemap-index.xml

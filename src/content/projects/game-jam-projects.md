@@ -4,6 +4,7 @@ description: "Playable builds and fast-iteration systems from projects including
 date: 2026-01-25
 tags: ["Game Jams", "Iteration", "Authoring Workflows"]
 coverImage: "/images/projects/game-jams-placeholder.svg"
+coverAlt: "Diagram representing fast game jam iteration, workflow helpers, and playable builds."
 featured: false
 externalUrl: "https://thingofnightmare.itch.io/"
 draft: false

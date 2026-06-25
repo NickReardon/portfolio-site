@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import type { CollectionEntry } from "astro:content";
+import { Code, ExternalLink, Play } from "@lucide/astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { entrySlug, formatDate, isVisibleContent } from "../../utils/content";
 
@@ -20,13 +21,18 @@ export async function getStaticPaths() {
 const { project } = Astro.props;
 const { Content } = await render(project);
 const links = [
-  { href: project.data.githubUrl, label: "GitHub" },
-  { href: project.data.videoUrl, label: "Video" },
-  { href: project.data.externalUrl, label: "Live Site" },
+  { href: project.data.githubUrl, label: "GitHub", Icon: Code },
+  { href: project.data.videoUrl, label: "Video", Icon: Play },
+  { href: project.data.externalUrl, label: "Live Site", Icon: ExternalLink },
 ].filter((link) => Boolean(link.href));
 ---
 
-<BaseLayout title={project.data.title} description={project.data.description}>
+<BaseLayout
+  title={project.data.title}
+  description={project.data.description}
+  image={project.data.coverImage}
+  type="article"
+>
   <article>
     <header class="section bg-site-subtle">
       <div class="mx-auto grid max-w-6xl gap-10 px-5 py-14 lg:grid-cols-[1fr_380px]">
@@ -40,9 +46,10 @@ const links = [
           {
             links.length > 0 && (
               <div class="mt-8 flex flex-wrap gap-3">
-                {links.map((link) => (
-                  <a class="button-secondary" href={link.href}>
-                    {link.label}
+                {links.map(({ href, label, Icon }) => (
+                  <a class="button-secondary" href={href}>
+                    <Icon size={16} aria-hidden="true" />
+                    {label}
                   </a>
                 ))}
               </div>
@@ -54,7 +61,7 @@ const links = [
           project.data.coverImage && (
             <img
               src={project.data.coverImage}
-              alt=""
+              alt={project.data.coverAlt ?? ""}
               class="aspect-[16/10] w-full rounded-lg border border-stone-200 object-cover shadow-sm"
             />
           )

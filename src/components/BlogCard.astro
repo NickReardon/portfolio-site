@@ -4,19 +4,21 @@ import { entrySlug, formatDate } from "../utils/content";
 
 interface Props {
   post: CollectionEntry<"blog">;
+  headingLevel?: 2 | 3;
 }
 
-const { post } = Astro.props;
+const { post, headingLevel = 2 } = Astro.props;
 const { data } = post;
 const slug = entrySlug(post.id);
 const href = `/blog/${slug}/`;
+const Heading = `h${headingLevel}` as "h2" | "h3";
 ---
 
 <article class="card p-5">
-  <a href={href} class="block space-y-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-600">
+  <a href={href} class="card-link block space-y-4">
     <div>
-      <p class="text-sm font-medium text-teal-700">{formatDate(data.date)}</p>
-      <h2 class="mt-1 text-xl font-semibold text-stone-950">{data.title}</h2>
+      <p class="text-sm font-medium text-teal-800">{formatDate(data.date)}</p>
+      <Heading class="mt-1 text-xl font-semibold text-stone-950">{data.title}</Heading>
     </div>
     <p class="text-sm leading-6 text-stone-650">{data.description}</p>
     <div class="flex flex-wrap gap-2">

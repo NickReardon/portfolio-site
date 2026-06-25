@@ -1,4 +1,5 @@
 ---
+import { FileText } from "@lucide/astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { site } from "../site.config";
 ---
@@ -59,7 +60,10 @@ import { site } from "../site.config";
         without rewriting the surrounding system.
       </p>
       <div class="mt-8 flex flex-wrap gap-3">
-        <a class="button-primary" href={site.resumeUrl}>Resume</a>
+        <a class="button-primary" href={site.resumeUrl}>
+          <FileText size={16} aria-hidden="true" />
+          Resume
+        </a>
         <a class="button-secondary" href="/contact/">Get in Touch</a>
       </div>
     </div>
