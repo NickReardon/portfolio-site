@@ -82,6 +82,14 @@ chore(a11y): Add accessibility audit scripts
 
 ## Pull Requests And Handoffs
 
+All changes must reach `main` through a pull request. Do not push directly to
+`main`.
+
+Production PRs must use `staging` as the source branch and `main` as the target
+branch. The `Production Gate / Staging domain is ready` check must pass before
+merging; it verifies that `https://staging.nick-reardon.com` responds and still
+emits the expected non-indexable staging metadata.
+
 Every substantial PR or agent handoff should include:
 
 - Summary: what changed and why.
@@ -154,8 +162,25 @@ Documentation locations:
 1. Merge work branches into `staging`.
 2. Validate the staging deployment at `https://staging.nick-reardon.com`.
 3. Confirm metadata, draft visibility, canonical URLs, and key pages.
-4. Merge or fast-forward `staging` into `main`.
-5. Validate production at `https://nick-reardon.com`.
+4. Open a pull request from `staging` into `main`.
+5. Wait for the `Production Gate / Staging domain is ready` check to pass.
+6. Merge the pull request into `main`.
+7. Validate production at `https://nick-reardon.com`.
 
 Use a production hotfix branch from `main` only when staging cannot wait. Backport
 or merge the hotfix into `staging` afterward so the branches do not diverge.
+
+## GitHub Branch Protection
+
+Configure a branch protection rule or ruleset for `main` with:
+
+- Require a pull request before merging.
+- Require status checks to pass before merging.
+- Required check: `Production Gate / Staging domain is ready`.
+- Require branches to be up to date before merging when practical.
+- Restrict direct pushes to repository maintainers only when emergency hotfix
+  access is needed; otherwise block direct pushes to `main`.
+
+Cloudflare Pages should also keep `main` as the production branch and `staging`
+as the long-lived preview branch with `staging.nick-reardon.com` attached to the
+`staging` branch deployment.
