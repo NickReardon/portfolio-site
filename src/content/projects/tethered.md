@@ -2,10 +2,15 @@
 title: "Tethered"
 description: "Current Unreal Engine project focused on data-driven gameplay systems and extendable combat architecture."
 date: 2026-01-25
+timeline: "Current systems project"
 tags: ["Unreal Engine", "C++", "Gameplay Tags", "Gameplay Systems"]
+projectType: "system"
+role: "Gameplay programmer"
+status: "In development"
+engine: "Unreal Engine"
 coverImage: "/images/projects/tethered-placeholder.svg"
 coverAlt: "Diagram showing Tethered gameplay system flow from input to gameplay tags, combos, attacks, and feedback."
-featured: true
+featured: false
 draft: false
 ---
 
@@ -14,6 +19,9 @@ draft: false
 Tethered is my current Unreal Engine project and the main place where I am
 building larger gameplay systems outside of coursework. The goal is to keep the
 implementation reliable while making it easy to extend with new content.
+
+This project is listed as systems work instead of a featured playable project
+until I have a public build, video, or deeper technical breakdown to show.
 
 ## System Focus
 

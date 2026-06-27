@@ -7,9 +7,13 @@
   },
   "scripts": {
     "dev": "astro dev",
+    "prebuild": "astro check",
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
+    "audit": "npm run audit:lighthouse && npm run audit:pa11y",
+    "audit:lighthouse": "node scripts/audit-pages.mjs lighthouse",
+    "audit:pa11y": "node scripts/audit-pages.mjs pa11y",
     "astro": "astro"
   },
   "dependencies": {
@@ -21,6 +25,8 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.9",
+    "lighthouse": "^13.4.0",
+    "pa11y": "^9.1.1",
     "typescript": "^6.0.3"
   }
 }

@@ -242,6 +242,52 @@
     padding: 0.42rem 0.62rem;
   }
 
+  .project-card-meta {
+    color: #57534e;
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 0.78rem;
+    font-weight: 650;
+    gap: 0.4rem 0.6rem;
+    line-height: 1.4;
+  }
+
+  .project-card-meta span {
+    align-items: center;
+    display: inline-flex;
+  }
+
+  .project-card-meta span + span::before {
+    background: #a8a29e;
+    border-radius: 999px;
+    content: "";
+    display: inline-block;
+    height: 0.3rem;
+    margin-right: 0.6rem;
+    width: 0.3rem;
+  }
+
+  .project-detail {
+    border-top: 3px solid #0f766e;
+    background: white;
+    padding: 0.9rem 1rem;
+  }
+
+  .project-detail dt {
+    color: #134e4a;
+    font-size: 0.72rem;
+    font-weight: 750;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+
+  .project-detail dd {
+    color: #292524;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-top: 0.35rem;
+  }
+
   .empty-state {
     border: 1px dashed #a8a29e;
     border-radius: 0.5rem;

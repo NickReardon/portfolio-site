@@ -30,8 +30,19 @@ Use these settings when importing the GitHub repository into Cloudflare Pages:
 - Build command: `npm run build`
 - Build directory: `dist`
 
-After the first successful deploy, add the custom domain from the Cloudflare
-Pages project settings and choose a canonical apex or `www` URL.
+After the first successful deploy, add `nick-reardon.com` as the production
+custom domain from the Cloudflare Pages project settings.
+
+For the long-lived pre-production environment, create a `staging` branch and
+enable preview builds for that branch. Add `staging.nick-reardon.com` as a
+custom domain for the `staging` branch. Keep the DNS record proxied through
+Cloudflare so it resolves to the branch deployment instead of production.
+
+Production builds use `https://nick-reardon.com` for canonical URLs and the
+sitemap. Staging and short-lived preview builds emit `noindex` metadata and a
+non-indexable `robots.txt`; their URLs are derived from the branch domain or
+Cloudflare Pages preview URL. Set `SITE_URL` in the build environment only when
+you need to override that default.
 
 ```sh
 npm create astro@latest -- --template minimal

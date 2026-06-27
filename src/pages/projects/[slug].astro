@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from "astro:content";
 import type { CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
 import { Code, ExternalLink, Play } from "@lucide/astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { entrySlug, formatDate, isVisibleContent } from "../../utils/content";
@@ -23,8 +24,18 @@ const { Content } = await render(project);
 const links = [
   { href: project.data.githubUrl, label: "GitHub", Icon: Code },
   { href: project.data.videoUrl, label: "Video", Icon: Play },
-  { href: project.data.externalUrl, label: "Live Site", Icon: ExternalLink },
+  {
+    href: project.data.externalUrl,
+    label: project.data.externalLabel ?? "Live Site",
+    Icon: ExternalLink,
+  },
 ].filter((link) => Boolean(link.href));
+const details = [
+  { label: "Role", value: project.data.role },
+  { label: "Status", value: project.data.status },
+  { label: "Engine", value: project.data.engine },
+].filter((detail) => Boolean(detail.value));
+const timeline = project.data.timeline ?? formatDate(project.data.date);
 ---
 
 <BaseLayout
@@ -37,12 +48,24 @@ const links = [
     <header class="section bg-site-subtle">
       <div class="mx-auto grid max-w-6xl gap-10 px-5 py-14 lg:grid-cols-[1fr_380px]">
         <div>
-          <p class="eyebrow">{formatDate(project.data.date)}</p>
+          <p class="eyebrow">{timeline}</p>
           <h1>{project.data.title}</h1>
           <p class="mt-5 text-xl leading-8 text-stone-700">{project.data.description}</p>
           <div class="mt-6 flex flex-wrap gap-2">
             {project.data.tags.map((tag) => <span class="tag">{tag}</span>)}
           </div>
+          {
+            details.length > 0 && (
+              <dl class="mt-8 grid gap-3 sm:grid-cols-3">
+                {details.map((detail) => (
+                  <div class="project-detail">
+                    <dt>{detail.label}</dt>
+                    <dd>{detail.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            )
+          }
           {
             links.length > 0 && (
               <div class="mt-8 flex flex-wrap gap-3">
@@ -59,9 +82,13 @@ const links = [
 
         {
           project.data.coverImage && (
-            <img
+            <Image
               src={project.data.coverImage}
               alt={project.data.coverAlt ?? ""}
+              width={760}
+              height={475}
+              loading="eager"
+              fetchpriority="high"
               class="aspect-[16/10] w-full rounded-lg border border-stone-200 object-cover shadow-sm"
             />
           )

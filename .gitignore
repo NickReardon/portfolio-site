@@ -13,6 +13,10 @@ yarn-error.log*
 pnpm-debug.log*
 dev-server*.log
 
+# generated audit reports
+reports/
+.audit-tmp/
+
 
 # environment variables
 .env

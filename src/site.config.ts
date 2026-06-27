@@ -1,6 +1,30 @@
+const productionBranch = "main";
+const stagingBranch = "staging";
+const productionUrl = "https://nick-reardon.com";
+const stagingUrl = "https://staging.nick-reardon.com";
+
+function normalizeUrl(url: string | undefined) {
+  if (!url) {
+    return undefined;
+  }
+
+  return /^https?:\/\//u.test(url) ? url : `https://${url}`;
+}
+
+const branch = import.meta.env.CF_PAGES_BRANCH;
+const isCloudflarePages = import.meta.env.CF_PAGES === "1";
+const deployedUrl =
+  normalizeUrl(import.meta.env.SITE_URL) ??
+  (branch === stagingBranch
+    ? stagingUrl
+    : branch && branch !== productionBranch
+      ? normalizeUrl(import.meta.env.CF_PAGES_URL) ?? productionUrl
+      : productionUrl);
+
 export const site = {
   name: "Nicholas Reardon",
-  url: "https://nick-reardon.com",
+  url: deployedUrl,
+  isSearchIndexable: !isCloudflarePages || branch === productionBranch,
   role: "Gameplay Programmer and Computer Science Student",
   focus:
     "Unreal Engine, C++, data-driven gameplay systems, and designer-friendly content workflows",

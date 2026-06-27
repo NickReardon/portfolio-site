@@ -67,7 +67,16 @@ const recentPosts = (await getCollection("blog"))
       {
         fallbackProjects.length > 0 ? (
           <div class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {fallbackProjects.map((project) => <ProjectCard project={project} headingLevel={3} />)}
+            {
+              fallbackProjects.map((project, index) => (
+                <ProjectCard
+                  project={project}
+                  headingLevel={3}
+                  imageLoading={index < 3 ? "eager" : "lazy"}
+                  imageFetchPriority={index === 0 ? "high" : "auto"}
+                />
+              ))
+            }
           </div>
         ) : (
           <p class="empty-state mt-8">More project writeups are coming soon.</p>
