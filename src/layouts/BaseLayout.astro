@@ -17,7 +17,9 @@ const {
   image = site.defaultImage,
   type = "website",
 } = Astro.props;
-const pageTitle = title ? `${title} | ${site.name}` : `${site.name} | ${site.role}`;
+const pageTitle = title
+  ? `${title} | ${site.name}`
+  : `${site.name} | ${site.role}`;
 const canonicalUrl = new URL(Astro.url.pathname, site.url).toString();
 const socialImageUrl = new URL(image, site.url).toString();
 ---
@@ -31,6 +33,11 @@ const socialImageUrl = new URL(image, site.url).toString();
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
+    {
+      !site.isSearchIndexable && (
+        <meta name="robots" content="noindex, nofollow" />
+      )
+    }
     <link rel="canonical" href={canonicalUrl} />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta property="og:site_name" content={site.name} />
@@ -48,7 +55,7 @@ const socialImageUrl = new URL(image, site.url).toString();
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
     <Navbar />
-    <main id="main-content" tabindex="-1">
+    <main id="main-content">
       <slot />
     </main>
     <Footer />

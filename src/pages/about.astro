@@ -4,20 +4,23 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import { site } from "../site.config";
 ---
 
-<BaseLayout title="About" description={`About ${site.name} and his gameplay systems work.`}>
+<BaseLayout
+  title="About"
+  description={`About ${site.name} and his gameplay systems work.`}
+>
   <section class="section bg-site-subtle">
     <div class="mx-auto max-w-4xl px-5 py-14">
       <p class="eyebrow">About</p>
       <h1>{site.name}</h1>
       <p class="mt-5 text-xl leading-8 text-stone-700">
-        I am a computer science student at California State University, Fullerton,
-        building Unreal Engine gameplay systems with an emphasis on reliability,
-        usability, and content authoring.
+        I am a computer science student at California State University,
+        Fullerton, building Unreal Engine gameplay systems with an emphasis on
+        reliability, usability, and content authoring.
       </p>
       <p class="mt-5 leading-7 text-stone-650">
         I care about systems that work the way designers expect them to work:
-        sensible defaults, clear extension points, and enough flexibility to grow
-        without constant refactoring.
+        sensible defaults, clear extension points, and enough flexibility to
+        grow without constant refactoring.
       </p>
     </div>
   </section>
@@ -31,19 +34,31 @@ import { site } from "../site.config";
       <div class="grid gap-4 lg:col-span-2 sm:grid-cols-2">
         <div class="info-panel">
           <h3>Gameplay Systems</h3>
-          <p>Data-driven combat and interaction systems with clear structure and player-facing feedback.</p>
+          <p>
+            Data-driven combat and interaction systems with clear structure and
+            player-facing feedback.
+          </p>
         </div>
         <div class="info-panel">
           <h3>Unreal Engine and C++</h3>
-          <p>Gameplay Tags, C++ architecture, Blueprint-facing workflows, and engine-side debugging.</p>
+          <p>
+            Gameplay Tags, C++ architecture, Blueprint-facing workflows, and
+            engine-side debugging.
+          </p>
         </div>
         <div class="info-panel">
           <h3>Content Authoring</h3>
-          <p>Systems and small utilities that reduce friction when creating, placing, and tuning content.</p>
+          <p>
+            Systems and small utilities that reduce friction when creating,
+            placing, and tuning content.
+          </p>
         </div>
         <div class="info-panel">
           <h3>Game Jam Iteration</h3>
-          <p>Fast implementation under constraints, with practical scripts and workflows when they improve output.</p>
+          <p>
+            Fast implementation under constraints, with practical scripts and
+            workflows when they improve output.
+          </p>
         </div>
       </div>
     </div>
@@ -56,8 +71,8 @@ import { site } from "../site.config";
       <p class="mt-4 max-w-3xl leading-7 text-stone-650">
         My current Unreal Engine project, Tethered, is focused on data-driven
         gameplay systems. One example is a combo system that maps combo steps to
-        attacks through Gameplay Tags, making it easier to add or change behavior
-        without rewriting the surrounding system.
+        attacks through Gameplay Tags, making it easier to add or change
+        behavior without rewriting the surrounding system.
       </p>
       <div class="mt-8 flex flex-wrap gap-3">
         <a class="button-primary" href={site.resumeUrl}>

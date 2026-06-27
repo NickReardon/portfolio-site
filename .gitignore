@@ -13,10 +13,16 @@ yarn-error.log*
 pnpm-debug.log*
 dev-server*.log
 
+# generated audit reports
+reports/
+.audit-tmp/
+
 
 # environment variables
 .env
-.env.production
+.env.*
+!.env.example
+!.env.*.example
 
 # macOS-specific files
 .DS_Store
