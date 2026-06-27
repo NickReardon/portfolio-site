@@ -8,7 +8,7 @@ on:
 
 jobs:
   staging-ready:
-    name: Staging domain is ready
+    name: Staging deployment is ready
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
@@ -22,7 +22,7 @@ jobs:
             exit 1
           fi
 
-      - name: Check staging domain
+      - name: Check staging deployment
         run: |
           curl --fail --show-error --silent --location \
             --max-time 20 \
@@ -30,7 +30,7 @@ jobs:
             --retry-delay 5 \
             --user-agent "Mozilla/5.0 (compatible; portfolio-production-gate/1.0)" \
             --output /tmp/staging-home.html \
-            https://staging.nick-reardon.com/
+            https://staging.portfolio-site-sy7.pages.dev/
 
           if ! grep -qi '<meta name="robots" content="noindex' /tmp/staging-home.html; then
             echo "Staging responded, but it did not include expected noindex metadata."

@@ -86,9 +86,11 @@ All changes must reach `main` through a pull request. Do not push directly to
 `main`.
 
 Production PRs must use `staging` as the source branch and `main` as the target
-branch. The `Production Gate / Staging domain is ready` check must pass before
-merging; it verifies that `https://staging.nick-reardon.com` responds and still
-emits the expected non-indexable staging metadata.
+branch. The `Production Gate / Staging deployment is ready` check must pass
+before merging; it verifies that the Cloudflare Pages staging deployment
+responds and still emits the expected non-indexable staging metadata. Humans
+should still validate `https://staging.nick-reardon.com` before production
+promotion.
 
 Every substantial PR or agent handoff should include:
 
@@ -163,7 +165,7 @@ Documentation locations:
 2. Validate the staging deployment at `https://staging.nick-reardon.com`.
 3. Confirm metadata, draft visibility, canonical URLs, and key pages.
 4. Open a pull request from `staging` into `main`.
-5. Wait for the `Production Gate / Staging domain is ready` check to pass.
+5. Wait for the `Production Gate / Staging deployment is ready` check to pass.
 6. Merge the pull request into `main`.
 7. Validate production at `https://nick-reardon.com`.
 
@@ -176,7 +178,7 @@ Configure a branch protection rule or ruleset for `main` with:
 
 - Require a pull request before merging.
 - Require status checks to pass before merging.
-- Required check: `Production Gate / Staging domain is ready`.
+- Required check: `Production Gate / Staging deployment is ready`.
 - Require branches to be up to date before merging when practical.
 - Restrict direct pushes to repository maintainers only when emergency hotfix
   access is needed; otherwise block direct pushes to `main`.

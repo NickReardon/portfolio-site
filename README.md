@@ -82,7 +82,7 @@ Short version:
 - Verify with the smallest command set that covers the risk, usually
   `npm run check` and `npm run build`.
 - Protect `main` with pull requests and require the
-  `Production Gate / Staging domain is ready` check before merging from
+  `Production Gate / Staging deployment is ready` check before merging from
   `staging`.
 
 ## Deploy To Cloudflare Pages
