@@ -18,7 +18,7 @@ const deployedUrl =
   (branch === stagingBranch
     ? stagingUrl
     : branch && branch !== productionBranch
-      ? normalizeUrl(import.meta.env.CF_PAGES_URL) ?? productionUrl
+      ? (normalizeUrl(import.meta.env.CF_PAGES_URL) ?? productionUrl)
       : productionUrl);
 
 export const site = {
@@ -34,7 +34,7 @@ export const site = {
   email: "reardon.ntr@gmail.com",
   resumeUrl: "/resume/",
   resumePdfUrl: "/resume.pdf",
-  githubUrl: "",
+  githubUrl: "https://github.com/NickReardon",
   itchUrl: "https://thingofnightmare.itch.io/",
   linkedinUrl: "https://www.linkedin.com/in/nicholas-reardon/",
 };

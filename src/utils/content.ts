@@ -22,7 +22,10 @@ export function sortProjects(
   return b.data.date.valueOf() - a.data.date.valueOf();
 }
 
-export function sortNewestFirst<T extends { data: { date: Date } }>(a: T, b: T) {
+export function sortNewestFirst<T extends { data: { date: Date } }>(
+  a: T,
+  b: T,
+) {
   return b.data.date.valueOf() - a.data.date.valueOf();
 }
 

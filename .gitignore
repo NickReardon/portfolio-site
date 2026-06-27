@@ -20,7 +20,9 @@ reports/
 
 # environment variables
 .env
-.env.production
+.env.*
+!.env.example
+!.env.*.example
 
 # macOS-specific files
 .DS_Store

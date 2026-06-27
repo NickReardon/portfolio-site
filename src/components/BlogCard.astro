@@ -18,7 +18,9 @@ const Heading = `h${headingLevel}` as "h2" | "h3";
   <a href={href} class="card-link block space-y-4">
     <div>
       <p class="text-sm font-medium text-teal-800">{formatDate(data.date)}</p>
-      <Heading class="mt-1 text-xl font-semibold text-stone-950">{data.title}</Heading>
+      <Heading class="mt-1 text-xl font-semibold text-stone-950"
+        >{data.title}</Heading
+      >
     </div>
     <p class="text-sm leading-6 text-stone-650">{data.description}</p>
     <div class="flex flex-wrap gap-2">

@@ -32,7 +32,9 @@ const { Content } = await render(post);
       <div class="mx-auto max-w-3xl px-5 py-14">
         <p class="eyebrow">{formatDate(post.data.date)}</p>
         <h1>{post.data.title}</h1>
-        <p class="mt-5 text-xl leading-8 text-stone-700">{post.data.description}</p>
+        <p class="mt-5 text-xl leading-8 text-stone-700">
+          {post.data.description}
+        </p>
         <div class="mt-6 flex flex-wrap gap-2">
           {post.data.tags.map((tag) => <span class="tag">{tag}</span>)}
         </div>

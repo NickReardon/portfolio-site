@@ -15,8 +15,8 @@ const posts = (await getCollection("blog"))
       <p class="eyebrow">Blog</p>
       <h1>Devlog and notes</h1>
       <p class="mt-5 max-w-3xl text-xl leading-8 text-stone-700">
-        Short notes on systems design, implementation tradeoffs, and what I learn
-        while building projects.
+        Short notes on systems design, implementation tradeoffs, and what I
+        learn while building projects.
       </p>
     </div>
   </section>
@@ -26,7 +26,9 @@ const posts = (await getCollection("blog"))
       {
         posts.length > 0 ? (
           <div class="grid gap-4">
-            {posts.map((post) => <BlogCard post={post} />)}
+            {posts.map((post) => (
+              <BlogCard post={post} />
+            ))}
           </div>
         ) : (
           <p class="empty-state">Devlog posts are coming soon.</p>

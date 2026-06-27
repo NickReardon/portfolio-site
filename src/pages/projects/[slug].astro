@@ -46,11 +46,15 @@ const timeline = project.data.timeline ?? formatDate(project.data.date);
 >
   <article>
     <header class="section bg-site-subtle">
-      <div class="mx-auto grid max-w-6xl gap-10 px-5 py-14 lg:grid-cols-[1fr_380px]">
+      <div
+        class="mx-auto grid max-w-6xl gap-10 px-5 py-14 lg:grid-cols-[1fr_380px]"
+      >
         <div>
           <p class="eyebrow">{timeline}</p>
           <h1>{project.data.title}</h1>
-          <p class="mt-5 text-xl leading-8 text-stone-700">{project.data.description}</p>
+          <p class="mt-5 text-xl leading-8 text-stone-700">
+            {project.data.description}
+          </p>
           <div class="mt-6 flex flex-wrap gap-2">
             {project.data.tags.map((tag) => <span class="tag">{tag}</span>)}
           </div>

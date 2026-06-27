@@ -1,5 +1,11 @@
 ---
-import { BriefcaseBusiness, Code, FileText, Gamepad2, Mail } from "@lucide/astro";
+import {
+  BriefcaseBusiness,
+  Code,
+  FileText,
+  Gamepad2,
+  Mail,
+} from "@lucide/astro";
 import ContactLink from "../components/ContactLink.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { site } from "../site.config";
@@ -19,7 +25,12 @@ import { site } from "../site.config";
 
   <section class="section">
     <div class="mx-auto grid max-w-4xl gap-4 px-5 py-14 sm:grid-cols-2">
-      <ContactLink href={`mailto:${site.email}`} label="Email" detail={site.email} icon={Mail} />
+      <ContactLink
+        href={`mailto:${site.email}`}
+        label="Email"
+        detail={site.email}
+        icon={Mail}
+      />
       {
         site.githubUrl && (
           <ContactLink
@@ -36,8 +47,18 @@ import { site } from "../site.config";
         detail="Professional profile"
         icon={BriefcaseBusiness}
       />
-      <ContactLink href={site.itchUrl} label="Itch.io" detail="Playable game jam builds" icon={Gamepad2} />
-      <ContactLink href={site.resumeUrl} label="Resume" detail="Web resume and PDF" icon={FileText} />
+      <ContactLink
+        href={site.itchUrl}
+        label="Itch.io"
+        detail="Playable game jam builds"
+        icon={Gamepad2}
+      />
+      <ContactLink
+        href={site.resumeUrl}
+        label="Resume"
+        detail="Web resume and PDF"
+        icon={FileText}
+      />
     </div>
   </section>
 </BaseLayout>

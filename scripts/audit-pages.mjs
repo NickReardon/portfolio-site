@@ -6,8 +6,9 @@ import { spawnSync } from "node:child_process";
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const reportsDir = join(root, "reports");
 const auditTmpDir = join(root, ".audit-tmp");
-const baseUrl = process.env.AUDIT_BASE_URL ?? "http://127.0.0.1:4321";
 const command = process.argv[2];
+const baseUrl =
+  process.argv[3] ?? process.env.AUDIT_BASE_URL ?? "http://127.0.0.1:4321";
 const cli = {
   lighthouse: join(root, "node_modules", "lighthouse", "cli", "index.js"),
   pa11y: join(root, "node_modules", "pa11y", "bin", "pa11y.js"),
@@ -73,8 +74,14 @@ function runLighthouse() {
       { capture: true },
     );
 
-    if (result.status !== 0 && existsSync(outputPath) && result.stderr.includes("EPERM")) {
-      console.warn(`Report written; Chrome cleanup hit a Windows file lock: ${outputPath}`);
+    if (
+      result.status !== 0 &&
+      existsSync(outputPath) &&
+      result.stderr.includes("EPERM")
+    ) {
+      console.warn(
+        `Report written; Chrome cleanup hit a Windows file lock: ${outputPath}`,
+      );
       return exitCode;
     }
 
@@ -107,5 +114,7 @@ if (command === "pa11y") {
   process.exit(runPa11y());
 }
 
-console.error("Usage: node scripts/audit-pages.mjs <lighthouse|pa11y>");
+console.error(
+  "Usage: node scripts/audit-pages.mjs <lighthouse|pa11y> [base-url]",
+);
 process.exit(1);
