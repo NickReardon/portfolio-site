@@ -1,9 +1,9 @@
 ---
 title: "Alien Survivor"
-description: "A browser-playable Unity prototype exploring a sci-fi survivor-style action loop."
+description: "A browser-playable Unity prototype with data-driven weapons, upgrades, enemy spawning, and runtime tuning hooks."
 date: 2024-01-25
 timeline: "Fall 2024 prototype"
-tags: ["Game Jam", "Unity", "Shooter", "Action"]
+tags: ["Unity", "Shooter", "Data-Driven Design", "Action"]
 projectType: "game"
 role: "Solo developer"
 status: "On hold"
@@ -29,12 +29,18 @@ implementation through web delivery.
 
 - Built the core action prototype around top-down movement, survival pressure,
   and enemy engagement.
+- Implemented an enemy spawning director with pacing, cap management, and
+  runtime tuning hooks for spawn rate and movement speed.
+- Built rarity-weighted enemy selection with per-type parameters such as speed,
+  size, and squad count.
+- Built a data-driven weapon and upgrade framework with stat scaling and
+  functional modifiers such as homing and boundary ricochet.
+- Created runtime UI that adapts to the available upgrades and current player
+  state.
 - Set up the Unity project for rapid iteration and HTML5 delivery on itch.io.
-- Scoped the project around a playable loop that could communicate the idea
-  before adding deeper progression or content.
 
 ## What The Work Shows
 
-Alien Survivor shows earlier end-to-end prototyping work: choosing a compact
-core loop, getting it playable in browser, and identifying which parts would
-need more design depth before continuing production.
+Alien Survivor shows earlier end-to-end systems prototyping: building a compact
+core loop, making progression data-driven enough to extend, and getting the work
+into a playable browser build.

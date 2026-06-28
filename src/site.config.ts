@@ -25,11 +25,11 @@ export const site = {
   name: "Nicholas Reardon",
   url: deployedUrl,
   isSearchIndexable: !isCloudflarePages || branch === productionBranch,
-  role: "Gameplay Programmer and Computer Science Student",
+  role: "Gameplay and Systems Programmer",
   focus:
-    "Unreal Engine, C++, data-driven gameplay systems, and designer-friendly content workflows",
+    "Unreal Engine, C++, modular gameplay architecture, and designer-friendly content workflows",
   description:
-    "A portfolio of Unreal Engine gameplay systems, technical design, and game jam work.",
+    "A portfolio of Unreal Engine gameplay systems, technical design, tools, and game jam work.",
   defaultImage: "/images/social-card.svg",
   email: "reardon.ntr@gmail.com",
   resumeUrl: "/resume/",

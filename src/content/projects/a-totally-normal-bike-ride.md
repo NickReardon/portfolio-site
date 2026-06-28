@@ -1,9 +1,9 @@
 ---
 title: "A Totally Normal Bike Ride"
-description: "A browser and Windows Godot prototype made for Spring Game Jam."
+description: "A Godot physics prototype about balancing a unicycle across telephone wires, built for a three-day game jam."
 date: 2025-01-24
-timeline: "Spring Game Jam"
-tags: ["Game Jam", "Godot", "Platformer", "Prototype"]
+timeline: "Three-day game jam"
+tags: ["Game Jam", "Godot", "Physics", "Prototype"]
 projectType: "game"
 role: "Gameplay programmer"
 status: "Prototype"
@@ -28,16 +28,20 @@ extra setup.
 I contributed gameplay programming work on a small team, with the priority of
 keeping the prototype playable, readable, and shippable within the jam window.
 
-- Helped implement and tune player-facing platforming behavior around the game's
-  unusual control scheme.
-- Worked within a tight prototype scope so the team could prioritize feel,
-  recoverability, and browser-playable delivery.
-- Contributed to debugging and integration so the final build had a clear input
+- Built the two-body physics character: a wheel and rider rigidbody joined by a
+  pin joint, with locomotion driven by wheel torque and balance driven by rider
+  lean torque.
+- Implemented the charge-and-release jump, using hold time to compress the rider
+  and apply a scaled release impulse.
+- Built the telephone-wire tool: two endpoints generate a segmented physics rope
+  with auto-sized segments, chained joints, and a smooth rendered line.
+- Built a day-night cycle driven by a normalized timer, shader gradient, sun,
+  moon, stars, and tinted cloud behavior.
+- Contributed debugging and integration so the final build had a clear input
   model and could be shared from itch.io.
 
 ## What The Work Shows
 
-The useful lesson here was handling a deliberately awkward mechanic without
-letting the implementation become awkward to work with. The project needed fast
-iteration, direct feedback, and a willingness to keep systems smaller than they
-would be in a longer production cycle.
+The useful lesson here was handling a deliberately unstable mechanic without
+letting the implementation become unclear to work with. The project needed fast
+iteration, direct feedback, and systems small enough to ship in three days.

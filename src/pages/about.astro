@@ -15,12 +15,13 @@ import { site } from "../site.config";
       <p class="mt-5 text-xl leading-8 text-stone-700">
         I am a computer science student at California State University,
         Fullerton, building Unreal Engine gameplay systems with an emphasis on
-        reliability, usability, and content authoring.
+        modular architecture, data-driven authoring, and reliable runtime state.
       </p>
       <p class="mt-5 leading-7 text-stone-650">
         I care about systems that work the way designers expect them to work:
         sensible defaults, clear extension points, and enough flexibility to
-        grow without constant refactoring.
+        grow without constant refactoring. My current focus is AAA gameplay,
+        systems, and tools work.
       </p>
     </div>
   </section>
@@ -35,29 +36,29 @@ import { site } from "../site.config";
         <div class="info-panel">
           <h3>Gameplay Systems</h3>
           <p>
-            Data-driven combat and interaction systems with clear structure and
-            player-facing feedback.
+            Modular combat, encounter, spawn, travel, and persistence systems
+            with clear ownership of runtime state.
           </p>
         </div>
         <div class="info-panel">
           <h3>Unreal Engine and C++</h3>
           <p>
-            Gameplay Tags, C++ architecture, Blueprint-facing workflows, and
-            engine-side debugging.
+            Lyra, Gameplay Ability System, Gameplay Tags, Enhanced Input,
+            Blueprint-facing workflows, and engine-side debugging.
           </p>
         </div>
         <div class="info-panel">
           <h3>Content Authoring</h3>
           <p>
-            Systems and small utilities that reduce friction when creating,
-            placing, and tuning content.
+            Data assets, interfaces, small tools, and runtime routing patterns
+            that reduce friction when creating, placing, and tuning content.
           </p>
         </div>
         <div class="info-panel">
-          <h3>Game Jam Iteration</h3>
+          <h3>AI and Encounters</h3>
           <p>
-            Fast implementation under constraints, with practical scripts and
-            workflows when they improve output.
+            Behavior Tree and EQS-driven enemy behavior, wave definitions, spawn
+            modifiers, and designer-tunable encounter pacing.
           </p>
         </div>
       </div>
@@ -69,10 +70,11 @@ import { site } from "../site.config";
       <p class="eyebrow">Current Focus</p>
       <h2>What I am building next</h2>
       <p class="mt-4 max-w-3xl leading-7 text-stone-650">
-        My current Unreal Engine project, Tethered, is focused on data-driven
-        gameplay systems. One example is a combo system that maps combo steps to
-        attacks through Gameplay Tags, making it easier to add or change
-        behavior without rewriting the surrounding system.
+        My current Unreal Engine project, Tethered, is an action rogue-lite
+        prototype built around a Lyra-aligned architecture. Its systems include
+        a world-level Ability System Component for event coordination, seamless
+        travel state reconstruction, pluggable save backends, data-driven
+        encounters, spawn modifiers, and Gameplay Tag-based combat routing.
       </p>
       <div class="mt-8 flex flex-wrap gap-3">
         <a class="button-primary" href={site.resumeUrl}>
