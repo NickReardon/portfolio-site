@@ -16,7 +16,7 @@ const githubProfile = resume.basics.profiles.find(
 
 function formatEducation(school: (typeof resume.education)[number]) {
   const parts = [school.studyType, school.area].filter(Boolean);
-  return [parts.join(" in "), school.summary].filter(Boolean).join(", ");
+  return parts.join(" in ");
 }
 
 function formatDate(date: string | undefined) {
@@ -58,6 +58,10 @@ function projectMeta(project: (typeof resume.projects)[number]) {
     .join(" | ");
 }
 
+function projectHref(project: (typeof resume.projects)[number]) {
+  return project.siteUrl ?? project.url;
+}
+
 function workMeta(job: (typeof resume.work)[number]) {
   return [job.name, formatDateRange(job.startDate, job.endDate), job.location]
     .filter(Boolean)
@@ -92,7 +96,13 @@ function workMeta(job: (typeof resume.work)[number]) {
           <ExternalLink size={16} aria-hidden="true" />
           Open PDF
         </a>
-        <a class="button-secondary" href={site.resumePdfUrl} download>
+        <a
+          class="button-secondary"
+          href={site.resumePdfUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          download
+        >
           <Download size={16} aria-hidden="true" />
           Download PDF
         </a>
@@ -110,6 +120,43 @@ function workMeta(job: (typeof resume.work)[number]) {
           <h2>Gameplay systems with practical authoring workflows.</h2>
           <p>{resume.basics.summary}</p>
         </section>
+
+        {
+          resume.projects.length > 0 && (
+            <section class="resume-panel">
+              <p class="eyebrow">Project Experience</p>
+              {resume.projects.map((project) => (
+                <div class="resume-entry">
+                  <div>
+                    <h2>
+                      {projectHref(project) ? (
+                        <a
+                          class="resume-title-link"
+                          href={projectHref(project)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {project.name}
+                        </a>
+                      ) : (
+                        project.name
+                      )}
+                    </h2>
+                    <p class="resume-meta">{projectMeta(project)}</p>
+                  </div>
+                  {project.description && <p>{project.description}</p>}
+                  {project.highlights?.length > 0 && (
+                    <ul class="resume-highlights">
+                      {project.highlights.map((highlight) => (
+                        <li>{highlight}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
+            </section>
+          )
+        }
 
         {
           resume.work.length > 0 && (
@@ -133,60 +180,22 @@ function workMeta(job: (typeof resume.work)[number]) {
             </section>
           )
         }
-
-        {
-          resume.projects.length > 0 && (
-            <section class="resume-panel">
-              <p class="eyebrow">Project Experience</p>
-              {resume.projects.map((project) => (
-                <div class="resume-entry">
-                  <div>
-                    <h2>{project.name}</h2>
-                    <p class="resume-meta">{projectMeta(project)}</p>
-                  </div>
-                  {project.description && <p>{project.description}</p>}
-                  {project.highlights?.length > 0 && (
-                    <ul class="resume-highlights">
-                      {project.highlights.map((highlight) => (
-                        <li>{highlight}</li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              ))}
-            </section>
-          )
-        }
-
-        {
-          resume.education.length > 0 && (
-            <section class="resume-panel">
-              <p class="eyebrow">Education</p>
-              {resume.education.map((school, index) => (
-                <div class={index > 0 ? "mt-5" : undefined}>
-                  <h2>{school.institution}</h2>
-                  <p>{formatEducation(school)}</p>
-                </div>
-              ))}
-            </section>
-          )
-        }
       </div>
 
       <aside class="resume-sidebar">
         {
-          resume.skills.length > 0 && (
-            <section>
-              <h2>Technical Focus</h2>
+          resume.education.length > 0 && (
+            <section class="resume-sidebar-block">
+              <h2>Education</h2>
               <div class="mt-4 grid gap-4">
-                {resume.skills.map((skill) => (
-                  <div>
-                    <h3>{skill.name}</h3>
-                    <div class="mt-2 flex flex-wrap gap-2">
-                      {skill.keywords.map((keyword) => (
-                        <span class="tag">{keyword}</span>
-                      ))}
-                    </div>
+                {resume.education.map((school) => (
+                  <div class="resume-sidebar-entry">
+                    <h3>{school.institution}</h3>
+                    <p>{formatEducation(school)}</p>
+                    {school.summary && <p>{school.summary}</p>}
+                    {school.highlights?.map((highlight) => (
+                      <p>{highlight}</p>
+                    ))}
                   </div>
                 ))}
               </div>
@@ -194,16 +203,37 @@ function workMeta(job: (typeof resume.work)[number]) {
           )
         }
 
-        <section>
+        {
+          resume.skills.length > 0 && (
+            <section class="resume-sidebar-block">
+              <h2>Technical Focus</h2>
+              <div class="mt-4 grid gap-4">
+                {resume.skills.map((skill) => (
+                  <div class="resume-skill-group">
+                    <h3>{skill.name}</h3>
+                    <p>{skill.keywords.join(", ")}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )
+        }
+
+        <section class="resume-sidebar-block">
           <h2>Links</h2>
-          <div class="mt-4 grid gap-3">
+          <div class="resume-link-grid mt-4">
             <a class="resume-link" href={`mailto:${resume.basics.email}`}>
               <Mail size={16} aria-hidden="true" />
               Email
             </a>
             {
               githubProfile && (
-                <a class="resume-link" href={githubProfile.url}>
+                <a
+                  class="resume-link"
+                  href={githubProfile.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <ExternalLink size={16} aria-hidden="true" />
                   GitHub
                 </a>
@@ -211,7 +241,12 @@ function workMeta(job: (typeof resume.work)[number]) {
             }
             {
               linkedInProfile && (
-                <a class="resume-link" href={linkedInProfile.url}>
+                <a
+                  class="resume-link"
+                  href={linkedInProfile.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <ExternalLink size={16} aria-hidden="true" />
                   LinkedIn
                 </a>
@@ -219,7 +254,12 @@ function workMeta(job: (typeof resume.work)[number]) {
             }
             {
               itchProfile && (
-                <a class="resume-link" href={itchProfile.url}>
+                <a
+                  class="resume-link"
+                  href={itchProfile.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <ExternalLink size={16} aria-hidden="true" />
                   Itch.io
                 </a>

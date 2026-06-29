@@ -81,17 +81,25 @@ export function createRenderCvDocument(resume) {
       social_networks: socialNetworks,
       sections: pruneEmpty({
         summary: [
-          "Computer science student building modular gameplay systems in Unreal Engine 5 on Lyra, focused on combat, encounters, persistence, and designer-facing workflows.",
+          "Gameplay and systems programmer building production-style Unreal Engine 5 systems on Lyra, focused on C++, modular data-driven architecture, combat, encounters, persistence, and designer-facing workflows.",
         ],
         skills: pdfSkills.map(mapSkill),
-        projects: pdfProjects.map(mapProject),
-        experience: (resume.work ?? []).map((job) => mapWork(job, 1)),
+        projects: pdfProjects.map((project) =>
+          mapProject(project, resume.basics.url),
+        ),
         education: (resume.education ?? []).map(mapEducation),
+        experience: (resume.work ?? []).map((job) => mapWork(job, 1)),
         awards: (resume.awards ?? []).map(mapAward),
       }),
     },
     design: {
       theme: "engineeringresumes",
+      colors: {
+        links: "rgb(19, 78, 74)",
+      },
+      links: {
+        underline: false,
+      },
       page: {
         size: "a4",
         top_margin: "0.35in",
@@ -106,8 +114,21 @@ export function createRenderCvDocument(resume) {
           body: "8.8pt",
           name: "20pt",
           headline: "8.8pt",
-          connections: "8.2pt",
+          connections: "6.4pt",
           section_titles: "1em",
+        },
+      },
+      header: {
+        connections: {
+          display_urls_instead_of_usernames: true,
+          space_between_connections: "0.14cm",
+        },
+      },
+      entries: {
+        highlights: {
+          bullet: "•",
+          nested_bullet: "•",
+          space_between_bullet_and_text: "0.2em",
         },
       },
     },
@@ -122,7 +143,7 @@ function mapEducation(school) {
     location: school.location,
     start_date: school.startDate,
     end_date: school.endDate,
-    highlights: school.highlights,
+    highlights: [school.summary, ...(school.highlights ?? [])].filter(Boolean),
   });
 }
 
@@ -138,9 +159,9 @@ function mapWork(job, highlightLimit = Infinity) {
   });
 }
 
-function mapProject(project) {
+function mapProject(project, siteUrl) {
   return pruneEmpty({
-    name: project.name,
+    name: formatProjectName(project, siteUrl),
     date:
       project.dateLabel ?? (project.endDate ? undefined : project.startDate),
     start_date: project.endDate ? project.startDate : undefined,
@@ -170,7 +191,34 @@ function formatLocation(location) {
     return undefined;
   }
 
-  return [location.city, location.region].filter(Boolean).join(", ");
+  return [
+    location.city,
+    [location.region, location.postalCode].filter(Boolean).join(" "),
+  ]
+    .filter(Boolean)
+    .join(", ");
+}
+
+function formatProjectName(project, siteUrl) {
+  const url = absoluteUrl(project.siteUrl, siteUrl) ?? project.url;
+
+  if (!url) {
+    return project.name;
+  }
+
+  return `[${project.name}](${url})`;
+}
+
+function absoluteUrl(path, siteUrl) {
+  if (!path) {
+    return undefined;
+  }
+
+  if (/^https?:\/\//u.test(path)) {
+    return path;
+  }
+
+  return new URL(path, siteUrl).toString();
 }
 
 function selectPdfProjects(projects) {

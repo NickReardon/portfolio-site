@@ -25,7 +25,7 @@ export const site = {
   name: "Nicholas Reardon",
   url: deployedUrl,
   isSearchIndexable: !isCloudflarePages || branch === productionBranch,
-  role: "Gameplay Programmer and Computer Science Student",
+  role: "Gameplay and Systems Programmer",
   focus:
     "Unreal Engine, C++, data-driven gameplay systems, and designer-friendly content workflows",
   description:

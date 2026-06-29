@@ -6,7 +6,7 @@
     "email": "reardon.ntr@gmail.com",
     "phone": "+1 (949) 338-3509",
     "url": "https://nick-reardon.com",
-    "summary": "Computer science student building production-style gameplay systems in Unreal Engine 5 on the Lyra framework. Focused on modular, data-driven architecture for combat, encounters, persistence, and designer-friendly content workflows.",
+    "summary": "Gameplay and systems programmer building production-style Unreal Engine 5 systems on the Lyra framework. Focused on C++, modular data-driven architecture, combat, encounters, persistence, and designer-friendly content workflows.",
     "location": {
       "city": "Laguna Niguel",
       "region": "CA",
@@ -38,7 +38,7 @@
       "area": "Computer Science",
       "studyType": "Bachelor of Science",
       "endDate": "2026-12",
-      "summary": "Expected Fall 2026."
+      "highlights": ["Expected graduation: Fall 2026."]
     },
     {
       "institution": "Saddleback College",
@@ -46,7 +46,7 @@
       "area": "Computer Science",
       "studyType": "Associate of Science",
       "endDate": "2024-05",
-      "summary": "May 2024."
+      "summary": "Graduated May 2024."
     }
   ],
   "work": [
@@ -69,6 +69,7 @@
       "description": "Lead system designer and gameplay engineer for a Lyra-based Unreal Engine action rogue-lite focused on modular combat, encounters, seamless travel, persistence, and data-driven content authoring.",
       "startDate": "2025-09",
       "endDate": "present",
+      "siteUrl": "/projects/tethered/",
       "keywords": [
         "Unreal Engine 5",
         "C++",
@@ -90,6 +91,7 @@
       "description": "Solo Unity prototype with data-driven weapons, upgrades, enemy spawning, and runtime UI.",
       "startDate": "2024-09",
       "endDate": "2024-12",
+      "siteUrl": "/projects/alien-survivor/",
       "url": "https://thingofnightmare.itch.io/",
       "keywords": ["Unity", "C#", "Data-driven Upgrades", "Runtime UI"],
       "highlights": [
@@ -104,6 +106,7 @@
       "description": "Primary gameplay and tooling programmer for a browser-playable Godot game jam platformer.",
       "startDate": "2025",
       "dateLabel": "2025 game jam",
+      "siteUrl": "/projects/last-oasis/",
       "url": "https://github.com/BCThunder/generous-game-jam",
       "keywords": [
         "Godot",
@@ -122,6 +125,7 @@
       "name": "A Totally Normal Bike Ride",
       "description": "Primary programmer for a three-day Godot jam game about physics balancing a bear on a unicycle across telephone wires.",
       "dateLabel": "3-day game jam",
+      "siteUrl": "/projects/a-totally-normal-bike-ride/",
       "url": "https://thingofnightmare.itch.io/",
       "keywords": [
         "Godot",
