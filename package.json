@@ -11,6 +11,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
+    "resume:build": "node scripts/build-resume.mjs",
+    "resume:validate": "node scripts/validate-resume.mjs",
     "clean": "rimraf dist .astro reports .audit-tmp",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
