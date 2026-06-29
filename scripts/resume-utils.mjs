@@ -58,7 +58,35 @@ function validateArray(value, name, errors) {
   }
 }
 
-export function createRenderCvDocument(resume) {
+const DEFAULT_SUMMARY =
+  "Gameplay and systems programmer building production-style Unreal Engine 5 systems on Lyra, focused on C++, modular data-driven architecture, combat, encounters, persistence, and designer-facing workflows.";
+
+// How many highlights each project keeps when a target is selected. Keeps the
+// targeted PDF close to one page; tune per target if a build spills over.
+const TARGET_PROJECT_HIGHLIGHTS = 4;
+const TARGET_SKILL_KEYWORDS = 8;
+
+export function resolveTarget(resume, target) {
+  if (!target) {
+    return null;
+  }
+
+  const config = resume.meta?.targets?.[target];
+
+  if (!config) {
+    const available = Object.keys(resume.meta?.targets ?? {});
+    throw new Error(
+      `Unknown resume target "${target}". Available targets: ${
+        available.length > 0 ? available.join(", ") : "(none defined)"
+      }.`,
+    );
+  }
+
+  return { name: target, ...config };
+}
+
+export function createRenderCvDocument(resume, options = {}) {
+  const target = resolveTarget(resume, options.target);
   const socialNetworks = (resume.basics.profiles ?? [])
     .filter((profile) => ["GitHub", "LinkedIn"].includes(profile.network))
     .map((profile) =>
@@ -67,28 +95,32 @@ export function createRenderCvDocument(resume) {
         username: profile.username,
       }),
     );
-  const pdfProjects = selectPdfProjects(resume.projects ?? []);
-  const pdfSkills = selectPdfSkills(resume.skills ?? []);
+  const pdfProjects = target
+    ? selectTargetProjects(resume.projects ?? [], target.tags ?? [])
+    : selectPdfProjects(resume.projects ?? []);
+  const pdfSkills = target
+    ? selectTargetSkills(resume.skills ?? [], target.tags ?? [])
+    : selectPdfSkills(resume.skills ?? []);
+  const summary = target?.summary ?? DEFAULT_SUMMARY;
+  const headline = target?.label ?? resume.basics.label;
 
   return pruneEmpty({
     cv: {
       name: resume.basics.name,
-      headline: resume.basics.label,
+      headline,
       location: formatLocation(resume.basics.location),
       email: resume.basics.email,
       phone: resume.basics.phone,
       website: resume.basics.url,
       social_networks: socialNetworks,
       sections: pruneEmpty({
-        summary: [
-          "Gameplay and systems programmer building production-style Unreal Engine 5 systems on Lyra, focused on C++, modular data-driven architecture, combat, encounters, persistence, and designer-facing workflows.",
-        ],
+        summary: [summary],
         skills: pdfSkills.map(mapSkill),
         projects: pdfProjects.map((project) =>
           mapProject(project, resume.basics.url),
         ),
         education: (resume.education ?? []).map(mapEducation),
-        experience: (resume.work ?? []).map((job) => mapWork(job, 1)),
+        experience: (resume.work ?? []).map((job) => mapWork(job)),
         awards: (resume.awards ?? []).map(mapAward),
       }),
     },
@@ -221,11 +253,40 @@ function absoluteUrl(path, siteUrl) {
   return new URL(path, siteUrl).toString();
 }
 
+// Untagged entries always appear; tagged entries appear only when at least one
+// of their tags matches the target. With no target selected, every entry is
+// kept (see the default selectPdf* paths above).
+function matchesTarget(entryTags, targetTags) {
+  if (!entryTags || entryTags.length === 0) {
+    return true;
+  }
+
+  return entryTags.some((tag) => targetTags.includes(tag));
+}
+
+function selectTargetProjects(projects, targetTags) {
+  return projects
+    .filter((project) => matchesTarget(project.tags, targetTags))
+    .map((project) => ({
+      ...project,
+      highlights: limitItems(project.highlights, TARGET_PROJECT_HIGHLIGHTS),
+    }));
+}
+
+function selectTargetSkills(skills, targetTags) {
+  return skills
+    .filter((skill) => matchesTarget(skill.tags, targetTags))
+    .map((skill) => ({
+      ...skill,
+      keywords: limitItems(skill.keywords, TARGET_SKILL_KEYWORDS),
+    }));
+}
+
 function selectPdfProjects(projects) {
   const bulletLimits = new Map([
-    ["Tethered", 4],
+    ["Tethered", 5],
     ["Alien Survivors", 2],
-    ["Last Oasis", 3],
+    ["Last Oasis", 4],
     ["A Totally Normal Bike Ride", 2],
   ]);
 
@@ -242,11 +303,11 @@ function selectPdfProjects(projects) {
 
 function selectPdfSkills(skills) {
   const keywordLimits = new Map([
-    ["Languages", 5],
-    ["Engines and Frameworks", 3],
-    ["Unreal Engine", 7],
-    ["Gameplay and Systems", 5],
-    ["Tooling", 4],
+    ["Languages", 6],
+    ["Engines and Frameworks", 4],
+    ["Unreal Engine", 8],
+    ["Gameplay and Systems", 7],
+    ["Tooling", 5],
   ]);
 
   return skills

@@ -16,9 +16,14 @@ import {
   validateResume,
 } from "./resume-utils.mjs";
 
+const target =
+  parseTarget(process.argv.slice(2)) ?? process.env.RESUME_TARGET ?? null;
 const buildDir = ".resume-build";
 const yamlPath = join(buildDir, "resume.yaml");
-const pdfPath = "public/resume.pdf";
+// Default build keeps the canonical public/resume.pdf. Targeted builds write a
+// suffixed file (e.g. public/resume-gameplay.pdf) so the default is untouched.
+const pdfFileName = target ? `resume-${target}.pdf` : "resume.pdf";
+const pdfPath = join("public", pdfFileName);
 const renderCvCommand = existsSync(".venv/Scripts/rendercv.exe")
   ? ".venv/Scripts/rendercv.exe"
   : "rendercv";
@@ -34,11 +39,31 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
+if (target) {
+  console.log(`Building resume for target: ${target}`);
+}
+
+function parseTarget(args) {
+  for (let index = 0; index < args.length; index += 1) {
+    const arg = args[index];
+
+    if (arg === "--target") {
+      return args[index + 1];
+    }
+
+    if (arg.startsWith("--target=")) {
+      return arg.slice("--target=".length);
+    }
+  }
+
+  return undefined;
+}
+
 rmSync(buildDir, { recursive: true, force: true });
 mkdirSync(buildDir, { recursive: true });
 mkdirSync(dirname(pdfPath), { recursive: true });
 
-const renderCvDocument = createRenderCvDocument(resume);
+const renderCvDocument = createRenderCvDocument(resume, { target });
 
 // RenderCV reads YAML, and JSON is valid YAML. Writing JSON keeps this script
 // dependency-free while still generating a disposable RenderCV input file.
@@ -53,7 +78,7 @@ execFileSync(
     "--output-folder",
     buildDir,
     "--pdf-path",
-    "resume.pdf",
+    pdfFileName,
     "--dont-generate-markdown",
     "--dont-generate-html",
     "--dont-generate-png",

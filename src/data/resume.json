@@ -1,5 +1,63 @@
 {
   "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
+  "meta": {
+    "tagsNote": "Tags are descriptive area labels: for each project, skill, or job they list which fields that entry can support when assembling a resume. Games is the primary domain but tags are not games-only. Tags are generous and overlapping by design. They also drive optional `--target` filtering at build time, where untagged entries always appear and tagged entries appear when they share a tag with the target.",
+    "tagLegend": {
+      "gameplay": "Gameplay and combat systems.",
+      "systems": "Software architecture, decoupling, and systems engineering.",
+      "ai": "Game AI, behavior, and decision systems.",
+      "ml": "Applied machine learning (models, training, inference).",
+      "tools": "Tooling, editor workflow, content authoring, and pipelines.",
+      "graphics": "Shaders, rendering, and visual systems.",
+      "physics": "Physics simulation, joints, and tuning.",
+      "ui-ux": "User interface and interaction design.",
+      "qa": "Testing, verification, and defect isolation.",
+      "desktop": "Desktop application development.",
+      "web": "Web and full-stack development.",
+      "data": "Data access, databases, and data pipelines.",
+      "python": "Python development.",
+      "performance": "Performance and optimization.",
+      "networking": "Networking, multiplayer, and server-authoritative design.",
+      "automation": "Scripting, automation, and developer tooling.",
+      "version-control": "Version control and collaboration workflows.",
+      "hardware": "Electronics and hardware troubleshooting.",
+      "support": "Technical support and documentation.",
+      "cs-fundamentals": "Core CS theory and algorithms."
+    },
+    "targets": {
+      "gameplay": {
+        "label": "Gameplay and Systems Programmer",
+        "summary": "Computer science student building production-style gameplay systems in Unreal Engine 5 on the Lyra framework. Strong focus on where logic lives, decoupling between systems, and data-driven authoring so content extends without new systems code. Primary work is a modular combat, encounter, and persistence architecture for an action rogue-lite.",
+        "tags": ["gameplay", "systems", "tools", "physics", "ai"]
+      },
+      "ai": {
+        "label": "AI and Gameplay Engineer",
+        "summary": "Builds enemy and encounter logic that stays readable and designer-tunable as it grows: Behavior Tree and EQS driven AI, data-asset and wave-definition encounter pacing, and a combo and attack-routing system that resolves moves from Gameplay Tags at runtime so upgrades change behavior without branching logic.",
+        "tags": ["ai", "ml", "gameplay", "systems"]
+      },
+      "tools": {
+        "label": "Tools and Core Tech Engineer",
+        "summary": "Builds reliable systems with a usability and content-authoring focus, so the intended way to use a system is the way a designer would expect it to work: Game Feature plugin isolation, pluggable save backends, subsystem-owned travel and persistence, and small authoring tools written during jams to speed iteration.",
+        "tags": [
+          "tools",
+          "systems",
+          "python",
+          "desktop",
+          "web",
+          "data",
+          "ui-ux",
+          "automation",
+          "graphics",
+          "performance"
+        ]
+      },
+      "qa": {
+        "label": "Quality Assurance Engineer",
+        "summary": "Comes from hands-on development and structured electronics troubleshooting. Habitual at isolating issues, reproducing edge cases, and validating fixes against intended design as systems iterate. Comfortable comparing observed behavior to design intent and communicating defects clearly.",
+        "tags": ["qa", "systems", "tools", "gameplay", "hardware", "support"]
+      }
+    }
+  },
   "basics": {
     "name": "Nicholas Reardon",
     "label": "Gameplay and Systems Programmer",
@@ -38,7 +96,13 @@
       "area": "Computer Science",
       "studyType": "Bachelor of Science",
       "endDate": "2026-12",
-      "highlights": ["Expected graduation: Fall 2026."]
+      "highlights": ["Expected graduation: Fall 2026."],
+      "courses": [
+        "CPSC 491 - Senior Capstone (Tethered)",
+        "CPSC 481 - Artificial Intelligence",
+        "CPSC 439 - Theory of Computation",
+        "CPSC 332 - Databases"
+      ]
     },
     {
       "institution": "Saddleback College",
@@ -56,8 +120,9 @@
       "position": "Electronics Support Technician",
       "startDate": "2023-06",
       "endDate": "2024-07",
+      "tags": ["hardware", "support", "qa"],
       "highlights": [
-        "Diagnosed and repaired unfamiliar devices through structured troubleshooting, fault isolation, and verification testing.",
+        "Independently diagnosed and repaired unfamiliar devices through structured troubleshooting, fault isolation, and verification testing.",
         "Executed delicate device teardowns with detailed tracking and documentation for reliable reassembly.",
         "Built internal repair documentation and improved workflows to increase consistency and efficiency."
       ]
@@ -70,6 +135,15 @@
       "startDate": "2025-09",
       "endDate": "present",
       "siteUrl": "/projects/tethered/",
+      "tags": [
+        "gameplay",
+        "systems",
+        "ai",
+        "tools",
+        "qa",
+        "networking",
+        "physics"
+      ],
       "keywords": [
         "Unreal Engine 5",
         "C++",
@@ -82,8 +156,10 @@
         "Architected a modular Lyra-based gameplay framework using Game Feature plugin isolation to keep combat, game modes, and content decoupled while iterating on an arena-mode vertical slice.",
         "Designed a world-level event bus on the GameState Ability System Component to coordinate encounter, spawn, and travel systems at runtime without coupling individual components.",
         "Built a seamless-travel subsystem that snapshots and reconstructs player and world state across level transitions, preserving GAS attributes, equipment, and run upgrades through GameState teardown.",
-        "Implemented a pluggable save backend behind an interface, isolating disk I/O from runtime state and leaving a clean extension point for future server-backed persistence.",
-        "Built data-driven encounter, wave-advance, spawn-modifier, and combo-routing systems so new encounter rules, enemy behaviors, and upgrades can be authored through data."
+        "Implemented a pluggable save backend behind an interface, isolating disk I/O from runtime state and leaving a clean extension point for a future server-backed implementation.",
+        "Designed a designer-facing combo system using an input-tag routing map where each step resolves attacks from owned Gameplay Tags at runtime, letting upgrades modify movesets without branching logic.",
+        "Built data-driven encounter, wave-advance, spawn-modifier, and combo-routing systems so new encounter rules, enemy behaviors, and upgrades can be authored through data.",
+        "Migrated a GAS-based Lyra project across two major Unreal Engine versions (5.6 to 5.8), resolving API deprecations, build and registration breakage, and Lyra base-class changes."
       ]
     },
     {
@@ -92,7 +168,16 @@
       "startDate": "2024-09",
       "endDate": "2024-12",
       "siteUrl": "/projects/alien-survivor/",
-      "url": "https://thingofnightmare.itch.io/",
+      "url": "https://thingofnightmare.itch.io/alien-survivor",
+      "tags": [
+        "gameplay",
+        "ai",
+        "systems",
+        "tools",
+        "performance",
+        "ui-ux",
+        "data"
+      ],
       "keywords": ["Unity", "C#", "Data-driven Upgrades", "Runtime UI"],
       "highlights": [
         "Built an enemy spawning director with spawn pacing, cap management, and optional object pooling for performance under high enemy counts.",
@@ -107,7 +192,8 @@
       "startDate": "2025",
       "dateLabel": "2025 game jam",
       "siteUrl": "/projects/last-oasis/",
-      "url": "https://github.com/BCThunder/generous-game-jam",
+      "url": "https://thingofnightmare.itch.io/last-oasis",
+      "tags": ["gameplay", "tools", "physics", "graphics", "ui-ux"],
       "keywords": [
         "Godot",
         "GDScript",
@@ -116,9 +202,9 @@
       ],
       "highlights": [
         "Built a nested state-machine character controller with ground, air, wall-slide, slam, destroy, and death states; coyote time; variable-height jumping; wall jumps; input buffering; spike grace frames; and tile-data-driven slippery surfaces.",
-        "Built an aimable launch ability with aim, fire, and cancel states, a live guide line, and on-screen control prompts.",
+        "Built a chain-reaction destructible system where a facing raycast breaks a target and an expanding overlap query breaks neighbors outward with per-depth delay.",
         "Created an editor-time tile-to-scene tool that swaps tiles for scene instances keyed by tile custom data while preserving flip, transpose, and rotation values.",
-        "Built chain-reaction destruction, velocity-driven squash and stretch, input-icon mapping from live InputMap bindings, and world/environment effects."
+        "Built an aimable launch ability with aim, fire, and cancel states, a live guide line, and on-screen control prompts."
       ]
     },
     {
@@ -126,7 +212,8 @@
       "description": "Primary programmer for a three-day Godot jam game about physics balancing a bear on a unicycle across telephone wires.",
       "dateLabel": "3-day game jam",
       "siteUrl": "/projects/a-totally-normal-bike-ride/",
-      "url": "https://thingofnightmare.itch.io/",
+      "url": "https://bcthunder.itch.io/a-totally-normal-bike-ride",
+      "tags": ["gameplay", "tools", "graphics", "physics"],
       "keywords": [
         "Godot",
         "GDScript",
@@ -139,6 +226,29 @@
         "Implemented a charge-and-release variable jump with compression, impulse scaling, contact-based ground state, and rolling average-speed feedback.",
         "Built a telephone-wire authoring tool that creates segmented physics ropes between anchors and renders them as smooth baked Curve2D lines.",
         "Implemented a shader-driven day-night cycle with four-phase sky blending, scripted sun and moon motion, stars, and tinted clouds."
+      ]
+    },
+    {
+      "name": "Stock Backtesting",
+      "description": "Python and PySide6 desktop application for downloading market data, charting ETF price history, and running trading-strategy backtests. Educational engineering project, not production trading software.",
+      "startDate": "2024",
+      "dateLabel": "Course project",
+      "tags": [
+        "tools",
+        "python",
+        "desktop",
+        "ui-ux",
+        "data",
+        "systems",
+        "web",
+        "automation"
+      ],
+      "keywords": ["Python", "PySide6", "Qt", "Matplotlib", "Data Adapters"],
+      "highlights": [
+        "Built a PySide6 desktop interface for selecting ETFs, date ranges, and strategies, with embedded Matplotlib charts for price history and strategy performance.",
+        "Designed a data-access abstraction with swappable adapters for Yahoo Finance, local JSON, Alpha Vantage, and Polygon-style sources, so adding a provider does not touch consumer code.",
+        "Added dynamic strategy loading via Python module discovery so a new strategy drops in as a file with no controller changes, and ran data downloads on a background QThread to keep the GUI responsive.",
+        "Implemented SMA Crossover, MACD, and Bollinger Bands strategies on shared infrastructure for tracking cash and shares, logging trades, computing return metrics, and writing CSV outputs."
       ]
     }
   ],
@@ -153,6 +263,7 @@
     },
     {
       "name": "Unreal Engine",
+      "tags": ["gameplay", "systems", "ai", "tools", "graphics", "networking"],
       "keywords": [
         "Gameplay Ability System",
         "Game Feature Plugins",
@@ -164,11 +275,13 @@
         "CommonUI",
         "World Partition",
         "MetaSound",
-        "Chaos Physics"
+        "Chaos Physics",
+        "Blueprint"
       ]
     },
     {
       "name": "Gameplay and Systems",
+      "tags": ["gameplay", "systems", "tools", "ai", "qa"],
       "keywords": [
         "Data-driven Design",
         "Modular Combat",
@@ -189,8 +302,44 @@
         "UnrealVS",
         "Cloudflare",
         "Doxygen",
+        "Engine Migration",
         "Debugging",
         "Profiling"
+      ]
+    },
+    {
+      "name": "AI and Decision Systems",
+      "tags": ["ai", "ml"],
+      "keywords": [
+        "Behavior Trees",
+        "EQS",
+        "Reusable Behavior Subtrees",
+        "AI Perception",
+        "A* and BFS Pathfinding",
+        "Decision Trees",
+        "scikit-learn"
+      ]
+    },
+    {
+      "name": "Graphics",
+      "tags": ["graphics"],
+      "keywords": [
+        "Shader Fundamentals",
+        "GLSL",
+        "PBR Concepts",
+        "Day-Night and Sky Systems"
+      ]
+    },
+    {
+      "name": "3D Asset Pipeline",
+      "tags": ["tools", "graphics"],
+      "keywords": [
+        "Blender",
+        "Modeling",
+        "UVs",
+        "Texturing",
+        "Rigging",
+        "Animation"
       ]
     }
   ],
