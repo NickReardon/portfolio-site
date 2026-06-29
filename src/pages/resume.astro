@@ -1,24 +1,89 @@
 ---
 import { Download, ExternalLink, FileText, Mail } from "@lucide/astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import resume from "../data/resume.json";
 import { site } from "../site.config";
+
+const linkedInProfile = resume.basics.profiles.find(
+  (profile) => profile.network === "LinkedIn",
+);
+const itchProfile = resume.basics.profiles.find(
+  (profile) => profile.network === "Itch.io",
+);
+const githubProfile = resume.basics.profiles.find(
+  (profile) => profile.network === "GitHub",
+);
+
+function formatEducation(school: (typeof resume.education)[number]) {
+  const parts = [school.studyType, school.area].filter(Boolean);
+  return parts.join(" in ");
+}
+
+function formatDate(date: string | undefined) {
+  if (!date) {
+    return undefined;
+  }
+
+  if (date.toLowerCase() === "present") {
+    return "Present";
+  }
+
+  const [year, month] = date.split("-");
+  if (!month) {
+    return year;
+  }
+
+  return new Intl.DateTimeFormat("en", {
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(Date.UTC(Number(year), Number(month) - 1)));
+}
+
+function formatDateRange(
+  startDate: string | undefined,
+  endDate: string | undefined,
+) {
+  return [formatDate(startDate), formatDate(endDate)]
+    .filter(Boolean)
+    .join(" - ");
+}
+
+function projectMeta(project: (typeof resume.projects)[number]) {
+  return [
+    formatDateRange(project.startDate, project.endDate),
+    ...(project.keywords ?? []),
+  ]
+    .filter(Boolean)
+    .join(" | ");
+}
+
+function projectHref(project: (typeof resume.projects)[number]) {
+  return project.siteUrl ?? project.url;
+}
+
+function workMeta(job: (typeof resume.work)[number]) {
+  return [job.name, formatDateRange(job.startDate, job.endDate), job.location]
+    .filter(Boolean)
+    .join(" | ");
+}
 ---
 
-<BaseLayout title="Resume" description={`Resume for ${site.name}.`}>
+<BaseLayout title="Resume" description={`Resume for ${resume.basics.name}.`}>
   <section class="section border-b border-stone-200 bg-site-subtle">
     <div
       class="mx-auto grid max-w-6xl gap-8 px-5 py-12 sm:py-14 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end"
     >
       <div class="max-w-3xl">
         <p class="eyebrow">Resume</p>
-        <h1>{site.name}</h1>
+        <h1>{resume.basics.name}</h1>
         <p class="mt-5 text-xl leading-8 text-stone-700">
-          {site.role} focused on {site.focus}.
+          {resume.basics.label} focused on {site.focus}.
         </p>
       </div>
 
       <div class="resume-actions">
-        <a class="button-primary" href={`mailto:${site.email}`}>
+        <a class="button-primary" href={`mailto:${resume.basics.email}`}>
           <Mail size={16} aria-hidden="true" />
           Contact
         </a>
@@ -31,7 +96,13 @@ import { site } from "../site.config";
           <ExternalLink size={16} aria-hidden="true" />
           Open PDF
         </a>
-        <a class="button-secondary" href={site.resumePdfUrl} download>
+        <a
+          class="button-secondary"
+          href={site.resumePdfUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          download
+        >
           <Download size={16} aria-hidden="true" />
           Download PDF
         </a>
@@ -47,102 +118,153 @@ import { site } from "../site.config";
         <section class="resume-panel">
           <p class="eyebrow">Profile</p>
           <h2>Gameplay systems with practical authoring workflows.</h2>
-          <p>
-            Computer science student at California State University, Fullerton
-            building Unreal Engine gameplay systems with an emphasis on modular
-            architecture, data-driven authoring, and reliable runtime state.
-          </p>
+          <p>{resume.basics.summary}</p>
         </section>
 
-        <section class="resume-panel">
-          <p class="eyebrow">Project Experience</p>
-          <div class="resume-entry">
-            <div>
-              <h2>Tethered</h2>
-              <p class="resume-meta">
-                Unreal Engine 5, C++, Lyra, Gameplay Ability System
-              </p>
-            </div>
-            <p>
-              Lead system designer and gameplay engineer for an action
-              rogue-lite prototype with modular combat, data-driven encounters,
-              seamless-travel state reconstruction, spawn modifiers, and a
-              pluggable save backend.
-            </p>
-          </div>
+        {
+          resume.projects.length > 0 && (
+            <section class="resume-panel">
+              <p class="eyebrow">Project Experience</p>
+              {resume.projects.map((project) => (
+                <div class="resume-entry">
+                  <div>
+                    <h2>
+                      {projectHref(project) ? (
+                        <a
+                          class="resume-title-link"
+                          href={projectHref(project)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {project.name}
+                        </a>
+                      ) : (
+                        project.name
+                      )}
+                    </h2>
+                    <p class="resume-meta">{projectMeta(project)}</p>
+                  </div>
+                  {project.description && <p>{project.description}</p>}
+                  {project.highlights?.length > 0 && (
+                    <ul class="resume-highlights">
+                      {project.highlights.map((highlight) => (
+                        <li>{highlight}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
+            </section>
+          )
+        }
 
-          <div class="resume-entry">
-            <div>
-              <h2>Last Oasis</h2>
-              <p class="resume-meta">
-                Godot, gameplay programming, authoring tools
-              </p>
-            </div>
-            <p>
-              Primary gameplay and tooling programmer for a browser-playable jam
-              platformer, including a state-machine character controller,
-              traversal feel, launch ability, chain-reaction destruction, and a
-              tile-to-scene authoring tool.
-            </p>
-          </div>
-
-          <div class="resume-entry">
-            <div>
-              <h2>Alien Survivor and Game Jam Prototypes</h2>
-              <p class="resume-meta">
-                Unity, Godot, data-driven upgrades, physics prototypes
-              </p>
-            </div>
-            <p>
-              Built browser-playable prototypes with data-driven weapons and
-              upgrades, enemy spawning directors, physics-heavy character
-              controllers, runtime UI, and small tools for faster content
-              iteration.
-            </p>
-          </div>
-        </section>
-
-        <section class="resume-panel">
-          <p class="eyebrow">Education</p>
-          <h2>California State University, Fullerton</h2>
-          <p>Bachelor of Science in Computer Science, expected Fall 2026.</p>
-          <h2 class="mt-5">Saddleback College</h2>
-          <p>Associate of Science in Computer Science, May 2024.</p>
-        </section>
+        {
+          resume.work.length > 0 && (
+            <section class="resume-panel">
+              <p class="eyebrow">Experience</p>
+              {resume.work.map((job) => (
+                <div class="resume-entry">
+                  <div>
+                    <h2>{job.position}</h2>
+                    <p class="resume-meta">{workMeta(job)}</p>
+                  </div>
+                  {job.highlights?.length > 0 && (
+                    <ul class="resume-highlights">
+                      {job.highlights.map((highlight) => (
+                        <li>{highlight}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
+            </section>
+          )
+        }
       </div>
 
       <aside class="resume-sidebar">
-        <section>
-          <h2>Technical Focus</h2>
-          <div class="mt-4 flex flex-wrap gap-2">
-            <span class="tag">Unreal Engine</span>
-            <span class="tag">C++</span>
-            <span class="tag">Gameplay Ability System</span>
-            <span class="tag">Lyra</span>
-            <span class="tag">Gameplay Tags</span>
-            <span class="tag">Behavior Trees</span>
-            <span class="tag">EQS</span>
-            <span class="tag">Unity</span>
-            <span class="tag">Godot</span>
-            <span class="tag">Content Authoring</span>
-          </div>
-        </section>
+        {
+          resume.education.length > 0 && (
+            <section class="resume-sidebar-block">
+              <h2>Education</h2>
+              <div class="mt-4 grid gap-4">
+                {resume.education.map((school) => (
+                  <div class="resume-sidebar-entry">
+                    <h3>{school.institution}</h3>
+                    <p>{formatEducation(school)}</p>
+                    {school.summary && <p>{school.summary}</p>}
+                    {school.highlights?.map((highlight) => (
+                      <p>{highlight}</p>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </section>
+          )
+        }
 
-        <section>
+        {
+          resume.skills.length > 0 && (
+            <section class="resume-sidebar-block">
+              <h2>Technical Focus</h2>
+              <div class="mt-4 grid gap-4">
+                {resume.skills.map((skill) => (
+                  <div class="resume-skill-group">
+                    <h3>{skill.name}</h3>
+                    <p>{skill.keywords.join(", ")}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )
+        }
+
+        <section class="resume-sidebar-block">
           <h2>Links</h2>
-          <div class="mt-4 grid gap-3">
-            <a class="resume-link" href={`mailto:${site.email}`}>
+          <div class="resume-link-grid mt-4">
+            <a class="resume-link" href={`mailto:${resume.basics.email}`}>
               <Mail size={16} aria-hidden="true" />
               Email
             </a>
-            <a class="resume-link" href={site.linkedinUrl}>
-              <ExternalLink size={16} aria-hidden="true" />
-              LinkedIn
-            </a>
-            <a class="resume-link" href={site.itchUrl}>
-              <ExternalLink size={16} aria-hidden="true" />
-              Itch.io
-            </a>
+            {
+              githubProfile && (
+                <a
+                  class="resume-link"
+                  href={githubProfile.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <ExternalLink size={16} aria-hidden="true" />
+                  GitHub
+                </a>
+              )
+            }
+            {
+              linkedInProfile && (
+                <a
+                  class="resume-link"
+                  href={linkedInProfile.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <ExternalLink size={16} aria-hidden="true" />
+                  LinkedIn
+                </a>
+              )
+            }
+            {
+              itchProfile && (
+                <a
+                  class="resume-link"
+                  href={itchProfile.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <ExternalLink size={16} aria-hidden="true" />
+                  Itch.io
+                </a>
+              )
+            }
             <a
               class="resume-link"
               href={site.resumePdfUrl}

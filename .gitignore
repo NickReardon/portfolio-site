@@ -5,6 +5,7 @@ dist/
 
 # dependencies
 node_modules/
+.venv/
 
 # logs
 npm-debug.log*
@@ -17,6 +18,8 @@ dev-server*.log
 reports/
 .audit-tmp/
 
+# generated resume build files
+.resume-build/
 
 # environment variables
 .env

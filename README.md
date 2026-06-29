@@ -8,6 +8,7 @@ GitHub, and Cloudflare Pages.
 
 - Node.js `>=22.12.0`
 - npm
+- RenderCV for regenerating `public/resume.pdf` locally
 - 1Password CLI only for local Cloudflare deploy commands
 
 ## Commands
@@ -17,6 +18,8 @@ npm install
 npm run dev
 npm run check
 npm run build
+npm run resume:validate
+npm run resume:build
 npm run preview
 npm run format:check
 ```
@@ -38,12 +41,17 @@ npm run audit:staging
 │   ├── images/
 │   └── resume.pdf
 ├── scripts/
-│   └── audit-pages.mjs
+│   ├── audit-pages.mjs
+│   ├── build-resume.mjs
+│   ├── resume-utils.mjs
+│   └── validate-resume.mjs
 ├── src/
 │   ├── components/
 │   ├── content/
 │   │   ├── blog/
 │   │   └── projects/
+│   ├── data/
+│   │   └── resume.json
 │   ├── layouts/
 │   ├── pages/
 │   ├── styles/
@@ -60,10 +68,33 @@ npm run audit:staging
 - Draft entries can stay in the repo with `draft: true`; production builds
   exclude them from lists and detail routes.
 - Static project and blog images live under `public/images`.
-- Replace `public/resume.pdf` with the current resume before launch.
+- Resume content lives in `src/data/resume.json`. This is the only manually
+  edited resume source for both the `/resume/` page and generated PDF.
+- `public/resume.pdf` is generated from `src/data/resume.json` as a one-page A4
+  PDF and committed so normal site builds do not require RenderCV.
 - Update social links and identity text in `src/site.config.ts` as needed.
 
 Use lowercase kebab-case for content slugs and asset filenames.
+
+### Resume PDF
+
+Install RenderCV in your local Python environment before regenerating the PDF:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python -m pip install rendercv
+```
+
+Update `src/data/resume.json`, then run:
+
+```powershell
+npm run resume:validate
+npm run resume:build
+```
+
+The build script writes temporary RenderCV input under `.resume-build/`, copies
+the rendered PDF to `public/resume.pdf`, and fails if the generated PDF is not
+exactly one page. Commit the JSON source and PDF together.
 
 ## Workflow
 
