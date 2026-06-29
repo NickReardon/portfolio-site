@@ -30,7 +30,7 @@ export const site = {
     "Unreal Engine, C++, modular gameplay architecture, and designer-friendly content workflows",
   description:
     "A portfolio of Unreal Engine gameplay systems, technical design, tools, and game jam work.",
-  defaultImage: "/images/social-card.svg",
+  defaultImage: "/images/social-card.png",
   email: "reardon.ntr@gmail.com",
   resumeUrl: "/resume/",
   resumePdfUrl: "/resume.pdf",

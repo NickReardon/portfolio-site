@@ -20,6 +20,7 @@ npm run check
 npm run build
 npm run resume:validate
 npm run resume:build
+npm run social:build
 npm run preview
 npm run format:check
 ```
@@ -43,6 +44,7 @@ npm run audit:staging
 ├── scripts/
 │   ├── audit-pages.mjs
 │   ├── build-resume.mjs
+│   ├── build-social-card.mjs
 │   ├── resume-utils.mjs
 │   └── validate-resume.mjs
 ├── src/
