@@ -384,11 +384,23 @@
     margin-top: 1.4rem;
   }
 
-  .resume-meta {
-    color: #134e4a !important;
+  .resume-panel .resume-headline {
+    color: #1c1917;
+    font-size: 1.45rem;
+    font-weight: 650;
+    line-height: 1.2;
+    margin-top: 0.5rem;
+  }
+
+  .resume-entry h3 {
+    font-size: 1.2rem;
+  }
+
+  .resume-panel .resume-meta {
+    color: #134e4a;
     font-size: 0.9rem;
     font-weight: 700;
-    margin-top: 0.35rem !important;
+    margin-top: 0.35rem;
   }
 
   .resume-title-link {
