@@ -50,12 +50,9 @@ function formatDateRange(
 }
 
 function projectMeta(project: (typeof resume.projects)[number]) {
-  return [
-    formatDateRange(project.startDate, project.endDate),
-    ...(project.keywords ?? []),
-  ]
-    .filter(Boolean)
-    .join(" | ");
+  const dateText =
+    project.dateLabel ?? formatDateRange(project.startDate, project.endDate);
+  return [dateText, ...(project.keywords ?? [])].filter(Boolean).join(" | ");
 }
 
 function projectHref(project: (typeof resume.projects)[number]) {
@@ -116,19 +113,21 @@ function workMeta(job: (typeof resume.work)[number]) {
     >
       <div class="space-y-8">
         <section class="resume-panel">
-          <p class="eyebrow">Profile</p>
-          <h2>Gameplay systems with practical authoring workflows.</h2>
+          <h2 class="eyebrow">Profile</h2>
+          <p class="resume-headline">
+            Gameplay systems with practical authoring workflows.
+          </p>
           <p>{resume.basics.summary}</p>
         </section>
 
         {
           resume.projects.length > 0 && (
             <section class="resume-panel">
-              <p class="eyebrow">Project Experience</p>
+              <h2 class="eyebrow">Project Experience</h2>
               {resume.projects.map((project) => (
                 <div class="resume-entry">
                   <div>
-                    <h2>
+                    <h3>
                       {projectHref(project) ? (
                         <a
                           class="resume-title-link"
@@ -141,7 +140,7 @@ function workMeta(job: (typeof resume.work)[number]) {
                       ) : (
                         project.name
                       )}
-                    </h2>
+                    </h3>
                     <p class="resume-meta">{projectMeta(project)}</p>
                   </div>
                   {project.description && <p>{project.description}</p>}
@@ -161,11 +160,11 @@ function workMeta(job: (typeof resume.work)[number]) {
         {
           resume.work.length > 0 && (
             <section class="resume-panel">
-              <p class="eyebrow">Experience</p>
+              <h2 class="eyebrow">Experience</h2>
               {resume.work.map((job) => (
                 <div class="resume-entry">
                   <div>
-                    <h2>{job.position}</h2>
+                    <h3>{job.position}</h3>
                     <p class="resume-meta">{workMeta(job)}</p>
                   </div>
                   {job.highlights?.length > 0 && (

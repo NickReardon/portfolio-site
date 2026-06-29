@@ -1,0 +1,14 @@
+# Normalize all text files to LF in the repo and the working tree.
+# Prevents CRLF/LF churn on Windows (core.autocrlf) and keeps Prettier happy.
+* text=auto eol=lf
+
+# Explicitly mark known binaries so Git never tries to normalize them.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary

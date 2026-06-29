@@ -33,6 +33,12 @@ const siteUrl =
 export default defineConfig({
   site: siteUrl,
   integrations: [sitemap()],
+  image: {
+    // Authorize itch.io's CDN so Astro can optimize remote project cover
+    // images at build time. See docs/image-pipeline-plan.md for the planned
+    // move to fully self-hosted, pipeline-optimized images.
+    remotePatterns: [{ protocol: "https", hostname: "img.itch.zone" }],
+  },
   vite: {
     plugins: [tailwindcss()],
   },
