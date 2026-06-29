@@ -1,0 +1,194 @@
+{
+  "$schema": "https://raw.githubusercontent.com/jsonresume/resume-schema/v1.0.0/schema.json",
+  "basics": {
+    "name": "Nicholas Reardon",
+    "label": "Gameplay and Systems Programmer",
+    "email": "reardon.ntr@gmail.com",
+    "phone": "+1 (949) 338-3509",
+    "url": "https://nick-reardon.com",
+    "summary": "Computer science student building production-style gameplay systems in Unreal Engine 5 on the Lyra framework. Focused on modular, data-driven architecture for combat, encounters, persistence, and designer-friendly content workflows.",
+    "location": {
+      "city": "Laguna Niguel",
+      "region": "CA",
+      "postalCode": "92677",
+      "countryCode": "US"
+    },
+    "profiles": [
+      {
+        "network": "GitHub",
+        "username": "NickReardon",
+        "url": "https://github.com/NickReardon"
+      },
+      {
+        "network": "LinkedIn",
+        "username": "nicholas-reardon",
+        "url": "https://www.linkedin.com/in/nicholas-reardon/"
+      },
+      {
+        "network": "Itch.io",
+        "username": "thingofnightmare",
+        "url": "https://thingofnightmare.itch.io/"
+      }
+    ]
+  },
+  "education": [
+    {
+      "institution": "California State University, Fullerton",
+      "location": "Fullerton, CA",
+      "area": "Computer Science",
+      "studyType": "Bachelor of Science",
+      "endDate": "2026-12",
+      "summary": "Expected Fall 2026."
+    },
+    {
+      "institution": "Saddleback College",
+      "location": "Mission Viejo, CA",
+      "area": "Computer Science",
+      "studyType": "Associate of Science",
+      "endDate": "2024-05",
+      "summary": "May 2024."
+    }
+  ],
+  "work": [
+    {
+      "name": "Cheapest iPhone Repair",
+      "location": "Laguna Niguel and Irvine, CA",
+      "position": "Electronics Support Technician",
+      "startDate": "2023-06",
+      "endDate": "2024-07",
+      "highlights": [
+        "Diagnosed and repaired unfamiliar devices through structured troubleshooting, fault isolation, and verification testing.",
+        "Executed delicate device teardowns with detailed tracking and documentation for reliable reassembly.",
+        "Built internal repair documentation and improved workflows to increase consistency and efficiency."
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "Tethered",
+      "description": "Lead system designer and gameplay engineer for a Lyra-based Unreal Engine action rogue-lite focused on modular combat, encounters, seamless travel, persistence, and data-driven content authoring.",
+      "startDate": "2025-09",
+      "endDate": "present",
+      "keywords": [
+        "Unreal Engine 5",
+        "C++",
+        "Lyra",
+        "Gameplay Ability System",
+        "Behavior Trees",
+        "EQS"
+      ],
+      "highlights": [
+        "Architected a modular Lyra-based gameplay framework using Game Feature plugin isolation to keep combat, game modes, and content decoupled while iterating on an arena-mode vertical slice.",
+        "Designed a world-level event bus on the GameState Ability System Component to coordinate encounter, spawn, and travel systems at runtime without coupling individual components.",
+        "Built a seamless-travel subsystem that snapshots and reconstructs player and world state across level transitions, preserving GAS attributes, equipment, and run upgrades through GameState teardown.",
+        "Implemented a pluggable save backend behind an interface, isolating disk I/O from runtime state and leaving a clean extension point for future server-backed persistence.",
+        "Built data-driven encounter, wave-advance, spawn-modifier, and combo-routing systems so new encounter rules, enemy behaviors, and upgrades can be authored through data."
+      ]
+    },
+    {
+      "name": "Alien Survivors",
+      "description": "Solo Unity prototype with data-driven weapons, upgrades, enemy spawning, and runtime UI.",
+      "startDate": "2024-09",
+      "endDate": "2024-12",
+      "url": "https://thingofnightmare.itch.io/",
+      "keywords": ["Unity", "C#", "Data-driven Upgrades", "Runtime UI"],
+      "highlights": [
+        "Built an enemy spawning director with spawn pacing, cap management, and optional object pooling for performance under high enemy counts.",
+        "Implemented rarity-weighted enemy selection with per-type parameters and runtime tuning hooks for spawn rate and movement speed.",
+        "Built a fully data-driven weapon and upgrade framework with stat scaling and functional modifiers authored as editor-defined upgrade definitions.",
+        "Created dynamic runtime UI that adapts to available upgrades and player state as new weapons and modifiers are added."
+      ]
+    },
+    {
+      "name": "Last Oasis",
+      "description": "Primary gameplay and tooling programmer for a browser-playable Godot game jam platformer.",
+      "startDate": "2025",
+      "dateLabel": "2025 game jam",
+      "url": "https://github.com/BCThunder/generous-game-jam",
+      "keywords": [
+        "Godot",
+        "GDScript",
+        "Character Controller",
+        "Authoring Tools"
+      ],
+      "highlights": [
+        "Built a nested state-machine character controller with ground, air, wall-slide, slam, destroy, and death states; coyote time; variable-height jumping; wall jumps; input buffering; spike grace frames; and tile-data-driven slippery surfaces.",
+        "Built an aimable launch ability with aim, fire, and cancel states, a live guide line, and on-screen control prompts.",
+        "Created an editor-time tile-to-scene tool that swaps tiles for scene instances keyed by tile custom data while preserving flip, transpose, and rotation values.",
+        "Built chain-reaction destruction, velocity-driven squash and stretch, input-icon mapping from live InputMap bindings, and world/environment effects."
+      ]
+    },
+    {
+      "name": "A Totally Normal Bike Ride",
+      "description": "Primary programmer for a three-day Godot jam game about physics balancing a bear on a unicycle across telephone wires.",
+      "dateLabel": "3-day game jam",
+      "url": "https://thingofnightmare.itch.io/",
+      "keywords": [
+        "Godot",
+        "GDScript",
+        "Physics",
+        "Procedural Tools",
+        "Shaders"
+      ],
+      "highlights": [
+        "Built a two-body physics character using a wheel and rider rigidbody joined by a pin joint, with torque-based locomotion and separate ground and air balance tuning.",
+        "Implemented a charge-and-release variable jump with compression, impulse scaling, contact-based ground state, and rolling average-speed feedback.",
+        "Built a telephone-wire authoring tool that creates segmented physics ropes between anchors and renders them as smooth baked Curve2D lines.",
+        "Implemented a shader-driven day-night cycle with four-phase sky blending, scripted sun and moon motion, stars, and tinted clouds."
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "name": "Languages",
+      "keywords": ["C++", "C#", "Python", "GDScript", "Java", "SQL"]
+    },
+    {
+      "name": "Engines and Frameworks",
+      "keywords": ["Unreal Engine 5", "Unity", "Godot", "Qt"]
+    },
+    {
+      "name": "Unreal Engine",
+      "keywords": [
+        "Gameplay Ability System",
+        "Game Feature Plugins",
+        "Lyra",
+        "Enhanced Input",
+        "Behavior Trees",
+        "EQS",
+        "UMG",
+        "CommonUI",
+        "World Partition",
+        "MetaSound",
+        "Chaos Physics"
+      ]
+    },
+    {
+      "name": "Gameplay and Systems",
+      "keywords": [
+        "Data-driven Design",
+        "Modular Combat",
+        "Encounter Systems",
+        "Spawn Systems",
+        "Save and Persistence",
+        "AI State Machines",
+        "Authoring Tools"
+      ]
+    },
+    {
+      "name": "Tooling",
+      "keywords": [
+        "Git",
+        "Diversion",
+        "JetBrains Rider",
+        "Visual Studio",
+        "UnrealVS",
+        "Cloudflare",
+        "Doxygen",
+        "Debugging",
+        "Profiling"
+      ]
+    }
+  ],
+  "awards": []
+}
