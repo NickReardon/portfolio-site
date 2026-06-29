@@ -8,8 +8,8 @@ projectType: "game"
 role: "Solo developer"
 status: "On hold"
 engine: "Unity"
-coverImage: "https://img.itch.zone/aW1nLzE4ODgyNTQ1LnBuZw==/508x254%23mb/NQ%2Fu6T.png"
-coverAlt: "Alien Survivor cover art from the itch.io project page."
+coverImage: "/images/projects/alien-survivor.png"
+coverAlt: "Alien Survivor cover art."
 featured: true
 externalUrl: "https://thingofnightmare.itch.io/alien-survivor"
 externalLabel: "Play on itch.io"
@@ -18,25 +18,42 @@ draft: false
 
 ## Overview
 
-Alien Survivor is a Unity prototype for a top-down sci-fi action game inspired
-by survivor-style pressure, simple readability, and quick escalation. The build
-is available on itch.io as a browser-playable prototype.
+Alien Survivor is a solo Unity prototype for a top-down sci-fi action game
+inspired by survivor-style pressure, simple readability, and quick escalation.
+Built September to December 2024, the build is available on itch.io as a
+browser-playable prototype. The focus was a compact core loop with progression
+data-driven enough to extend without rewriting systems.
+
+<!-- MEDIA[gif]: gameplay - escalating enemy waves with weapons auto-firing and upgrades stacking -->
 
 ## What I Contributed
 
 This was a solo project, so my work covered the full prototype loop from initial
 implementation through web delivery.
 
-- Built the core action prototype around top-down movement, survival pressure,
-  and enemy engagement.
-- Implemented an enemy spawning director with pacing, cap management, and
-  runtime tuning hooks for spawn rate and movement speed.
-- Built rarity-weighted enemy selection with per-type parameters such as speed,
-  size, and squad count.
-- Built a data-driven weapon and upgrade framework with stat scaling and
-  functional modifiers such as homing and boundary ricochet.
-- Created runtime UI that adapts to the available upgrades and current player
-  state.
+### Enemy spawning director
+
+- Built an enemy spawning director with spawn pacing, cap management, and
+  optional object pooling to hold performance under high enemy counts.
+- Implemented rarity-weighted enemy selection with per-type parameters such as
+  speed, size, and squad count, plus runtime tuning hooks for spawn rate and
+  movement speed.
+
+<!-- CODE[csharp]: rarity-weighted enemy selection + spawn pacing loop -->
+
+### Data-driven weapons and upgrades
+
+- Built a fully data-driven weapon and upgrade framework with stat scaling and
+  functional modifiers, such as homing and boundary ricochet, authored as
+  editor-defined upgrade definitions.
+- Created dynamic runtime UI that adapts to the available upgrades and current
+  player state, scaling cleanly as new weapons and modifiers are added.
+
+<!-- CODE[csharp]: ScriptableObject upgrade definition + functional modifier application -->
+<!-- MEDIA[image]: upgrade-selection UI adapting to available upgrades -->
+
+### Delivery
+
 - Set up the Unity project for rapid iteration and HTML5 delivery on itch.io.
 
 ## What The Work Shows
