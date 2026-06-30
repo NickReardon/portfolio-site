@@ -134,11 +134,16 @@ function workMeta(job: (typeof resume.work)[number]) {
                     <h3>{project.name}</h3>
                     <p class="resume-meta">{projectMeta(project)}</p>
                     {(projectPageHref(project) || playHref(project)) && (
-                      <p class="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+                      <p class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
                         {projectPageHref(project) && (
                           <a class="text-link" href={projectPageHref(project)}>
                             Project page
                           </a>
+                        )}
+                        {projectPageHref(project) && playHref(project) && (
+                          <span class="text-stone-400" aria-hidden="true">
+                            |
+                          </span>
                         )}
                         {playHref(project) && (
                           <a
@@ -147,7 +152,7 @@ function workMeta(job: (typeof resume.work)[number]) {
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            ▶ Play here
+                            Play on itch.io
                           </a>
                         )}
                       </p>
