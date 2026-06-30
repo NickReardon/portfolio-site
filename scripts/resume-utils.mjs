@@ -232,17 +232,23 @@ function formatLocation(location) {
 }
 
 function formatProjectName(project, siteUrl) {
-  // Playable projects link to where you can play them; everything else links to
-  // its case-study page. The availability word is appended so a reader can tell
-  // at a glance whether a project is playable or a writeup.
-  const url =
-    project.availability === "Playable" && project.url
-      ? project.url
-      : (absoluteUrl(project.siteUrl, siteUrl) ?? project.url);
+  // Mirror the web resume: a plain (unlinked) project name followed by a
+  // "Project page" link and, for playable projects, a "Play on itch.io" link,
+  // separated by a pipe when both are present.
+  const links = [];
+  const pageUrl = absoluteUrl(project.siteUrl, siteUrl);
 
-  const name = url ? `[${project.name}](${url})` : project.name;
+  if (pageUrl) {
+    links.push(`[Project page](${pageUrl})`);
+  }
 
-  return project.availability ? `${name} - ${project.availability}` : name;
+  if (project.availability === "Playable" && project.url) {
+    links.push(`[Play on itch.io](${project.url})`);
+  }
+
+  return links.length > 0
+    ? `${project.name} — ${links.join(" | ")}`
+    : project.name;
 }
 
 function absoluteUrl(path, siteUrl) {
