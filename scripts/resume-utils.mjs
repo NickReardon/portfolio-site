@@ -146,7 +146,7 @@ export function createRenderCvDocument(resume, options = {}) {
           body: "8.8pt",
           name: "20pt",
           headline: "8.8pt",
-          connections: "6.4pt",
+          connections: "8.4pt",
           section_titles: "1em",
         },
       },
