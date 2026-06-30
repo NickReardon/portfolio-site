@@ -14,7 +14,12 @@
   }
 
   body {
+    display: flex;
+    flex-direction: column;
     min-height: 100vh;
+    /* Dynamic viewport unit keeps the footer at the true bottom on mobile,
+       accounting for the browser's collapsing address bar. */
+    min-height: 100dvh;
     background: var(--color-site-bg);
     color: #1c1917;
     font-family:
@@ -26,6 +31,12 @@
       "Segoe UI",
       sans-serif;
     letter-spacing: 0;
+  }
+
+  /* Let the main content grow so the footer is pushed to the bottom of the
+     viewport on short pages, while still flowing normally on long pages. */
+  #main-content {
+    flex: 1 0 auto;
   }
 
   h1,
@@ -384,11 +395,23 @@
     margin-top: 1.4rem;
   }
 
-  .resume-meta {
-    color: #134e4a !important;
+  .resume-panel .resume-headline {
+    color: #1c1917;
+    font-size: 1.45rem;
+    font-weight: 650;
+    line-height: 1.2;
+    margin-top: 0.5rem;
+  }
+
+  .resume-entry h3 {
+    font-size: 1.2rem;
+  }
+
+  .resume-panel .resume-meta {
+    color: #134e4a;
     font-size: 0.9rem;
     font-weight: 700;
-    margin-top: 0.35rem !important;
+    margin-top: 0.35rem;
   }
 
   .resume-title-link {

@@ -20,6 +20,7 @@ npm run check
 npm run build
 npm run resume:validate
 npm run resume:build
+npm run social:build
 npm run preview
 npm run format:check
 ```
@@ -43,6 +44,7 @@ npm run audit:staging
 ├── scripts/
 │   ├── audit-pages.mjs
 │   ├── build-resume.mjs
+│   ├── build-social-card.mjs
 │   ├── resume-utils.mjs
 │   └── validate-resume.mjs
 ├── src/
@@ -82,14 +84,26 @@ Install RenderCV in your local Python environment before regenerating the PDF:
 
 ```powershell
 python -m venv .venv
-.\.venv\Scripts\python -m pip install rendercv
+.\.venv\Scripts\python -m pip install "rendercv[full]"
 ```
+
+The `[full]` extra is required: it pulls in the Typst rendering engine and
+fonts. Plain `pip install rendercv` installs the library but cannot render a
+PDF.
 
 Update `src/data/resume.json`, then run:
 
 ```powershell
 npm run resume:validate
 npm run resume:build
+```
+
+To generate a role-targeted variant (writes `public/resume-<target>.pdf` and
+leaves the default `public/resume.pdf` untouched), pass a target defined under
+`meta.targets` in `resume.json`:
+
+```powershell
+npm run resume:build -- --target gameplay   # or ai | tools | qa
 ```
 
 The build script writes temporary RenderCV input under `.resume-build/`, copies

@@ -50,16 +50,17 @@ function formatDateRange(
 }
 
 function projectMeta(project: (typeof resume.projects)[number]) {
-  return [
-    formatDateRange(project.startDate, project.endDate),
-    ...(project.keywords ?? []),
-  ]
-    .filter(Boolean)
-    .join(" | ");
+  const dateText =
+    project.dateLabel ?? formatDateRange(project.startDate, project.endDate);
+  return [dateText, ...(project.keywords ?? [])].filter(Boolean).join(" | ");
 }
 
-function projectHref(project: (typeof resume.projects)[number]) {
-  return project.siteUrl ?? project.url;
+function projectPageHref(project: (typeof resume.projects)[number]) {
+  return project.siteUrl;
+}
+
+function playHref(project: (typeof resume.projects)[number]) {
+  return project.availability === "Playable" ? project.url : undefined;
 }
 
 function workMeta(job: (typeof resume.work)[number]) {
@@ -116,33 +117,46 @@ function workMeta(job: (typeof resume.work)[number]) {
     >
       <div class="space-y-8">
         <section class="resume-panel">
-          <p class="eyebrow">Profile</p>
-          <h2>Gameplay systems with practical authoring workflows.</h2>
+          <h2 class="eyebrow">Profile</h2>
+          <p class="resume-headline">
+            Gameplay systems with practical authoring workflows.
+          </p>
           <p>{resume.basics.summary}</p>
         </section>
 
         {
           resume.projects.length > 0 && (
             <section class="resume-panel">
-              <p class="eyebrow">Project Experience</p>
+              <h2 class="eyebrow">Project Experience</h2>
               {resume.projects.map((project) => (
                 <div class="resume-entry">
                   <div>
-                    <h2>
-                      {projectHref(project) ? (
-                        <a
-                          class="resume-title-link"
-                          href={projectHref(project)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {project.name}
-                        </a>
-                      ) : (
-                        project.name
-                      )}
-                    </h2>
+                    <h3>{project.name}</h3>
                     <p class="resume-meta">{projectMeta(project)}</p>
+                    {(projectPageHref(project) || playHref(project)) && (
+                      <p class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+                        {projectPageHref(project) && (
+                          <a class="text-link" href={projectPageHref(project)}>
+                            Project page
+                          </a>
+                        )}
+                        {projectPageHref(project) && playHref(project) && (
+                          <span class="text-stone-400" aria-hidden="true">
+                            |
+                          </span>
+                        )}
+                        {playHref(project) && (
+                          <a
+                            class="text-link"
+                            href={playHref(project)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Play on itch.io
+                          </a>
+                        )}
+                      </p>
+                    )}
                   </div>
                   {project.description && <p>{project.description}</p>}
                   {project.highlights?.length > 0 && (
@@ -161,11 +175,11 @@ function workMeta(job: (typeof resume.work)[number]) {
         {
           resume.work.length > 0 && (
             <section class="resume-panel">
-              <p class="eyebrow">Experience</p>
+              <h2 class="eyebrow">Experience</h2>
               {resume.work.map((job) => (
                 <div class="resume-entry">
                   <div>
-                    <h2>{job.position}</h2>
+                    <h3>{job.position}</h3>
                     <p class="resume-meta">{workMeta(job)}</p>
                   </div>
                   {job.highlights?.length > 0 && (
