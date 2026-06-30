@@ -55,21 +55,12 @@ function projectMeta(project: (typeof resume.projects)[number]) {
   return [dateText, ...(project.keywords ?? [])].filter(Boolean).join(" | ");
 }
 
-function projectHref(project: (typeof resume.projects)[number]) {
-  return project.siteUrl ?? project.url;
+function projectPageHref(project: (typeof resume.projects)[number]) {
+  return project.siteUrl;
 }
 
-function availabilityHref(project: (typeof resume.projects)[number]) {
-  if (project.availability === "Playable") {
-    return project.url ?? project.siteUrl;
-  }
-  return project.siteUrl ?? project.url;
-}
-
-function availabilityLabel(project: (typeof resume.projects)[number]) {
-  return project.availability === "Playable"
-    ? "▶ Playable"
-    : project.availability;
+function playHref(project: (typeof resume.projects)[number]) {
+  return project.availability === "Playable" ? project.url : undefined;
 }
 
 function workMeta(job: (typeof resume.work)[number]) {
@@ -140,31 +131,25 @@ function workMeta(job: (typeof resume.work)[number]) {
               {resume.projects.map((project) => (
                 <div class="resume-entry">
                   <div>
-                    <h3>
-                      {projectHref(project) ? (
-                        <a
-                          class="resume-title-link"
-                          href={projectHref(project)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {project.name}
-                        </a>
-                      ) : (
-                        project.name
-                      )}
-                    </h3>
+                    <h3>{project.name}</h3>
                     <p class="resume-meta">{projectMeta(project)}</p>
-                    {project.availability && availabilityHref(project) && (
-                      <p class="mt-1 text-sm">
-                        <a
-                          class="text-link"
-                          href={availabilityHref(project)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {availabilityLabel(project)}
-                        </a>
+                    {(projectPageHref(project) || playHref(project)) && (
+                      <p class="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+                        {projectPageHref(project) && (
+                          <a class="text-link" href={projectPageHref(project)}>
+                            Project page
+                          </a>
+                        )}
+                        {playHref(project) && (
+                          <a
+                            class="text-link"
+                            href={playHref(project)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            ▶ Play here
+                          </a>
+                        )}
                       </p>
                     )}
                   </div>
