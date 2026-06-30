@@ -168,14 +168,19 @@ export function createRenderCvDocument(resume, options = {}) {
 }
 
 function mapEducation(school) {
+  // The graduation date is shown on the right (school.dateLabel overrides the
+  // start/end range for cases like "Expected ..."). The summary/highlights are
+  // intentionally omitted here: they only restate that date, and repeating it
+  // below the entry would duplicate the date in the PDF. The web resume still
+  // renders them, since its sidebar has no right-aligned date.
   return pruneEmpty({
     institution: school.institution,
     area: school.area,
     degree: school.studyType,
     location: school.location,
-    start_date: school.startDate,
-    end_date: school.endDate,
-    highlights: [school.summary, ...(school.highlights ?? [])].filter(Boolean),
+    date: school.dateLabel,
+    start_date: school.dateLabel ? undefined : school.startDate,
+    end_date: school.dateLabel ? undefined : school.endDate,
   });
 }
 
