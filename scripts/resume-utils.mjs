@@ -232,13 +232,17 @@ function formatLocation(location) {
 }
 
 function formatProjectName(project, siteUrl) {
-  const url = absoluteUrl(project.siteUrl, siteUrl) ?? project.url;
+  // Playable projects link to where you can play them; everything else links to
+  // its case-study page. The availability word is appended so a reader can tell
+  // at a glance whether a project is playable or a writeup.
+  const url =
+    project.availability === "Playable" && project.url
+      ? project.url
+      : (absoluteUrl(project.siteUrl, siteUrl) ?? project.url);
 
-  if (!url) {
-    return project.name;
-  }
+  const name = url ? `[${project.name}](${url})` : project.name;
 
-  return `[${project.name}](${url})`;
+  return project.availability ? `${name} - ${project.availability}` : name;
 }
 
 function absoluteUrl(path, siteUrl) {

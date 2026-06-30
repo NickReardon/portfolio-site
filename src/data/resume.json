@@ -135,6 +135,7 @@
       "startDate": "2025-09",
       "endDate": "present",
       "siteUrl": "/projects/tethered/",
+      "availability": "Case study",
       "tags": [
         "gameplay",
         "systems",
@@ -169,6 +170,7 @@
       "endDate": "2024-12",
       "siteUrl": "/projects/alien-survivor/",
       "url": "https://thingofnightmare.itch.io/alien-survivor",
+      "availability": "Playable",
       "tags": [
         "gameplay",
         "ai",
@@ -193,6 +195,7 @@
       "dateLabel": "2025 game jam",
       "siteUrl": "/projects/last-oasis/",
       "url": "https://thingofnightmare.itch.io/last-oasis",
+      "availability": "Playable",
       "tags": ["gameplay", "tools", "physics", "graphics", "ui-ux"],
       "keywords": [
         "Godot",
@@ -213,6 +216,7 @@
       "dateLabel": "3-day game jam",
       "siteUrl": "/projects/a-totally-normal-bike-ride/",
       "url": "https://bcthunder.itch.io/a-totally-normal-bike-ride",
+      "availability": "Playable",
       "tags": ["gameplay", "tools", "graphics", "physics"],
       "keywords": [
         "Godot",

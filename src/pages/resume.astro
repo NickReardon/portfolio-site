@@ -59,6 +59,19 @@ function projectHref(project: (typeof resume.projects)[number]) {
   return project.siteUrl ?? project.url;
 }
 
+function availabilityHref(project: (typeof resume.projects)[number]) {
+  if (project.availability === "Playable") {
+    return project.url ?? project.siteUrl;
+  }
+  return project.siteUrl ?? project.url;
+}
+
+function availabilityLabel(project: (typeof resume.projects)[number]) {
+  return project.availability === "Playable"
+    ? "▶ Playable"
+    : project.availability;
+}
+
 function workMeta(job: (typeof resume.work)[number]) {
   return [job.name, formatDateRange(job.startDate, job.endDate), job.location]
     .filter(Boolean)
@@ -142,6 +155,18 @@ function workMeta(job: (typeof resume.work)[number]) {
                       )}
                     </h3>
                     <p class="resume-meta">{projectMeta(project)}</p>
+                    {project.availability && availabilityHref(project) && (
+                      <p class="mt-1 text-sm">
+                        <a
+                          class="text-link"
+                          href={availabilityHref(project)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {availabilityLabel(project)}
+                        </a>
+                      </p>
+                    )}
                   </div>
                   {project.description && <p>{project.description}</p>}
                   {project.highlights?.length > 0 && (
