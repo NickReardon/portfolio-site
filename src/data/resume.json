@@ -27,7 +27,7 @@
     "targets": {
       "gameplay": {
         "label": "Gameplay and Systems Programmer",
-        "summary": "Computer science student building production-style gameplay systems in Unreal Engine 5 on the Lyra framework. Strong focus on where logic lives, decoupling between systems, and data-driven authoring so content extends without new systems code. Primary work is a modular combat, encounter, and persistence architecture for an action rogue-lite.",
+        "summary": "Gameplay and systems programmer building modular, production-style systems in Unreal Engine 5 on the Lyra framework. Strong focus on state architecture, decoupled systems, and data-driven workflows. Primary work is a modular combat, encounter, and persistence architecture for an action rogue-lite.",
         "tags": ["gameplay", "systems", "tools", "physics", "ai"]
       },
       "ai": {
