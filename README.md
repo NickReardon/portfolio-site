@@ -30,6 +30,7 @@ Heavier quality checks:
 ```powershell
 npm run audit
 npm run audit:staging
+npm run audit:scores
 ```
 
 ## Project Structure
@@ -37,6 +38,7 @@ npm run audit:staging
 ```text
 /
 ├── docs/
+│   ├── content.md
 │   └── workflow.md
 ├── public/
 │   ├── images/
@@ -45,6 +47,7 @@ npm run audit:staging
 │   ├── audit-pages.mjs
 │   ├── build-resume.mjs
 │   ├── build-social-card.mjs
+│   ├── print-scores.mjs
 │   ├── resume-utils.mjs
 │   └── validate-resume.mjs
 ├── src/
@@ -67,6 +70,7 @@ npm run audit:staging
 
 - Project markdown lives in `src/content/projects`.
 - Blog markdown lives in `src/content/blog`.
+- Content tone and authoring guidance lives in `docs/content.md`.
 - Draft entries can stay in the repo with `draft: true`; production builds
   exclude them from lists and detail routes.
 - Static project and blog images live under `public/images`.
@@ -122,7 +126,7 @@ Short version:
 
 - `main` is production.
 - `staging` is long-lived pre-production.
-- Agent branches use `codex/<type>/<short-kebab-summary>`.
+- Work branches use `<type>/<short-kebab-summary>`.
 - Commits use `<type>(<scope>): <Description>`.
 - Verify with the smallest command set that covers the risk, usually
   `npm run check` and `npm run build`.
