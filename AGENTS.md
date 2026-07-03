@@ -127,5 +127,4 @@ them explicitly.
 - Keep high-level project setup and deployment instructions in `README.md`.
 - Keep workflow rules in `docs/workflow.md`.
 - Keep agent-specific operating rules in this file.
-- Add content-authoring guidance to `docs/content.md` if content workflows become
-  more detailed than the README can comfortably hold.
+- Keep content-authoring guidance in `docs/content.md`.

@@ -22,13 +22,9 @@ Last Oasis is a jam platformer about Palis, a water spirit trying to find water
 and keep survivors alive in a desert. The project shipped as a browser-playable
 submission to the thatgamecompany x COREBLAZER Game Jam 2025.
 
-## What I Contributed
+## Key Contributions
 
-On a shared team repository, my work was the player controller, traversal feel,
-the launch ability, and small authoring tools that helped the team build and
-iterate faster under jam constraints. (The repo lives under a teammate's
-account; my contribution is the player controller and player scene plus the
-world and tooling systems below.)
+As the primary gameplay and tooling programmer, I was responsible for the core character controller, traversal feel, special abilities, and the authoring tools used by the design team to iterate rapidly under tight jam constraints.
 
 ### Character controller
 

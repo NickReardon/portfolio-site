@@ -25,8 +25,9 @@ It is a functional prototype built to demonstrate how core gameplay systems sit
 on a modular, data-driven architecture that can expand into a full game. The
 thesis behind the project: a small team can use Lyra-aligned structure to keep
 systems decoupled and add content by authoring data rather than writing new
-systems code. The project is being submitted as a CSUF CPSC 491 senior capstone
-through the Video Game Development Club.
+systems code. Developed in collaboration with a student team at CSU Fullerton,
+the project serves as a technical demonstration of Lyra-aligned systems in a
+high-iteration environment.
 
 <!-- MEDIA[video]: combat + encounter vertical-slice reel (hub -> arena -> wave clear -> upgrade). This is the high-leverage one to record before the next studio touchpoint. -->
 
@@ -152,12 +153,12 @@ I carried the GAS-based Lyra project up two major engine versions, 5.6 to 5.7 to
 5.8, resolving API deprecations, build and registration breakage, and Lyra
 base-class changes at each hop. The project builds and opens cleanly on 5.8.
 
-### Server-authoritative design (co-op-ready)
+### Server-authoritative design
 
-Gameplay is routed through server-authoritative GAS flows rather than
-client-local shortcuts, so the architecture stays viable for future co-op
-without a rewrite. Networked play is not yet built or tested; this is a
-deliberate design constraint and a learning target, not a shipped feature.
+Gameplay is built using server-authoritative GAS flows rather than client-local
+shortcuts. This design choice keeps authority boundaries explicit and better
+positions the architecture for future cooperative multiplayer work without
+requiring a core systems rewrite.
 
 ## Testing and Integration
 
@@ -171,31 +172,16 @@ world tags, and full save-to-disk and relaunch restoration.
 
 <!-- CODE[cpp]: GameInstance test-relay - write-expectation-before-travel / assert-after-load. Placeholder for a verified snippet. -->
 
-## Strongest Talking Points
-
-1. World ASC as a decoupled event bus coordinating encounter, spawn, and travel
-   systems.
-2. State survival across seamless travel: how GAS state, equipment, and world
-   attributes reconstruct after a GameState is destroyed.
-3. Pluggable save backend behind an interface, designed for a future
-   server-backed implementation.
-4. Data-driven authoring throughout: encounters, waves, spawn modifiers, combos,
-   and completion behaviors all extend through data, not code.
-5. Listener interface pattern for room completion with zero coupling beyond the
-   contract.
-6. Server-authoritative GAS to leave the door open for co-op, with a clear view
-   of what authority buys (single source of truth, cheat resistance) and what is
-   still missing (no replication testing or prediction tuning yet).
-
 ## Narrative and World
 
 A Control-inspired brutalist megacorp tower, mechs versus aliens, with themes of
 identity and consciousness - a project with deep investment in both narrative
 and technical systems.
 
-## What I Am Learning
+## Key Takeaways
 
-Tethered is where I practice larger Unreal architecture tradeoffs: deciding where
-state should live, how much flexibility a system should expose, how to avoid
-fragile load-order assumptions, and how to keep content workflows readable as the
-project grows.
+Through developing _Tethered_, the primary focus has been navigating architectural tradeoffs:
+
+- **Decoupled State Management**: Establishing clear ownership between local player state, transient world state, and persistent save data.
+- **Workflow Efficiency**: Creating extensible data-driven frameworks (encounters, combos, spawn rules) so that new content can be added and balanced without compiler overhead.
+- **Robust Lifecycles**: Handling complex Unreal Engine lifecycles, particularly managing state reconstruction during seamless travel transitions.

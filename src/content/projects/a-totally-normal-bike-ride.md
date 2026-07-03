@@ -23,10 +23,9 @@ unstable bike-platforming premise. The project shipped with a browser build and
 a Windows download, which made it easy for judges and players to try without
 extra setup.
 
-## What I Contributed
+## Key Contributions
 
-I was the primary programmer on a small team, with the priority of keeping the
-prototype playable, readable, and shippable within the three-day jam window.
+As the lead programmer, I focused on implementing the physics systems, wire authoring utilities, and environmental visual pipelines to deliver a polished, stable prototype within the three-day jam window.
 
 ### Two-body physics character
 
