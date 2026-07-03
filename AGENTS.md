@@ -54,6 +54,14 @@ Allowed branch types:
 Keep branches short-lived. Merge to `staging` for preview validation before
 promoting to `main`.
 
+Always perform branch promotion and merging through GitHub pull requests. Do not
+directly push one branch ref over another, including `staging` to `main`, unless
+the user explicitly overrides this rule for a specific operation.
+
+Create local auxiliary worktrees inside the project under `.workspace/worktrees/`.
+Do not create new worktrees in user-global scratch directories such as
+`~/.codex/worktrees/` unless the user explicitly asks for that location.
+
 ## Commits
 
 Use scoped Conventional Commit-style subjects:
