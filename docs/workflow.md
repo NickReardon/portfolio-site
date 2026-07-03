@@ -16,7 +16,13 @@ Branch naming:
 <type>/<short-kebab-summary>
 ```
 
-Use this form for both human-created and agent-created implementation branches.
+Use this form for both human-created and agent-created implementation branches
+unless a different team convention is needed.
+
+Create local auxiliary worktrees inside this project under `.workspace/worktrees/`.
+Do not create new worktrees in user-global scratch directories such as
+`~/.codex/worktrees/` unless that location is explicitly requested. The
+`.workspace/` directory is local-only and ignored by Git.
 
 Recommended branch types:
 
@@ -81,7 +87,9 @@ chore(a11y): Add accessibility audit scripts
 ## Pull Requests And Handoffs
 
 All changes must reach `main` through a pull request. Do not push directly to
-`main`.
+`main`, and do not directly push one branch ref over another, including
+`staging` to `main`, unless the operation is explicitly approved for a specific
+case.
 
 Production PRs must use `staging` as the source branch and `main` as the target
 branch. The `Production Gate / Staging deployment is ready` check must pass

@@ -37,7 +37,7 @@ candidate because it is heavier than the normal build checks.
 - `main` is production and deploys to `https://nick-reardon.com`.
 - `staging` is the long-lived pre-production branch and deploys to
   `https://staging.nick-reardon.com`.
-- Implementation branches should use:
+- Branches should use:
   `<type>/<short-kebab-summary>`.
 
 Allowed branch types:
@@ -51,6 +51,14 @@ Allowed branch types:
 
 Keep branches short-lived. Merge to `staging` for preview validation before
 promoting to `main`.
+
+Always perform branch promotion and merging through GitHub pull requests. Do not
+directly push one branch ref over another, including `staging` to `main`, unless
+the user explicitly overrides this rule for a specific operation.
+
+Create local auxiliary worktrees inside the project under `.workspace/worktrees/`.
+Do not create new worktrees in user-global scratch directories such as
+`~/.codex/worktrees/` unless the user explicitly asks for that location.
 
 ## Commits
 
