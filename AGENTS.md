@@ -38,7 +38,7 @@ candidate because it is heavier than the normal build checks.
 - `staging` is the long-lived pre-production branch and deploys to
   `https://staging.nick-reardon.com`.
 - Agent-created implementation branches should use:
-  `codex/<type>/<short-kebab-summary>`.
+  `<type>/<short-kebab-summary>`.
 - Human feature branches should use:
   `<type>/<short-kebab-summary>`.
 
