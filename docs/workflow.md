@@ -13,12 +13,11 @@ It applies to humans and coding agents unless a task explicitly says otherwise.
 Branch naming:
 
 ```text
-codex/<type>/<short-kebab-summary>
 <type>/<short-kebab-summary>
 ```
 
-Use the `codex/` prefix for agent-created branches. Omit it for human-created
-branches unless a different team convention is needed.
+Use the same branch naming pattern for agent-created and human-created branches
+unless a different team convention is needed.
 
 Create local auxiliary worktrees inside this project under `.workspace/worktrees/`.
 Do not create new worktrees in user-global scratch directories such as

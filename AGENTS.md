@@ -37,9 +37,7 @@ candidate because it is heavier than the normal build checks.
 - `main` is production and deploys to `https://nick-reardon.com`.
 - `staging` is the long-lived pre-production branch and deploys to
   `https://staging.nick-reardon.com`.
-- Agent-created implementation branches should use:
-  `<type>/<short-kebab-summary>`.
-- Human feature branches should use:
+- Branches should use:
   `<type>/<short-kebab-summary>`.
 
 Allowed branch types:
