@@ -24,6 +24,11 @@ Do not create new worktrees in user-global scratch directories such as
 `~/.codex/worktrees/` unless that location is explicitly requested. The
 `.workspace/` directory is local-only and ignored by Git.
 
+Create local auxiliary worktrees inside this project under `.workspace/worktrees/`.
+Do not create new worktrees in user-global scratch directories such as
+`~/.codex/worktrees/` unless that location is explicitly requested. The
+`.workspace/` directory is local-only and ignored by Git.
+
 Recommended branch types:
 
 - `feat`: new pages, components, sections, or user-facing behavior.
