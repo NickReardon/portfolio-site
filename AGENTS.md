@@ -37,9 +37,8 @@ candidate because it is heavier than the normal build checks.
 - `main` is production and deploys to `https://nick-reardon.com`.
 - `staging` is the long-lived pre-production branch and deploys to
   `https://staging.nick-reardon.com`.
+
 - Agent-created implementation branches should use:
-  `<type>/<short-kebab-summary>`.
-- Human feature branches should use:
   `<type>/<short-kebab-summary>`.
 
 Allowed branch types:
@@ -129,5 +128,4 @@ them explicitly.
 - Keep high-level project setup and deployment instructions in `README.md`.
 - Keep workflow rules in `docs/workflow.md`.
 - Keep agent-specific operating rules in this file.
-- Add content-authoring guidance to `docs/content.md` if content workflows become
-  more detailed than the README can comfortably hold.
+- Keep content-authoring guidance in `docs/content.md`.

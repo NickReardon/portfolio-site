@@ -8,6 +8,7 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
+  noindex?: boolean;
   type?: "website" | "article";
 }
 
@@ -15,6 +16,7 @@ const {
   title,
   description = site.description,
   image = site.defaultImage,
+  noindex = false,
   type = "website",
 } = Astro.props;
 const pageTitle = title
@@ -34,7 +36,7 @@ const socialImageUrl = new URL(image, site.url).toString();
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
     {
-      !site.isSearchIndexable && (
+      (noindex || !site.isSearchIndexable) && (
         <meta name="robots" content="noindex, nofollow" />
       )
     }

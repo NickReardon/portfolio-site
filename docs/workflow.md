@@ -13,12 +13,16 @@ It applies to humans and coding agents unless a task explicitly says otherwise.
 Branch naming:
 
 ```text
-codex/<type>/<short-kebab-summary>
 <type>/<short-kebab-summary>
 ```
 
-Use the `codex/` prefix for agent-created branches. Omit it for human-created
-branches unless a different team convention is needed.
+Use this form for both human-created and agent-created implementation branches
+unless a different team convention is needed.
+
+Create local auxiliary worktrees inside this project under `.workspace/worktrees/`.
+Do not create new worktrees in user-global scratch directories such as
+`~/.codex/worktrees/` unless that location is explicitly requested. The
+`.workspace/` directory is local-only and ignored by Git.
 
 Create local auxiliary worktrees inside this project under `.workspace/worktrees/`.
 Do not create new worktrees in user-global scratch directories such as
@@ -163,8 +167,7 @@ Documentation locations:
 - `README.md`: project overview, setup, commands, content locations, deployment.
 - `AGENTS.md`: agent-specific operating instructions.
 - `docs/workflow.md`: branch, commit, PR, verification, and documentation policy.
-- Future `docs/content.md`: detailed writing, image, and frontmatter guidance if
-  content work outgrows the README.
+- `docs/content.md`: detailed writing, image, and frontmatter guidance.
 
 ## Release Flow
 

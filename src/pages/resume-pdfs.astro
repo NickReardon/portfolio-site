@@ -1,0 +1,141 @@
+---
+import { Download, ExternalLink } from "@lucide/astro";
+import { existsSync, readdirSync, statSync } from "node:fs";
+import { join } from "node:path";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+interface ResumePdf {
+  fileName: string;
+  href: string;
+  label: string;
+  size: string;
+}
+
+const pdfDirectory = join(process.cwd(), "public", "resumes");
+
+const pdfs: ResumePdf[] = existsSync(pdfDirectory)
+  ? readdirSync(pdfDirectory, { withFileTypes: true })
+      .filter((entry) => entry.isFile() && entry.name.endsWith(".pdf"))
+      .map((entry) => {
+        const path = join(pdfDirectory, entry.name);
+
+        return {
+          fileName: entry.name,
+          href: `/resumes/${entry.name}`,
+          label: formatResumePdfLabel(entry.name),
+          size: formatFileSize(statSync(path).size),
+        };
+      })
+      .sort(sortResumePdfs)
+  : [];
+
+function formatResumePdfLabel(fileName: string) {
+  const name = fileName.replace(/\.pdf$/u, "");
+
+  if (name === "resume") {
+    return "Default one-page resume";
+  }
+
+  if (name === "resume-full") {
+    return "Full-length resume";
+  }
+
+  return name
+    .replace(/^resume-/u, "")
+    .split("-")
+    .map((part) =>
+      part === "pdf"
+        ? "PDF"
+        : part.replace(/^\w/u, (letter) => letter.toUpperCase()),
+    )
+    .join(" ");
+}
+
+function sortResumePdfs(left: ResumePdf, right: ResumePdf) {
+  const leftRank = getResumePdfRank(left.fileName);
+  const rightRank = getResumePdfRank(right.fileName);
+
+  return leftRank - rightRank || left.fileName.localeCompare(right.fileName);
+}
+
+function getResumePdfRank(fileName: string) {
+  if (fileName === "resume.pdf") {
+    return 0;
+  }
+
+  if (fileName === "resume-full.pdf") {
+    return 1;
+  }
+
+  return 2;
+}
+
+function formatFileSize(bytes: number) {
+  const kibibytes = bytes / 1024;
+
+  return `${kibibytes.toFixed(kibibytes >= 100 ? 0 : 1)} KB`;
+}
+---
+
+<BaseLayout
+  title="Resume PDFs"
+  description="Rendered resume PDF variants for Nicholas Reardon."
+  noindex
+>
+  <section class="section border-b border-stone-200 bg-site-subtle">
+    <div class="mx-auto max-w-6xl px-5 py-12 sm:py-14">
+      <p class="eyebrow">Resume PDFs</p>
+      <h1>Rendered Resume PDFs</h1>
+      <p class="mt-5 max-w-3xl text-xl leading-8 text-stone-700">
+        Generated PDF variants for review and download.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="mx-auto max-w-6xl px-5 py-14">
+      {
+        pdfs.length > 0 ? (
+          <div class="grid gap-4">
+            {pdfs.map((pdf) => (
+              <article class="resume-panel">
+                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <h2 class="text-xl font-semibold text-stone-950">
+                      {pdf.label}
+                    </h2>
+                    <p class="resume-meta mt-1">
+                      {pdf.fileName} | {pdf.size}
+                    </p>
+                  </div>
+                  <div class="flex flex-wrap gap-3">
+                    <a
+                      class="button-secondary"
+                      href={pdf.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <ExternalLink size={16} aria-hidden="true" />
+                      Open
+                    </a>
+                    <a class="button-primary" href={pdf.href} download>
+                      <Download size={16} aria-hidden="true" />
+                      Download
+                    </a>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <section class="resume-panel">
+            <h2>No PDFs Found</h2>
+            <p class="mt-3">
+              Generate resume PDFs with <code>npm run resume:build</code>.
+            </p>
+          </section>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>

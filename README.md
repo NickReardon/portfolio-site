@@ -30,6 +30,7 @@ Heavier quality checks:
 ```powershell
 npm run audit
 npm run audit:staging
+npm run audit:scores
 ```
 
 ## Project Structure
@@ -37,14 +38,17 @@ npm run audit:staging
 ```text
 /
 ├── docs/
+│   ├── content.md
 │   └── workflow.md
 ├── public/
 │   ├── images/
+│   ├── resumes/
 │   └── resume.pdf
 ├── scripts/
 │   ├── audit-pages.mjs
 │   ├── build-resume.mjs
 │   ├── build-social-card.mjs
+│   ├── print-scores.mjs
 │   ├── resume-utils.mjs
 │   └── validate-resume.mjs
 ├── src/
@@ -67,6 +71,7 @@ npm run audit:staging
 
 - Project markdown lives in `src/content/projects`.
 - Blog markdown lives in `src/content/blog`.
+- Content tone and authoring guidance lives in `docs/content.md`.
 - Draft entries can stay in the repo with `draft: true`; production builds
   exclude them from lists and detail routes.
 - Static project and blog images live under `public/images`.
@@ -74,6 +79,8 @@ npm run audit:staging
   edited resume source for both the `/resume/` page and generated PDF.
 - `public/resume.pdf` is generated from `src/data/resume.json` as a one-page A4
   PDF and committed so normal site builds do not require RenderCV.
+- Rendered resume PDF variants live in `public/resumes/` and are listed on the
+  unlinked `/resume-pdfs/` page.
 - Update social links and identity text in `src/site.config.ts` as needed.
 
 Use lowercase kebab-case for content slugs and asset filenames.
@@ -106,9 +113,35 @@ leaves the default `public/resume.pdf` untouched), pass a target defined under
 npm run resume:build -- --target gameplay   # or ai | tools | qa
 ```
 
+To generate a full-length PDF without one-page trimming or the one-page build
+assertion, pass `--full`:
+
+```powershell
+npm run resume:build -- --full
+```
+
+To preview another official RenderCV theme, pass `--theme`. Alternate theme
+builds write a suffixed PDF under `public/resumes/` such as
+`public/resumes/resume-moderncv.pdf` so the canonical resume is not replaced:
+
+```powershell
+npm run resume:build -- --theme moderncv
+npm run resume:build -- --target gameplay --theme sb2nov
+```
+
+Supported official themes are `classic`, `ember`, `engineeringclassic`,
+`engineeringresumes`, `harvard`, `ink`, `moderncv`, `opal`, and `sb2nov`.
+
+Community or custom RenderCV themes should be committed under
+`rendercv-themes/<theme-name>/`, where `<theme-name>` uses lowercase letters and
+numbers only. The build script copies that folder next to the generated
+RenderCV input before rendering because RenderCV loads custom themes from the
+input file directory.
+
 The build script writes temporary RenderCV input under `.resume-build/`, copies
-the rendered PDF to `public/resume.pdf`, and fails if the generated PDF is not
-exactly one page. Commit the JSON source and PDF together.
+the rendered PDF to `public/resumes/`, and copies the default one-page PDF to
+`public/resume.pdf` for stable site links. Non-full builds fail if the generated
+PDF is not exactly one page. Commit the JSON source and PDFs together.
 
 ## Workflow
 
@@ -122,7 +155,7 @@ Short version:
 
 - `main` is production.
 - `staging` is long-lived pre-production.
-- Agent branches use `codex/<type>/<short-kebab-summary>`.
+- Work branches use `<type>/<short-kebab-summary>`.
 - Commits use `<type>(<scope>): <Description>`.
 - Verify with the smallest command set that covers the risk, usually
   `npm run check` and `npm run build`.
