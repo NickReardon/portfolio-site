@@ -13,6 +13,7 @@ engine: "Godot"
 coverImage: "/images/projects/last-oasis.png"
 coverAlt: "Last Oasis cover art."
 ogImage: "/images/projects/last-oasis.png"
+mediaPending: true
 featured: true
 externalUrl: "https://thingofnightmare.itch.io/last-oasis"
 externalLabel: "Play on itch.io"

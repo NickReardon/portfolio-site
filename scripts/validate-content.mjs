@@ -117,8 +117,13 @@ for (const fileName of projectFiles) {
     }
   }
 
-  if (strictMedia && data.mediaPending === true) {
-    errors.push(`${fileName}: mediaPending must be false for release`);
+  if (data.mediaPending === true) {
+    const message = `${fileName}: mediaPending must be false for release`;
+    if (strictMedia) {
+      errors.push(message);
+    } else {
+      warnings.push(message);
+    }
   }
 }
 

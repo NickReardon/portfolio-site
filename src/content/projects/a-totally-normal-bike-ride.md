@@ -13,6 +13,7 @@ engine: "Godot"
 coverImage: "/images/projects/a-totally-normal-bike-ride.png"
 coverAlt: "A Totally Normal Bike Ride cover art."
 ogImage: "/images/projects/a-totally-normal-bike-ride.png"
+mediaPending: true
 featured: true
 externalUrl: "https://bcthunder.itch.io/a-totally-normal-bike-ride"
 externalLabel: "Play on itch.io"

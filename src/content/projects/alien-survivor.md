@@ -13,6 +13,7 @@ engine: "Unity"
 coverImage: "/images/projects/alien-survivor.png"
 coverAlt: "Alien Survivor cover art."
 ogImage: "/images/projects/alien-survivor.png"
+mediaPending: true
 featured: false
 externalUrl: "https://thingofnightmare.itch.io/alien-survivor"
 externalLabel: "Play on itch.io"
