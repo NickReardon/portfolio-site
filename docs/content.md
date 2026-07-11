@@ -25,3 +25,77 @@ To avoid reading as a junior-level candidate, we frame academic experience neutr
 
 - **No Interview/Coaching Notes**: Do not include sections like "Strongest Talking Points" or internal notes coaching yourself on how to pitch the project. The page should read as an objective case study.
 - **Key Takeaways**: Use a "Key Takeaways" section at the end of case studies to outline major architectural lessons, systems tradeoffs, and workflow improvements.
+
+## 5. Canonical Project Metadata
+
+Project content frontmatter is the canonical source for portfolio-facing project
+metadata. The Home page, Projects index, and project headers must read their
+title, role, status, engine, date label, tags, featured state, and ordering from
+the content collection rather than redefining those values at the page level.
+
+Resume project entries use the project page URL as their stable link to content.
+When a resume-facing field must be duplicated, `npm run content:validate` checks
+that names, roles, date labels, and external URLs still agree.
+
+Required project fields include:
+
+- `dateLabel`: the human-readable date or event label.
+- `order`: a unique positive integer controlling project order.
+- `variant`: `case-study` or `jam-postmortem`.
+- `status`: `In development`, `Released`, `Prototype`, or `On hold`.
+
+Published projects require a cover image, useful alternative text, and an Open
+Graph image. Draft entries may omit media while they remain excluded from
+production.
+
+## 6. Project Page Structures
+
+### Case studies
+
+Use this order for an in-development flagship case study:
+
+1. Overview.
+2. Team and specific ownership.
+3. Core gameplay loop.
+4. Architecture introduction.
+5. System subsections shaped around problem, decision, trade-off, and evidence.
+6. Testing and integration.
+7. Key Takeaways.
+
+Target 800 to 1,200 words.
+
+### Jam postmortems
+
+Use this order for shipped jam work:
+
+1. Overview of the game, jam, and constraint.
+2. What I Contributed.
+3. System subsections describing the relevant decision and trade-off.
+4. At least one gameplay motion asset.
+5. What the Work Shows.
+
+Target 400 to 700 words. Put specific ownership before detailed implementation
+claims.
+
+## 7. Media and Publishing
+
+- Do not publish placeholder images, placeholder paths, or internal media/code
+  reminder comments.
+- Alternative text describes meaningful images. A visible caption is optional
+  and does not replace alternative text.
+- Embedded videos require an accessible title. Videos that communicate
+  meaningful evidence also require captions or a nearby transcript.
+- Autoplay video must be muted, inline, and disabled when the visitor prefers
+  reduced motion.
+- Open Graph images must be real project captures with a social-friendly crop.
+- Set `mediaPending: true` only as a temporary implementation marker. Normal
+  validation reports it; `npm run content:validate:release` rejects it.
+
+Before publishing project changes, run:
+
+```powershell
+npm run content:validate:release
+npm run check
+npm run build
+npm run format:check
+```
