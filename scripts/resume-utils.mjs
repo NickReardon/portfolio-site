@@ -1,5 +1,18 @@
 import { readFileSync } from "node:fs";
 
+export const DEFAULT_RENDER_CV_THEME = "engineeringresumes";
+export const OFFICIAL_RENDER_CV_THEMES = [
+  "classic",
+  "ember",
+  "engineeringclassic",
+  "engineeringresumes",
+  "harvard",
+  "ink",
+  "moderncv",
+  "opal",
+  "sb2nov",
+];
+
 export function readResume(path = "src/data/resume.json") {
   return JSON.parse(readFileSync(path, "utf8"));
 }
@@ -87,6 +100,8 @@ export function resolveTarget(resume, target) {
 
 export function createRenderCvDocument(resume, options = {}) {
   const target = resolveTarget(resume, options.target);
+  const theme = options.theme ?? DEFAULT_RENDER_CV_THEME;
+  const fullLength = options.fullLength ?? false;
   const socialNetworks = (resume.basics.profiles ?? [])
     .filter((profile) => ["GitHub", "LinkedIn"].includes(profile.network))
     .map((profile) =>
@@ -95,12 +110,11 @@ export function createRenderCvDocument(resume, options = {}) {
         username: profile.username,
       }),
     );
-  const pdfProjects = target
-    ? selectTargetProjects(resume.projects ?? [], target.tags ?? [])
-    : selectPdfProjects(resume.projects ?? []);
-  const pdfSkills = target
-    ? selectTargetSkills(resume.skills ?? [], target.tags ?? [])
-    : selectPdfSkills(resume.skills ?? []);
+  const pdfProjects = selectProjects(resume.projects ?? [], {
+    fullLength,
+    target,
+  });
+  const pdfSkills = selectSkills(resume.skills ?? [], { fullLength, target });
   const summary = target?.summary ?? DEFAULT_SUMMARY;
   const headline = target?.label ?? resume.basics.label;
 
@@ -125,7 +139,7 @@ export function createRenderCvDocument(resume, options = {}) {
       }),
     },
     design: {
-      theme: "engineeringresumes",
+      theme,
       colors: {
         links: "rgb(19, 78, 74)",
       },
@@ -295,6 +309,32 @@ function selectTargetSkills(skills, targetTags) {
       ...skill,
       keywords: limitItems(skill.keywords, TARGET_SKILL_KEYWORDS),
     }));
+}
+
+function selectProjects(projects, { fullLength, target }) {
+  if (fullLength) {
+    return target
+      ? projects.filter((project) =>
+          matchesTarget(project.tags, target.tags ?? []),
+        )
+      : projects;
+  }
+
+  return target
+    ? selectTargetProjects(projects, target.tags ?? [])
+    : selectPdfProjects(projects);
+}
+
+function selectSkills(skills, { fullLength, target }) {
+  if (fullLength) {
+    return target
+      ? skills.filter((skill) => matchesTarget(skill.tags, target.tags ?? []))
+      : skills;
+  }
+
+  return target
+    ? selectTargetSkills(skills, target.tags ?? [])
+    : selectPdfSkills(skills);
 }
 
 function selectPdfProjects(projects) {

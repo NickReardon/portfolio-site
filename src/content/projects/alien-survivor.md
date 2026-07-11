@@ -26,10 +26,10 @@ data-driven enough to extend without rewriting systems.
 
 <!-- MEDIA[gif]: gameplay - escalating enemy waves with weapons auto-firing and upgrades stacking -->
 
-## What I Contributed
+## Implementation Details
 
-This was a solo project, so my work covered the full prototype loop from initial
-implementation through web delivery.
+As a solo project, this prototype demonstrates end-to-end implementation of
+modular systems, optimized spawner directors, and data-driven weapon scaling.
 
 ### Enemy spawning director
 

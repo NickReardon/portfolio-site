@@ -37,9 +37,8 @@ candidate because it is heavier than the normal build checks.
 - `main` is production and deploys to `https://nick-reardon.com`.
 - `staging` is the long-lived pre-production branch and deploys to
   `https://staging.nick-reardon.com`.
+
 - Agent-created implementation branches should use:
-  `codex/<type>/<short-kebab-summary>`.
-- Human feature branches should use:
   `<type>/<short-kebab-summary>`.
 
 Allowed branch types:
@@ -53,6 +52,14 @@ Allowed branch types:
 
 Keep branches short-lived. Merge to `staging` for preview validation before
 promoting to `main`.
+
+Always perform branch promotion and merging through GitHub pull requests. Do not
+directly push one branch ref over another, including `staging` to `main`, unless
+the user explicitly overrides this rule for a specific operation.
+
+Create local auxiliary worktrees inside the project under `.workspace/worktrees/`.
+Do not create new worktrees in user-global scratch directories such as
+`~/.codex/worktrees/` unless the user explicitly asks for that location.
 
 ## Commits
 
@@ -121,5 +128,4 @@ them explicitly.
 - Keep high-level project setup and deployment instructions in `README.md`.
 - Keep workflow rules in `docs/workflow.md`.
 - Keep agent-specific operating rules in this file.
-- Add content-authoring guidance to `docs/content.md` if content workflows become
-  more detailed than the README can comfortably hold.
+- Keep content-authoring guidance in `docs/content.md`.
