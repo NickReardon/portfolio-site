@@ -18,6 +18,9 @@ dev-server*.log
 reports/
 .audit-tmp/
 
+# local worktrees and agent scratch space
+.workspace/
+
 # generated resume build files
 .resume-build/
 
