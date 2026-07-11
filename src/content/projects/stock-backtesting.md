@@ -2,11 +2,13 @@
 title: "Stock Backtesting"
 description: "A Python and PySide6 desktop application for downloading market data, charting ETF price history, and running trading-strategy backtests."
 date: 2024-05-15
-timeline: "Software development course project"
+dateLabel: "Software development course project"
+order: 50
+variant: "case-study"
 tags: ["Python", "PySide6", "Qt", "Desktop Tools", "Backtesting"]
 projectType: "system"
 role: "Solo implementation (team design and planning)"
-status: "Educational project"
+status: "Prototype"
 engine: "Python / PySide6"
 featured: false
 draft: true

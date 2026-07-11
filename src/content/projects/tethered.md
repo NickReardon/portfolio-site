@@ -2,7 +2,9 @@
 title: "Tethered"
 description: "Unreal Engine 5 action rogue-lite prototype focused on modular combat, encounter, travel, and persistence systems."
 date: 2026-01-25
-timeline: "September 2025 - present"
+dateLabel: "September 2025 - present"
+order: 10
+variant: "case-study"
 tags: ["Unreal Engine", "C++", "GAS", "Lyra", "Gameplay Systems"]
 projectType: "system"
 role: "Lead System Designer and Gameplay Engineer"
@@ -10,6 +12,8 @@ status: "In development"
 engine: "Unreal Engine 5.8"
 coverImage: "/images/projects/tethered-placeholder.svg"
 coverAlt: "Diagram showing Tethered gameplay system flow from input to gameplay tags, combos, attacks, and feedback."
+ogImage: "/images/projects/tethered-placeholder.svg"
+mediaPending: true
 featured: true
 draft: false
 ---
@@ -27,9 +31,9 @@ thesis behind the project: a small team can use Lyra-aligned structure to keep
 systems decoupled and add content by authoring data rather than writing new
 systems code. Developed in collaboration with a student team at CSU Fullerton,
 the project serves as a technical demonstration of Lyra-aligned systems in a
-high-iteration environment.
-
-<!-- MEDIA[video]: combat + encounter vertical-slice reel (hub -> arena -> wave clear -> upgrade). This is the high-leverage one to record before the next studio touchpoint. -->
+high-iteration environment. Its Control-inspired brutalist megacorp tower and
+mechs-versus-aliens premise give the technical systems a coherent world and
+narrative frame.
 
 ## Team
 
@@ -43,8 +47,6 @@ advisor.
 Hub world, loadout selection, run initiation, seamless travel into arena rooms,
 wave-based encounters, room-clear gating, upgrade acquisition, and return. World
 state carries across rooms and across runs.
-
-<!-- MEDIA[gif]: seamless travel - hub to arena with no visible loading seam -->
 
 ## Architecture
 
@@ -68,8 +70,6 @@ run-level scalars: difficulty multiplier, curse and blessing stacks, threat
 level, and floor number. World state is reconstructed after every room
 transition so enemies scale and gain behaviors from active modifiers without
 changes to their base definitions.
-
-<!-- CODE[cpp]: world ASC event broadcast / encounter event handler. Drop a verified snippet from the live 5.8 codebase here - confirm exact class names before pasting (see positioning notes). -->
 
 ### Game Feature Plugin isolation
 
@@ -107,8 +107,6 @@ the encounter ability reads to begin spawning waves. Wave-advance conditions are
 modular rule abilities composed per wave without modifying the encounter
 ability, so new encounter types are authored entirely through data.
 
-<!-- CODE[cpp]: wave-advance rule ability / encounter definition data asset. Placeholder for a verified snippet. -->
-
 ### Spawn modifiers
 
 A persistent spawn-modifier ability listens for spawn events and evaluates
@@ -131,8 +129,6 @@ An input-tag routing map drives combat: each combo step evaluates owned Gameplay
 Tags at runtime to resolve AI and player-executed attacks, so upgrades modify
 movesets without branching logic. The combo system expands during runtime
 through upgrades.
-
-<!-- MEDIA[gif]: combo routing - same input producing different attacks after an upgrade is applied -->
 
 ### AI
 
@@ -169,14 +165,6 @@ tests cover travel round trips, persistence reconstruction, weapon and ability
 survival across travel, run-reset of mid-run upgrades, encounter activation and
 wave advance, double-encounter blocking, spawn-modifier application gating on
 world tags, and full save-to-disk and relaunch restoration.
-
-<!-- CODE[cpp]: GameInstance test-relay - write-expectation-before-travel / assert-after-load. Placeholder for a verified snippet. -->
-
-## Narrative and World
-
-A Control-inspired brutalist megacorp tower, mechs versus aliens, with themes of
-identity and consciousness - a project with deep investment in both narrative
-and technical systems.
 
 ## Key Takeaways
 

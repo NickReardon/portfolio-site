@@ -132,6 +132,7 @@
   "projects": [
     {
       "name": "Tethered",
+      "role": "Lead System Designer and Gameplay Engineer",
       "description": "Lead system designer and gameplay engineer for a Lyra-based Unreal Engine action rogue-lite focused on modular combat, encounters, seamless travel, persistence, and data-driven content authoring.",
       "startDate": "2025-09",
       "endDate": "present",
@@ -164,7 +165,8 @@
       ]
     },
     {
-      "name": "Alien Survivors",
+      "name": "Alien Survivor",
+      "role": "Solo developer",
       "description": "Solo Unity prototype with data-driven weapons, upgrades, enemy spawning, and runtime UI.",
       "startDate": "2024-09",
       "endDate": "2024-12",
@@ -190,6 +192,7 @@
     },
     {
       "name": "Last Oasis",
+      "role": "Primary gameplay and tooling programmer",
       "description": "Primary gameplay and tooling programmer for a browser-playable Godot game jam platformer.",
       "startDate": "2025",
       "dateLabel": "2025 game jam",
@@ -212,8 +215,9 @@
     },
     {
       "name": "A Totally Normal Bike Ride",
+      "role": "Primary programmer",
       "description": "Primary programmer for a three-day Godot jam game about physics balancing a bear on a unicycle across telephone wires.",
-      "dateLabel": "3-day game jam",
+      "dateLabel": "Three-day game jam",
       "siteUrl": "/projects/a-totally-normal-bike-ride/",
       "url": "https://bcthunder.itch.io/a-totally-normal-bike-ride",
       "availability": "Playable",
@@ -234,9 +238,10 @@
     },
     {
       "name": "Stock Backtesting",
+      "role": "Solo implementation (team design and planning)",
       "description": "Python and PySide6 desktop application for downloading market data, charting ETF price history, and running trading-strategy backtests. Educational engineering project, not production trading software.",
       "startDate": "2024",
-      "dateLabel": "Course project",
+      "dateLabel": "Software development course project",
       "tags": [
         "tools",
         "python",

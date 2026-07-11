@@ -1,0 +1,114 @@
+---
+import { Image } from "astro:assets";
+
+type MediaKind = "image" | "video" | "youtube";
+
+interface VideoSource {
+  src: string;
+  type: "video/mp4" | "video/webm";
+}
+
+interface Props {
+  kind?: MediaKind;
+  src: string;
+  alt?: string;
+  title?: string;
+  caption?: string;
+  aspect?: `${number}/${number}`;
+  poster?: string;
+  sources?: VideoSource[];
+  autoplay?: boolean;
+  loop?: boolean;
+  loading?: "eager" | "lazy";
+  fetchPriority?: "high" | "low" | "auto";
+}
+
+const {
+  kind = "image",
+  src,
+  alt = "",
+  title = "Project video",
+  caption,
+  aspect = "16/9",
+  poster,
+  sources = [],
+  autoplay = false,
+  loop = false,
+  loading = "lazy",
+  fetchPriority,
+} = Astro.props;
+const [aspectWidth, aspectHeight] = aspect.split("/").map(Number);
+const imageWidth = 1200;
+const imageHeight = Math.round(imageWidth * (aspectHeight / aspectWidth));
+const aspectStyle = `aspect-ratio: ${aspectWidth} / ${aspectHeight}`;
+---
+
+<figure class="project-media">
+  {
+    kind === "image" && (
+      <Image
+        src={src}
+        alt={alt}
+        width={imageWidth}
+        height={imageHeight}
+        loading={loading}
+        fetchpriority={fetchPriority}
+        style={aspectStyle}
+        class="project-media-frame object-cover"
+      />
+    )
+  }
+
+  {
+    kind === "video" && (
+      <video
+        class="project-media-frame"
+        style={aspectStyle}
+        poster={poster}
+        controls
+        muted
+        loop={loop}
+        playsinline
+        preload="metadata"
+        data-project-autoplay={autoplay ? "true" : undefined}
+        aria-label={title}
+      >
+        {sources.map((source) => (
+          <source src={source.src} type={source.type} />
+        ))}
+        {sources.length === 0 && <source src={src} />}
+        Your browser does not support embedded video.
+      </video>
+    )
+  }
+
+  {
+    kind === "youtube" && (
+      <iframe
+        class="project-media-frame"
+        style={aspectStyle}
+        src={src}
+        title={title}
+        loading="lazy"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+      />
+    )
+  }
+
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<script>
+  const reducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  ).matches;
+
+  if (!reducedMotion) {
+    document
+      .querySelectorAll<HTMLVideoElement>('video[data-project-autoplay="true"]')
+      .forEach((video) => {
+        void video.play().catch(() => undefined);
+      });
+  }
+</script>
