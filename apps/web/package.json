@@ -1,0 +1,40 @@
+{
+  "name": "@personal/web",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "dev:host": "astro dev --host",
+    "prebuild": "pnpm content:validate && astro check",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "content:validate": "node scripts/validate-content.mjs",
+    "content:validate:release": "node scripts/validate-content.mjs --strict-media",
+    "social:build": "node scripts/build-social-card.mjs",
+    "audit": "pnpm audit:lighthouse && pnpm audit:pa11y",
+    "audit:lighthouse": "node scripts/audit-pages.mjs lighthouse",
+    "audit:pa11y": "node scripts/audit-pages.mjs pa11y",
+    "audit:scores": "node scripts/print-scores.mjs",
+    "audit:staging": "pnpm audit:staging:lighthouse && pnpm audit:staging:pa11y",
+    "audit:staging:lighthouse": "node scripts/audit-pages.mjs lighthouse https://staging.nick-reardon.com",
+    "audit:staging:pa11y": "node scripts/audit-pages.mjs pa11y https://staging.nick-reardon.com",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "@lucide/astro": "^1.21.0",
+    "@tailwindcss/vite": "^4.3.1",
+    "astro": "^6.4.7",
+    "tailwindcss": "^4.3.1",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.9",
+    "lighthouse": "^13.4.0",
+    "pa11y": "^9.1.1",
+    "sharp": "^0.34.5",
+    "typescript": "^6.0.3"
+  }
+}

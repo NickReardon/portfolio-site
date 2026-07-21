@@ -24,13 +24,25 @@ workflow or deployment, and verified before handoff.
 Run the narrowest useful verification for the task:
 
 ```powershell
-npm run check
-npm run build
-npm run format:check
+pnpm privacy:check
+pnpm check
+pnpm build
+pnpm format:check
 ```
 
-Use `npm run audit` only for accessibility/performance work or before a release
+Use `pnpm audit` only for accessibility/performance work or before a release
 candidate because it is heavier than the normal build checks.
+
+## Private Knowledge Boundary
+
+- Public builds consume only `content/public` and `apps/web/public`.
+- Local agents may read `PERSONAL_CONTENT_DIR` for knowledge and resume tasks.
+- Keep decrypted knowledge, indexes, job descriptions, packets, drafts, and
+  private outputs under `.local/` only.
+- Never copy private values into logs, tests, fixtures, patches, or commit
+  messages except through an explicitly approved `resume:publish` operation.
+- Never stage `.local/` or content from the private sibling repository.
+- Run `pnpm privacy:check` before every handoff.
 
 ## Branching
 

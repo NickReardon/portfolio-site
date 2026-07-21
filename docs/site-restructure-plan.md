@@ -77,9 +77,9 @@ index, and `llms.txt`.
 Run:
 
 ```powershell
-npm run check
-npm run build
-npm run format:check
+pnpm check
+pnpm build
+pnpm format:check
 ```
 
 ## Phase 2: Home and Projects Discovery
@@ -258,10 +258,10 @@ Update `docs/content.md` with:
 Run the full verification set:
 
 ```powershell
-npm run check
-npm run build
-npm run format:check
-npm run audit
+pnpm check
+pnpm build
+pnpm format:check
+pnpm audit
 ```
 
 Perform final production-preview checks for:

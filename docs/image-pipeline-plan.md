@@ -27,14 +27,14 @@ dependency.
 
 ### Steps
 
-1. Save full-resolution source images under `src/content/projects/` (next to
+1. Save full-resolution source images under `apps/web/src/content/projects/` (next to
    each markdown file) or a shared `src/assets/projects/` directory. Aim for at
    least 1520px wide so the 760px detail image has a 2x source.
 2. Switch the `coverImage` schema field to Astro's `image()` helper so it is
    validated and typed as `ImageMetadata`:
 
    ```ts
-   // src/content.config.ts
+   // apps/web/src/content.config.ts
    import { defineCollection } from "astro:content";
    import { glob } from "astro/loaders";
 
@@ -66,7 +66,7 @@ dependency.
 
 ### Verification
 
-- `npm run check`, `npm run build`, `npm run format:check`.
-- Inspect `dist/_astro/` for the optimized cover variants.
-- Re-run `npm run audit` and confirm the "Improve image delivery" audit on
+- `pnpm check`, `pnpm build`, `pnpm format:check`.
+- Inspect `.local/build/web/_astro/` for the optimized cover variants.
+- Re-run `pnpm audit` and confirm the "Improve image delivery" audit on
   Home, Projects, and the Last Oasis detail page improves.

@@ -28,13 +28,13 @@ To avoid reading as a junior-level candidate, we frame academic experience neutr
 
 ## 5. Canonical Project Metadata
 
-Project content frontmatter is the canonical source for portfolio-facing project
+Project content under `apps/web/src/content` is the canonical source for portfolio-facing project
 metadata. The Home page, Projects index, and project headers must read their
 title, role, status, engine, date label, tags, featured state, and ordering from
 the content collection rather than redefining those values at the page level.
 
 Resume project entries use the project page URL as their stable link to content.
-When a resume-facing field must be duplicated, `npm run content:validate` checks
+When a resume-facing field must be duplicated, `pnpm content:validate` checks
 that names, roles, date labels, and external URLs still agree.
 
 Required project fields include:
@@ -89,13 +89,22 @@ claims.
   reduced motion.
 - Open Graph images must be real project captures with a social-friendly crop.
 - Set `mediaPending: true` only as a temporary implementation marker. Normal
-  validation reports it; `npm run content:validate:release` rejects it.
+  validation reports it; `pnpm content:validate:release` rejects it.
 
 Before publishing project changes, run:
 
 ```powershell
-npm run content:validate:release
-npm run check
-npm run build
-npm run format:check
+pnpm content:validate:release
+pnpm privacy:check
+pnpm check
+pnpm build
+pnpm format:check
 ```
+
+## 8. Knowledge-Derived Resume Content
+
+The approved public resume snapshot lives at `content/public/resume.json`.
+Long-form private source documents live only in the encrypted sibling repository.
+Use the knowledge pipeline and evidence-backed draft workflow documented in
+`docs/personal-knowledge.md`; do not manually copy private source directories
+into the public monorepo.

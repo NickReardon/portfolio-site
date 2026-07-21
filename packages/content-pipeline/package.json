@@ -1,0 +1,22 @@
+{
+  "name": "@personal/content-pipeline",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "knowledge:preview": "node src/cli/knowledge-preview.mjs",
+    "knowledge:index": "node src/cli/knowledge-index.mjs",
+    "knowledge:search": "node src/cli/knowledge-search.mjs",
+    "resume:prepare": "node src/cli/resume-prepare.mjs",
+    "resume:validate": "node src/cli/resume-validate.mjs",
+    "resume:render": "node src/cli/resume-render.mjs",
+    "resume:publish": "node src/cli/resume-publish.mjs",
+    "privacy:check": "node src/cli/privacy-check.mjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "@personal/content-contracts": "workspace:*",
+    "minisearch": "^7.2.0",
+    "yaml": "^2.8.2"
+  }
+}

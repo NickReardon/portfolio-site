@@ -24,11 +24,6 @@ Do not create new worktrees in user-global scratch directories such as
 `~/.codex/worktrees/` unless that location is explicitly requested. The
 `.workspace/` directory is local-only and ignored by Git.
 
-Create local auxiliary worktrees inside this project under `.workspace/worktrees/`.
-Do not create new worktrees in user-global scratch directories such as
-`~/.codex/worktrees/` unless that location is explicitly requested. The
-`.workspace/` directory is local-only and ignored by Git.
-
 Recommended branch types:
 
 - `feat`: new pages, components, sections, or user-facing behavior.
@@ -141,13 +136,13 @@ Recommended PR body:
 Use the smallest check set that covers the risk:
 
 - Documentation-only: proofread and check links/paths.
-- Content-only: `npm run check`; use `npm run build` when routes, slugs, images,
+- Content-only: `pnpm check`; use `pnpm build` when routes, slugs, images,
   or frontmatter schema are affected.
-- Component/layout changes: `npm run check`, `npm run build`, and browser checks
+- Component/layout changes: `pnpm check`, `pnpm build`, and browser checks
   at mobile and desktop widths.
-- Config/deploy changes: `npm run build`; preview or staging deploy validation
+- Config/deploy changes: `pnpm build`; preview or staging deploy validation
   when Cloudflare behavior is affected.
-- Release candidate: `npm run check`, `npm run build`, and `npm run audit` when
+- Release candidate: `pnpm privacy:check`, `pnpm check`, `pnpm build`, and `pnpm audit` when
   audit dependencies are installed and available.
 
 If a check cannot be run, record the reason in the PR or final handoff.

@@ -1,6 +1,8 @@
-# build output
+# all controlled local output, decrypted previews, indexes, drafts, and builds
+.local/
+
+# framework output that cannot be redirected
 dist/
-# generated types
 .astro/
 
 # dependencies
@@ -23,6 +25,11 @@ reports/
 
 # generated resume build files
 .resume-build/
+
+# private-source and draft artifacts must never be tracked
+*.decrypted.*
+*.private.pdf
+*.resume-draft.json
 
 # environment variables
 .env

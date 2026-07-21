@@ -1,6 +1,8 @@
+.local/
 dist/
 .astro/
 node_modules/
 reports/
 .audit-tmp/
-public/resume.pdf
+apps/web/public/resume.pdf
+apps/web/public/resumes/*.pdf

@@ -13,7 +13,10 @@ export const OFFICIAL_RENDER_CV_THEMES = [
   "sb2nov",
 ];
 
-export function readResume(path = "src/data/resume.json") {
+export function readResume(path) {
+  if (!path) {
+    throw new Error("A resume source path is required.");
+  }
   return JSON.parse(readFileSync(path, "utf8"));
 }
 
@@ -340,7 +343,7 @@ function selectSkills(skills, { fullLength, target }) {
 function selectPdfProjects(projects) {
   const bulletLimits = new Map([
     ["Tethered", 5],
-    ["Alien Survivors", 2],
+    ["Alien Survivor", 2],
     ["Last Oasis", 4],
     ["A Totally Normal Bike Ride", 2],
   ]);

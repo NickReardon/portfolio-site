@@ -10,8 +10,12 @@ const projectStatuses = new Set([
 ]);
 const projectVariants = new Set(["case-study", "jam-postmortem"]);
 const strictMedia = process.argv.includes("--strict-media");
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const projectsDirectory = path.join(root, "src", "content", "projects");
+const webRoot = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "..",
+);
+const platformRoot = path.resolve(webRoot, "..", "..");
+const projectsDirectory = path.join(webRoot, "src", "content", "projects");
 
 function parseScalar(value) {
   const trimmed = value.trim();
@@ -47,7 +51,7 @@ function parseFrontmatter(source, fileName) {
 }
 
 function localAssetPath(assetPath) {
-  return path.join(root, "public", assetPath.replace(/^\//u, ""));
+  return path.join(webRoot, "public", assetPath.replace(/^\//u, ""));
 }
 
 const errors = [];
@@ -140,7 +144,10 @@ for (const project of projects) {
 }
 
 const resume = JSON.parse(
-  await readFile(path.join(root, "src", "data", "resume.json"), "utf8"),
+  await readFile(
+    path.join(platformRoot, "content", "public", "resume.json"),
+    "utf8",
+  ),
 );
 const resumeProjectsBySiteUrl = new Map(
   resume.projects

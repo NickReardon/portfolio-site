@@ -10,7 +10,8 @@ import {
   statSync,
   writeFileSync,
 } from "node:fs";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import {
   createRenderCvDocument,
   DEFAULT_RENDER_CV_THEME,
@@ -20,29 +21,43 @@ import {
 } from "./resume-utils.mjs";
 
 const args = process.argv.slice(2);
+const platformRoot = fileURLToPath(new URL("../../../", import.meta.url));
 const target = parseOption(args, "target") ?? process.env.RESUME_TARGET ?? null;
 const theme =
   parseOption(args, "theme") ??
   process.env.RESUME_THEME ??
   DEFAULT_RENDER_CV_THEME;
 const fullLength = parseFlag(args, "full") || process.env.RESUME_FULL === "1";
-const buildDir = ".resume-build";
-const customThemeRoot = "rendercv-themes";
-const pdfOutputDir = join("public", "resumes");
+const sourcePath = resolve(
+  parseOption(args, "source") ??
+    join(platformRoot, "content", "public", "resume.json"),
+);
+const explicitOutputDir = parseOption(args, "output-dir");
+const buildDir = join(platformRoot, ".local", "resume-build");
+const customThemeRoot = join(platformRoot, "rendercv-themes");
+const pdfOutputDir = resolve(
+  explicitOutputDir ?? join(platformRoot, "apps", "web", "public", "resumes"),
+);
 const yamlPath = join(buildDir, "resume.yaml");
-const canonicalPdfPath = join("public", "resume.pdf");
+const canonicalPdfPath = explicitOutputDir
+  ? null
+  : join(platformRoot, "apps", "web", "public", "resume.pdf");
 // All generated PDFs are collected under public/resumes. The default one-page
 // build is also copied to public/resume.pdf for stable site links.
-const pdfFileName = createPdfFileName({ fullLength, target, theme });
+const pdfFileName =
+  parseOption(args, "file-name") ??
+  createPdfFileName({ fullLength, target, theme });
 const pdfPath = join(pdfOutputDir, pdfFileName);
-const renderCvCommand = existsSync(".venv/Scripts/rendercv.exe")
-  ? ".venv/Scripts/rendercv.exe"
-  : "rendercv";
+const localRenderCv = join(platformRoot, ".venv", "Scripts", "rendercv.exe");
+const renderCvCommand = existsSync(localRenderCv) ? localRenderCv : "rendercv";
 const officialThemes = new Set(OFFICIAL_RENDER_CV_THEMES);
 const isCanonicalBuild =
-  !fullLength && !target && theme === DEFAULT_RENDER_CV_THEME;
+  canonicalPdfPath &&
+  !fullLength &&
+  !target &&
+  theme === DEFAULT_RENDER_CV_THEME;
 
-const resume = readResume();
+const resume = readResume(sourcePath);
 const errors = validateResume(resume);
 
 if (errors.length > 0) {

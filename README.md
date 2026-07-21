@@ -1,214 +1,138 @@
-# Portfolio Site
+# Personal Platform
 
-Static Astro portfolio website for projects, devlogs, resume links, and contact
-links. The v1 architecture is intentionally simple: Astro, Tailwind 4, Markdown,
-GitHub, and Cloudflare Pages.
+Public pnpm monorepo for Nicholas Reardon's Astro portfolio, public resume,
+resume renderer, and local personal-knowledge publishing pipeline. Private
+source material lives in the encrypted sibling repository
+[`personal-content`](https://github.com/NickReardon/personal-content).
+
+The deployment boundary is deliberate: Astro and Cloudflare consume only
+`content/public` and `apps/web/public`. They never require the private
+repository, SOPS, age, 1Password, or decrypted local material.
 
 ## Requirements
 
 - Node.js `>=22.12.0`
-- npm
-- RenderCV for regenerating `public/resume.pdf` locally
-- 1Password CLI only for local Cloudflare deploy commands
-
-## Commands
-
-```powershell
-npm install
-npm run dev
-npm run check
-npm run build
-npm run resume:validate
-npm run resume:build
-npm run social:build
-npm run preview
-npm run format:check
-```
-
-Heavier quality checks:
+- pnpm `11.9.0`
+- RenderCV with the `full` extra for PDF generation
+- SOPS and age for private knowledge documents
+- 1Password CLI for private decryption and local Cloudflare deployment
 
 ```powershell
-npm run audit
-npm run audit:staging
-npm run audit:scores
-```
-
-## Project Structure
-
-```text
-/
-├── docs/
-│   ├── content.md
-│   └── workflow.md
-├── public/
-│   ├── images/
-│   ├── resumes/
-│   └── resume.pdf
-├── scripts/
-│   ├── audit-pages.mjs
-│   ├── build-resume.mjs
-│   ├── build-social-card.mjs
-│   ├── print-scores.mjs
-│   ├── resume-utils.mjs
-│   └── validate-resume.mjs
-├── src/
-│   ├── components/
-│   ├── content/
-│   │   ├── blog/
-│   │   └── projects/
-│   ├── data/
-│   │   └── resume.json
-│   ├── layouts/
-│   ├── pages/
-│   ├── styles/
-│   └── site.config.ts
-├── AGENTS.md
-├── astro.config.mjs
-└── package.json
-```
-
-## Content
-
-- Project markdown lives in `src/content/projects`.
-- Blog markdown lives in `src/content/blog`.
-- Content tone and authoring guidance lives in `docs/content.md`.
-- Draft entries can stay in the repo with `draft: true`; production builds
-  exclude them from lists and detail routes.
-- Static project and blog images live under `public/images`.
-- Resume content lives in `src/data/resume.json`. This is the only manually
-  edited resume source for both the `/resume/` page and generated PDF.
-- `public/resume.pdf` is generated from `src/data/resume.json` as a one-page A4
-  PDF and committed so normal site builds do not require RenderCV.
-- Rendered resume PDF variants live in `public/resumes/` and are listed on the
-  unlinked `/resume-pdfs/` page.
-- Update social links and identity text in `src/site.config.ts` as needed.
-
-Use lowercase kebab-case for content slugs and asset filenames.
-
-### Resume PDF
-
-Install RenderCV in your local Python environment before regenerating the PDF:
-
-```powershell
+pnpm install
 python -m venv .venv
 .\.venv\Scripts\python -m pip install "rendercv[full]"
 ```
 
-The `[full]` extra is required: it pulls in the Typst rendering engine and
-fonts. Plain `pip install rendercv` installs the library but cannot render a
-PDF.
+## Structure
 
-Update `src/data/resume.json`, then run:
-
-```powershell
-npm run resume:validate
-npm run resume:build
+```text
+personal-platform/
+├── apps/
+│   ├── web/                    # Astro site and public static assets
+│   └── resume-generator/       # RenderCV adapter
+├── packages/
+│   ├── content-contracts/      # Knowledge, recipe, draft, and public schemas
+│   └── content-pipeline/       # Search, validation, rendering, publication
+├── content/public/resume.json  # Approved public resume snapshot
+├── .local/                     # Ignored builds, previews, indexes, and drafts
+└── pnpm-workspace.yaml
 ```
 
-To generate a role-targeted variant (writes `public/resume-<target>.pdf` and
-leaves the default `public/resume.pdf` untouched), pass a target defined under
-`meta.targets` in `resume.json`:
+The private sibling defaults to `../personal-content`. Override it in the
+ignored `.env.local` when needed:
 
-```powershell
-npm run resume:build -- --target gameplay   # or ai | tools | qa
+```dotenv
+PERSONAL_CONTENT_DIR=D:\Web\personal-content
+SOPS_AGE_KEY="op://Developer/Personal Content age identity/notesPlain"
 ```
 
-To generate a full-length PDF without one-page trimming or the one-page build
-assertion, pass `--full`:
+## Website Commands
 
 ```powershell
-npm run resume:build -- --full
+pnpm dev
+pnpm check
+pnpm build
+pnpm preview
+pnpm format:check
+pnpm privacy:check
 ```
 
-To preview another official RenderCV theme, pass `--theme`. Alternate theme
-builds write a suffixed PDF under `public/resumes/` such as
-`public/resumes/resume-moderncv.pdf` so the canonical resume is not replaced:
+The production build is written to `.local/build/web`. Cloudflare Pages should
+use `pnpm build` and `.local/build/web` as its build command and output
+directory. Project and blog Markdown remains under `apps/web/src/content`, and
+public images and PDFs live under `apps/web/public`.
+
+## Knowledge and Resume Workflow
+
+Private documents are SOPS-encrypted YAML with stable document and evidence
+IDs. Decryption and indexes stay under `.local/`:
 
 ```powershell
-npm run resume:build -- --theme moderncv
-npm run resume:build -- --target gameplay --theme sb2nov
+pnpm knowledge:preview
+pnpm knowledge:index
+pnpm knowledge:search -- "persistence designer workflows" --tags gameplay,systems
 ```
 
-Supported official themes are `classic`, `ember`, `engineeringclassic`,
-`engineeringresumes`, `harvard`, `ink`, `moderncv`, `opal`, and `sb2nov`.
+Prepare an evidence packet and starter draft:
 
-Community or custom RenderCV themes should be committed under
-`rendercv-themes/<theme-name>/`, where `<theme-name>` uses lowercase letters and
-numbers only. The build script copies that folder next to the generated
-RenderCV input before rendering because RenderCV loads custom themes from the
-input file directory.
+```powershell
+pnpm resume:prepare -- --recipe gameplay-programmer
+pnpm resume:prepare -- --recipe gameplay-programmer --job .local/jobs/example.txt
+```
 
-The build script writes temporary RenderCV input under `.resume-build/`, copies
-the rendered PDF to `public/resumes/`, and copies the default one-page PDF to
-`public/resume.pdf` for stable site links. Non-full builds fail if the generated
-PDF is not exactly one page. Commit the JSON source and PDFs together.
+Codex reads the reported packet, condenses supported facts into the matching
+draft JSON, and adds provenance for every work and project bullet. Then run:
 
-## Workflow
+```powershell
+pnpm resume:validate -- --draft <id>
+pnpm resume:render -- --draft <id>
+```
 
-Repository workflow conventions live in:
+Rendering writes only to `.local/resumes/<id>`. After human review, explicitly
+publish the approved snapshot and canonical PDF:
 
-- `AGENTS.md` for coding-agent operating instructions.
-- `docs/workflow.md` for branch names, commit frequency, commit messages, PR
-  descriptions, verification expectations, and release flow.
+```powershell
+pnpm resume:publish -- --draft <id> --approve-publication
+```
 
-Short version:
+Publication fails for unknown evidence, missing provenance, mismatched source
+dates, unsupported numeric claims, or recipe limits. It strips provenance from
+the public JSON. Everything intentionally included in the published resume is
+considered public.
 
-- `main` is production.
-- `staging` is long-lived pre-production.
-- Work branches use `<type>/<short-kebab-summary>`.
-- Commits use `<type>(<scope>): <Description>`.
-- Verify with the smallest command set that covers the risk, usually
-  `npm run check` and `npm run build`.
-- Protect `main` with pull requests and require the
-  `Production Gate / Staging deployment is ready` check before merging from
-  `staging`.
+The existing public snapshot can be validated or regenerated independently of
+private content:
 
-## Deploy To Cloudflare Pages
+```powershell
+pnpm resume:validate:public
+pnpm resume:build
+```
 
-Use these settings when importing the GitHub repository into Cloudflare Pages:
+## Privacy Boundary
 
-- Production branch: `main`
-- Build command: `npm run build`
-- Build directory: `dist`
+`pnpm privacy:check` examines tracked and staged files and rejects `.local`,
+decrypted/private artifacts, SOPS source files, literal age identities, local
+environment files, and nested copies of `personal-content`. It does not reject
+ordinary resume facts.
 
-After the first successful deploy, add `nick-reardon.com` as the production
-custom domain from the Cloudflare Pages project settings.
+Local agents may read the private sibling repository for knowledge and resume
+tasks. They must not copy private values into public patches, logs, fixtures,
+or commit messages except through reviewed resume publication.
 
-For the long-lived pre-production environment, create a `staging` branch and
-enable preview builds for that branch. Add `staging.nick-reardon.com` as a
-custom domain for the `staging` branch. Keep the DNS record proxied through
-Cloudflare so it resolves to the branch deployment instead of production.
+## Deployment and Workflow
 
-Production builds use `https://nick-reardon.com` for canonical URLs and the
-sitemap. Staging and short-lived preview builds emit `noindex` metadata and a
-non-indexable `robots.txt`; their URLs are derived from the branch domain or
-Cloudflare Pages preview URL. Set `SITE_URL` in the build environment only when
-you need to override that default.
+- `main` deploys production at `https://nick-reardon.com`.
+- `staging` deploys pre-production at `https://staging.nick-reardon.com`.
+- Cloudflare receives no personal-content path, SOPS identity, or 1Password key.
+- Production promotion remains a pull request from `staging` to `main`.
 
-### Local Wrangler Deploys With 1Password
-
-For local Wrangler commands, store the Cloudflare account ID and API token in
-1Password, then run Wrangler through `op run` so the values only exist in the
-subprocess environment.
+Local Wrangler deployment still uses `.env.1password`:
 
 ```powershell
 Copy-Item .env.1password.example .env.1password
+pnpm deploy:cloudflare -- --project-name <project-name> --branch staging
 ```
 
-Edit `.env.1password` so each `op://...` value points at your actual 1Password
-vault, item, and field. Prefer `CLOUDFLARE_API_TOKEN`; the older
-`CLOUDFLARE_API_KEY` flow also requires `CLOUDFLARE_EMAIL`.
-
-Check the credentials:
-
-```powershell
-op run --env-file ./.env.1password -- npx --yes wrangler whoami
-```
-
-Deploy the built `dist` directory:
-
-```powershell
-npm run deploy:cloudflare -- --project-name <cloudflare-pages-project-name> --branch main
-```
-
-Use `--branch staging` for the staging Pages deployment.
+See [docs/content.md](docs/content.md),
+[docs/personal-knowledge.md](docs/personal-knowledge.md), and
+[docs/workflow.md](docs/workflow.md) for detailed authoring and release rules.
