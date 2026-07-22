@@ -8,6 +8,8 @@ const productionBranch = "main";
 const stagingBranch = "staging";
 const productionUrl = "https://nick-reardon.com";
 const stagingUrl = "https://staging.nick-reardon.com";
+const buildOutputDirectory =
+  process.env.CF_PAGES === "1" ? "../../dist" : "../../.local/build/web";
 
 /**
  * @param {string | undefined} url
@@ -32,7 +34,7 @@ const siteUrl =
 // https://astro.build/config
 export default defineConfig({
   site: siteUrl,
-  outDir: "../../.local/build/web",
+  outDir: buildOutputDirectory,
   integrations: [sitemap()],
   image: {
     // Authorize itch.io's CDN so Astro can optimize remote project cover

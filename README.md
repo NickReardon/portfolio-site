@@ -57,10 +57,12 @@ pnpm format:check
 pnpm privacy:check
 ```
 
-The production build is written to `.local/build/web`. Cloudflare Pages should
-use `pnpm build` and `.local/build/web` as its build command and output
-directory. Project and blog Markdown remains under `apps/web/src/content`, and
-public images and PDFs live under `apps/web/public`.
+Local production builds are written to `.local/build/web`. Cloudflare Pages
+injects `CF_PAGES=1`, which makes the same build write to the repository-level
+`dist` directory expected by the existing Pages project. Keep the Pages build
+command as `npm run build` (or `pnpm build`) and its output directory as `dist`.
+Project and blog Markdown remains under `apps/web/src/content`, and public
+images and PDFs live under `apps/web/public`.
 
 ## Knowledge and Resume Workflow
 
