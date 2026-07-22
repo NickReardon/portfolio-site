@@ -1,10 +1,11 @@
-import { mkdirSync } from "node:fs";
+import { copyFileSync, mkdirSync } from "node:fs";
 import { relative, resolve } from "node:path";
 import {
   localRoot,
   parseArgs,
   platformRoot,
   resetDirectory,
+  run,
   writeTextAtomic,
 } from "../common.mjs";
 import {
@@ -36,10 +37,40 @@ for (const { record } of targets) {
   mkdirSync(resolve(stagingPath, ".."), { recursive: true });
   writeTextAtomic(stagingPath, record.content);
 }
+const resumeRecord = targets.find(({ record }) => record.id === "resume");
+const resumePdfStaging = resolve(stagingRoot, "resume-output");
+if (resumeRecord) {
+  run(
+    process.execPath,
+    [
+      resolve(
+        platformRoot,
+        "apps",
+        "resume-generator",
+        "scripts",
+        "build-resume.mjs",
+      ),
+      "--source",
+      resolve(stagingRoot, resumeRecord.record.outputPath),
+      "--output-dir",
+      resumePdfStaging,
+      "--file-name",
+      "resume.pdf",
+    ],
+    { stdio: "inherit" },
+  );
+}
 for (const { record, target } of targets) {
   writeTextAtomic(target, record.content);
+}
+if (resumeRecord) {
+  copyFileSync(
+    resolve(resumePdfStaging, "resume.pdf"),
+    resolve(platformRoot, "apps", "web", "public", "resume.pdf"),
+  );
 }
 console.log(`Published ${targets.length} approved canonical artifact(s):`);
 targets.forEach(({ target }) =>
   console.log(`- ${relative(platformRoot, target)}`),
 );
+if (resumeRecord) console.log("- apps\\web\\public\\resume.pdf");
