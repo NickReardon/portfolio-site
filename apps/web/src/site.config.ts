@@ -22,22 +22,22 @@ const deployedUrl =
       : productionUrl);
 
 export const site = {
-  name: "Nicholas Reardon",
+  name: siteContent.identity.name,
   url: deployedUrl,
   isSearchIndexable: !isCloudflarePages || branch === productionBranch,
-  role: "Gameplay and Systems Programmer",
-  focus:
-    "Unreal Engine, C++, modular gameplay architecture, and designer-friendly content workflows",
-  description:
-    "A portfolio of Unreal Engine gameplay systems, technical design, tools, and game jam work.",
+  role: siteContent.identity.role,
+  focus: siteContent.identity.focus,
+  description: siteContent.identity.description,
   defaultImage: "/images/social-card.png",
-  email: "reardon.ntr@gmail.com",
-  resumeUrl: "/resume/",
-  resumePdfUrl: "/resume.pdf",
-  githubUrl: "https://github.com/NickReardon",
-  itchUrl: "https://thingofnightmare.itch.io/",
-  linkedinUrl: "https://www.linkedin.com/in/nicholas-reardon/",
+  email: siteContent.identity.email,
+  resumeUrl: siteContent.identity.resumeUrl,
+  resumePdfUrl: siteContent.identity.resumePdfUrl,
+  githubUrl: siteContent.identity.githubUrl,
+  itchUrl: siteContent.identity.itchUrl,
+  linkedinUrl: siteContent.identity.linkedinUrl,
 };
+
+export const siteCopy = siteContent;
 
 export const navigation = [
   { href: "/", label: "Home" },
@@ -45,3 +45,4 @@ export const navigation = [
   { href: "/about/", label: "About" },
   { href: "/contact/", label: "Contact" },
 ];
+import siteContent from "../../../content/public/site.json";

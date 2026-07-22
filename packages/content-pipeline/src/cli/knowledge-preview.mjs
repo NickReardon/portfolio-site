@@ -11,6 +11,7 @@ import YAML from "yaml";
 import {
   formatZodErrors,
   knowledgeDocumentSchema,
+  publicationRecordSchema,
   resumeRecipeSchema,
 } from "@personal/content-contracts";
 import {
@@ -25,9 +26,11 @@ const args = parseArgs();
 const sourceRoot = personalContentDir(args);
 const encryptedRoot = resolve(sourceRoot, "encrypted");
 const recipeRoot = resolve(sourceRoot, "resume-recipes");
+const publicationRoot = resolve(sourceRoot, "publications");
 const stagingRoot = resolve(localRoot, "preview-staging");
 const knowledgeOutput = resolve(stagingRoot, "knowledge");
 const recipeOutput = resolve(stagingRoot, "recipes");
+const publicationOutput = resolve(stagingRoot, "publications");
 
 if (!existsSync(encryptedRoot)) {
   throw new Error(
@@ -38,6 +41,7 @@ assertSopsAvailable();
 resetDirectory(stagingRoot);
 mkdirSync(knowledgeOutput, { recursive: true });
 mkdirSync(recipeOutput, { recursive: true });
+mkdirSync(publicationOutput, { recursive: true });
 
 const documents = decryptCollection(
   encryptedRoot,
@@ -47,13 +51,21 @@ const documents = decryptCollection(
 const recipes = existsSync(recipeRoot)
   ? decryptCollection(recipeRoot, resumeRecipeSchema, recipeOutput)
   : [];
+const publications = existsSync(publicationRoot)
+  ? decryptCollection(
+      publicationRoot,
+      publicationRecordSchema,
+      publicationOutput,
+    )
+  : [];
 
 promotePreview("knowledge");
 promotePreview("recipes");
+promotePreview("publications");
 rmSync(stagingRoot, { recursive: true, force: true });
 
 console.log(
-  `Prepared ${documents.length} knowledge document(s) and ${recipes.length} recipe(s) under .local/.`,
+  `Prepared ${documents.length} knowledge document(s), ${publications.length} publication source(s), and ${recipes.length} recipe(s) under .local/.`,
 );
 
 function promotePreview(name) {

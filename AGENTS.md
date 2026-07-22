@@ -39,8 +39,12 @@ candidate because it is heavier than the normal build checks.
 - Local agents may read `PERSONAL_CONTENT_DIR` for knowledge and resume tasks.
 - Keep decrypted knowledge, indexes, job descriptions, packets, drafts, and
   private outputs under `.local/` only.
+- Treat `personal-content` as the canonical authoring source for website copy,
+  project and blog documents, knowledge, and resume content. Files under
+  `content/public` and `apps/web/src/content` are approved publication snapshots.
 - Never copy private values into logs, tests, fixtures, patches, or commit
-  messages except through an explicitly approved `resume:publish` operation.
+  messages except through an explicitly approved `content:publish` or
+  `resume:publish` operation.
 - Never stage `.local/` or content from the private sibling repository.
 - Run `pnpm privacy:check` before every handoff.
 

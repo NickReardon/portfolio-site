@@ -15,6 +15,33 @@ Private knowledge documents are SOPS-encrypted YAML in the sibling
 Resume recipes define retrieval priorities, excluded tags, page and project
 limits, bullet limits, and whether evidence is mandatory.
 
+Encrypted publication records are the canonical source for public site copy,
+project and blog Markdown, and the public resume JSON. `knowledge:preview`
+decrypts both knowledge documents and publication records under `.local/`, and
+`knowledge:index` makes both source classes searchable.
+
+## Website and Resume Source Publication
+
+The initial migration command is intentionally guarded and should only be used
+to adopt an existing public artifact deliberately:
+
+```powershell
+pnpm content:adopt -- --approve-adoption
+```
+
+Normal authoring flows from the encrypted canonical record to a reviewable
+public snapshot:
+
+```powershell
+pnpm knowledge:preview
+pnpm content:verify
+pnpm content:publish -- --approve-publication
+```
+
+`content:publish` validates every record and restricts outputs to the approved
+site JSON, resume JSON, and Astro project/blog content directories. It cannot
+overwrite application code. Cloudflare consumes only the committed snapshots.
+
 ## Agent Drafting Contract
 
 `resume:prepare` writes an ignored packet and starter draft. An agent may rewrite
@@ -33,10 +60,10 @@ publication.
 
 ## Publication
 
-Validation and rendering are safe local operations. Publication requires both a
-valid draft and the explicit `--approve-publication` flag. The pipeline renders
-to a local staging directory first, then replaces only
-`content/public/resume.json` and `apps/web/public/resume.pdf`.
+Validation and rendering are safe local operations. Resume publication requires
+both a valid draft and the explicit `--approve-publication` flag. It first
+encrypts the reviewed resume into its canonical `personal-content` publication
+record, then updates the public resume snapshot and PDF.
 
 Always review the local PDF before publishing. After publication, run:
 

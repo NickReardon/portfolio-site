@@ -3,7 +3,7 @@ import { getCollection } from "astro:content";
 import { FileText } from "@lucide/astro";
 import ProjectCard from "../components/ProjectCard.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { site } from "../site.config";
+import { site, siteCopy } from "../site.config";
 import { isVisibleContent, sortProjects } from "../utils/content";
 
 const projects = (await getCollection("projects"))
@@ -42,9 +42,7 @@ const fallbackProjects =
       <aside class="border-l-4 border-teal-700 pl-6">
         <p class="eyebrow">Current Focus</p>
         <ul class="mt-4 space-y-3 text-sm leading-6 text-stone-700">
-          <li>Lyra-based Unreal Engine gameplay architecture.</li>
-          <li>Data-driven combat, encounters, travel, and persistence.</li>
-          <li>Designer-friendly authoring workflows and technical writeups.</li>
+          {siteCopy.home.currentFocus.map((item) => <li>{item}</li>)}
         </ul>
       </aside>
     </div>
@@ -83,14 +81,9 @@ const fallbackProjects =
     <div class="mx-auto max-w-6xl px-5 py-14">
       <div class="max-w-3xl">
         <p class="eyebrow">About</p>
-        <h2>
-          Gameplay systems built around how people actually author content.
-        </h2>
+        <h2>{siteCopy.home.aboutHeading}</h2>
         <p class="mt-4 leading-7 text-stone-650">
-          My strongest work comes from Tethered, a Lyra-based Unreal Engine
-          action rogue-lite prototype, and from game jams where I build gameplay
-          systems, traversal mechanics, and small authoring tools under real
-          production pressure.
+          {siteCopy.home.aboutBody}
         </p>
         <a class="button-secondary mt-6 inline-flex" href="/about/"
           >Read more about me</a

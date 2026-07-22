@@ -28,6 +28,20 @@ export const knowledgeDocumentSchema = z.object({
   evidence: z.array(evidenceSchema).default([]),
 });
 
+export const publicationRecordSchema = z.object({
+  schemaVersion: z.literal(1),
+  id: z.string().regex(/^[a-z0-9][a-z0-9-]*$/u),
+  title: z.string().min(1),
+  format: z.enum(["json", "markdown"]),
+  outputPath: z.string().min(1),
+  summary: z.string().min(1),
+  tags: stringList,
+  skills: stringList,
+  roles: stringList,
+  knowledgeDocumentIds: stringList,
+  content: z.string().min(1),
+});
+
 export const resumeRecipeSchema = z.object({
   schemaVersion: z.literal(1),
   id: z.string().regex(/^[a-z0-9][a-z0-9-]*$/u),

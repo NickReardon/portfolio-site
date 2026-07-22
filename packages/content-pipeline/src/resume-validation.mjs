@@ -6,7 +6,7 @@ import {
   resumeRecipeSchema,
 } from "@personal/content-contracts";
 import { localRoot, readJson } from "./common.mjs";
-import { loadKnowledgeDocuments } from "./knowledge-store.mjs";
+import { loadResumeSourceDocuments } from "./knowledge-store.mjs";
 
 export function resolveDraftPath(value) {
   if (value.includes("/") || value.includes("\\") || value.endsWith(".json")) {
@@ -35,7 +35,7 @@ export function validateDraftFile(path) {
     return { draft, errors };
   }
   const recipe = recipeResult.data;
-  const documents = loadKnowledgeDocuments();
+  const documents = loadResumeSourceDocuments();
   const documentsById = new Map(
     documents.map((document) => [document.id, document]),
   );

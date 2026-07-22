@@ -2,6 +2,10 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import MiniSearch from "minisearch";
 import { localRoot, readJson } from "./common.mjs";
+import {
+  loadPublicationRecords,
+  publicationToKnowledgeDocument,
+} from "./publication-store.mjs";
 
 export const miniSearchOptions = {
   fields: [
@@ -31,6 +35,13 @@ export function loadKnowledgeDocuments() {
     .filter((name) => name.endsWith(".json"))
     .sort()
     .map((name) => readJson(join(directory, name)));
+}
+
+export function loadResumeSourceDocuments() {
+  return [
+    ...loadKnowledgeDocuments(),
+    ...loadPublicationRecords().map(publicationToKnowledgeDocument),
+  ];
 }
 
 export function toSearchDocument(document) {

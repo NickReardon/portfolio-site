@@ -28,12 +28,17 @@ To avoid reading as a junior-level candidate, we frame academic experience neutr
 
 ## 5. Canonical Project Metadata
 
-Project content under `apps/web/src/content` is the canonical source for portfolio-facing project
-metadata. The Home page, Projects index, and project headers must read their
-title, role, status, engine, date label, tags, featured state, and ordering from
-the content collection rather than redefining those values at the page level.
+Encrypted publication records under `personal-content/publications` are the
+canonical authoring source. Project and blog Markdown under
+`apps/web/src/content` and JSON under `content/public` are approved public
+snapshots. Do not make lasting content edits only in the snapshots.
 
-Resume project entries use the project page URL as their stable link to content.
+The Home page, Projects index, and project headers read their title, role,
+status, engine, date label, tags, featured state, and ordering from the
+published content collection rather than redefining those values at the page
+level. Public resume project entries use the project page URL as their stable
+link to content.
+
 When a resume-facing field must be duplicated, `pnpm content:validate` checks
 that names, roles, date labels, and external URLs still agree.
 
@@ -91,7 +96,17 @@ claims.
 - Set `mediaPending: true` only as a temporary implementation marker. Normal
   validation reports it; `pnpm content:validate:release` rejects it.
 
-Before publishing project changes, run:
+Edit canonical publication records with SOPS, refresh the local preview, review
+the intended public content, and publish explicitly:
+
+```powershell
+op run --env-file .\.env.local -- sops edit D:\Web\personal-content\publications\project\project-tethered.sops.yaml
+pnpm knowledge:preview
+pnpm content:publish -- --approve-publication
+pnpm content:verify
+```
+
+Before handing off project changes, run:
 
 ```powershell
 pnpm content:validate:release
@@ -103,8 +118,8 @@ pnpm format:check
 
 ## 8. Knowledge-Derived Resume Content
 
-The approved public resume snapshot lives at `content/public/resume.json`.
-Long-form private source documents live only in the encrypted sibling repository.
-Use the knowledge pipeline and evidence-backed draft workflow documented in
-`docs/personal-knowledge.md`; do not manually copy private source directories
-into the public monorepo.
+The approved public resume snapshot lives at `content/public/resume.json`, but
+its canonical publication record and all long-form source documents live in the
+encrypted sibling repository. Use the knowledge pipeline and evidence-backed
+draft workflow documented in `docs/personal-knowledge.md`; do not manually copy
+private source directories into the public monorepo.

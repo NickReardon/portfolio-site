@@ -33,7 +33,7 @@ personal-platform/
 ├── packages/
 │   ├── content-contracts/      # Knowledge, recipe, draft, and public schemas
 │   └── content-pipeline/       # Search, validation, rendering, publication
-├── content/public/resume.json  # Approved public resume snapshot
+├── content/public/             # Approved site and resume snapshots
 ├── .local/                     # Ignored builds, previews, indexes, and drafts
 └── pnpm-workspace.yaml
 ```
@@ -61,8 +61,25 @@ Local production builds are written to `.local/build/web`. Cloudflare Pages
 injects `CF_PAGES=1`, which makes the same build write to the repository-level
 `dist` directory expected by the existing Pages project. Keep the Pages build
 command as `npm run build` (or `pnpm build`) and its output directory as `dist`.
-Project and blog Markdown remains under `apps/web/src/content`, and public
-images and PDFs live under `apps/web/public`.
+Project and blog Markdown snapshots remain under `apps/web/src/content`, and
+public images and PDFs live under `apps/web/public`.
+
+## Canonical Website Content
+
+The encrypted sibling repository is the canonical authoring source for public
+profile copy, project and blog documents, and the public resume. Cloudflare uses
+only the approved snapshots committed here.
+
+```powershell
+pnpm knowledge:preview
+pnpm content:verify
+pnpm content:publish -- --approve-publication
+```
+
+`content:verify` fails when a public snapshot differs from its canonical source.
+`content:publish` is the explicit private-to-public promotion boundary. The
+one-time `content:adopt -- --approve-adoption` command exists for intentional
+migrations and is not the normal authoring path.
 
 ## Knowledge and Resume Workflow
 
@@ -117,9 +134,10 @@ decrypted/private artifacts, SOPS source files, literal age identities, local
 environment files, and nested copies of `personal-content`. It does not reject
 ordinary resume facts.
 
-Local agents may read the private sibling repository for knowledge and resume
-tasks. They must not copy private values into public patches, logs, fixtures,
-or commit messages except through reviewed resume publication.
+Local agents may read the private sibling repository for knowledge, website,
+and resume tasks. They must not copy private values into public patches, logs,
+fixtures, or commit messages except through reviewed content or resume
+publication.
 
 ## Deployment and Workflow
 

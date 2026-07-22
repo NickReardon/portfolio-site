@@ -8,7 +8,7 @@ import {
 } from "@lucide/astro";
 import ContactLink from "../components/ContactLink.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { site } from "../site.config";
+import { site, siteCopy } from "../site.config";
 ---
 
 <BaseLayout title="Contact" description={`Contact ${site.name}.`}>
@@ -17,8 +17,7 @@ import { site } from "../site.config";
       <p class="eyebrow">Contact</p>
       <h1>Get in touch</h1>
       <p class="mt-5 text-xl leading-8 text-stone-700">
-        I am open to gameplay programming, technical design, and internship
-        conversations where reliable systems and fast iteration matter.
+        {siteCopy.contact.introduction}
       </p>
     </div>
   </section>
@@ -36,7 +35,7 @@ import { site } from "../site.config";
           <ContactLink
             href={site.githubUrl}
             label="GitHub"
-            detail="Project source and code samples"
+            detail={siteCopy.contact.githubDetail}
             icon={Code}
           />
         )
@@ -44,19 +43,19 @@ import { site } from "../site.config";
       <ContactLink
         href={site.linkedinUrl}
         label="LinkedIn"
-        detail="Professional profile"
+        detail={siteCopy.contact.linkedinDetail}
         icon={BriefcaseBusiness}
       />
       <ContactLink
         href={site.itchUrl}
         label="Itch.io"
-        detail="Playable game jam builds"
+        detail={siteCopy.contact.itchDetail}
         icon={Gamepad2}
       />
       <ContactLink
         href={site.resumeUrl}
         label="Resume"
-        detail="Web resume and PDF"
+        detail={siteCopy.contact.resumeDetail}
         icon={FileText}
       />
     </div>

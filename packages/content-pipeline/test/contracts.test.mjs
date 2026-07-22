@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   knowledgeDocumentSchema,
+  publicationRecordSchema,
   resumeDraftSchema,
   resumeRecipeSchema,
 } from "@personal/content-contracts";
@@ -33,6 +34,23 @@ test("knowledge documents require stable ids and structured evidence", () => {
     knowledgeDocumentSchema.safeParse({ ...document, id: "Not valid" }).success,
     false,
   );
+});
+
+test("publication records preserve canonical content and narrow targets", () => {
+  const result = publicationRecordSchema.safeParse({
+    schemaVersion: 1,
+    id: "project-example",
+    title: "Example",
+    format: "markdown",
+    outputPath: "apps/web/src/content/projects/example.md",
+    summary: "A public project source.",
+    tags: ["gameplay"],
+    skills: ["C++"],
+    roles: ["gameplay-programmer"],
+    knowledgeDocumentIds: ["project-example"],
+    content: "---\ntitle: Example\n---\n\nBody.\n",
+  });
+  assert.equal(result.success, true);
 });
 
 test("recipes carry deterministic evidence and layout limits", () => {

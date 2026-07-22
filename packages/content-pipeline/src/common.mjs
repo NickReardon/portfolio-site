@@ -67,9 +67,13 @@ export function readJson(path) {
 }
 
 export function writeJsonAtomic(path, value) {
+  writeTextAtomic(path, `${JSON.stringify(value, null, 2)}\n`);
+}
+
+export function writeTextAtomic(path, value) {
   mkdirSync(dirname(path), { recursive: true });
   const temporary = `${path}.tmp`;
-  writeFileSync(temporary, `${JSON.stringify(value, null, 2)}\n`, "utf8");
+  writeFileSync(temporary, value, "utf8");
   renameSync(temporary, path);
 }
 

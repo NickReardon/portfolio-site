@@ -3,12 +3,12 @@ import { resolve } from "node:path";
 import MiniSearch from "minisearch";
 import { localRoot } from "../common.mjs";
 import {
-  loadKnowledgeDocuments,
+  loadResumeSourceDocuments,
   miniSearchOptions,
   toSearchDocument,
 } from "../knowledge-store.mjs";
 
-const documents = loadKnowledgeDocuments();
+const documents = loadResumeSourceDocuments();
 if (documents.length === 0) {
   throw new Error(
     "No knowledge documents are available to index. Run a successful knowledge:preview first.",
@@ -23,4 +23,4 @@ writeFileSync(
   JSON.stringify(index),
   "utf8",
 );
-console.log(`Indexed ${documents.length} knowledge document(s).`);
+console.log(`Indexed ${documents.length} canonical source document(s).`);

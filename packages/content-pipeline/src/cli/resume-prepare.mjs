@@ -13,7 +13,7 @@ import {
   writeJsonAtomic,
 } from "../common.mjs";
 import {
-  loadKnowledgeDocuments,
+  loadResumeSourceDocuments,
   searchKnowledge,
 } from "../knowledge-store.mjs";
 
@@ -43,7 +43,7 @@ const matchIds = matches
   )
   .map((match) => match.id);
 const documentsById = new Map(
-  loadKnowledgeDocuments().map((document) => [document.id, document]),
+  loadResumeSourceDocuments().map((document) => [document.id, document]),
 );
 const documents = matchIds.map((id) => documentsById.get(id)).filter(Boolean);
 const id = String(
