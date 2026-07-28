@@ -212,7 +212,8 @@
         "Designed a conversation runtime around an explicit state machine and a signal-driven service layer, so interface code subscribed to dialogue state instead of polling it.",
         "Layered original runtime, flow-control, and pacing logic over the dialogue_manager addon rather than forking it, keeping the writers' authoring format intact.",
         "Built a real-time messaging interface with dynamic message bubbles, typing indicators, timed delivery, branching response trays, and message tones synthesized at runtime.",
-        "Authored characters and conversation hooks as Resource catalogs so narrative scope could change without code changes, and built a crossfading music player with a real-time audio-spectrum visualizer."
+        "Authored characters and conversation hooks as Resource catalogs so narrative scope could change without code changes during a shifting narrative scope.",
+        "Integrated and adapted existing dialogue and audio solutions instead of reimplementing them, reserving the jam's hours for the systems specific to this game."
       ]
     },
     {

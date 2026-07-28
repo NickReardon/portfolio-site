@@ -33,11 +33,15 @@ behaves.
 
 ## What I Contributed
 
-I owned the full codebase: the app shell, the dialogue runtime, the dating and
-matchmaking logic, the messaging interface, and the audio systems. I structured
-the project around a small number of decoupled services so that writing,
-tuning, and interface work could proceed without blocking on one another during
-a four-day window.
+I was responsible for all of the engine work: the app shell, the dialogue
+runtime, the dating and matchmaking logic, the messaging interface, and the
+audio integration. I structured the project around a small number of decoupled
+services so that writing, tuning, and interface work could proceed without
+blocking on one another during a four-day window.
+
+A four-day budget makes "what should I not write" a real design question. I
+leaned on existing solutions for dialogue and audio and spent the hours on the
+parts that were specific to this game.
 
 ### Conversation runtime
 
@@ -76,13 +80,18 @@ adding or cutting a romance path was a content edit. This mattered more than
 usual on a four-day timeline, because the narrative scope moved repeatedly and
 the systems needed to absorb that without code changes.
 
-### Audio
+### Audio, and what I chose not to write
 
-A music manager handles a registry-driven playlist with tween-based crossfading
-and scheduled transitions. A reusable bus visualizer attaches a spectrum
-analyzer to an audio bus and renders smoothed, contrast-curved frequency bands
-with configurable attack and decay, so the in-game music player reacts to
-whatever the composers delivered.
+The in-game music player wanted a spectrum visualizer. Rather than write
+frequency-analysis display code during a four-day jam, I adapted an existing
+implementation to the project's audio buses and visual style, and wired it into
+the music player alongside playlist handling, crossfading, and scheduled track
+transitions.
+
+That was the same call I made on dialogue. Both problems had mature existing
+solutions, and neither was what made this game distinct. Adapting them cost
+integration and debugging time instead of authoring time, which was the cheaper
+of the two on a four-day clock.
 
 ### Shipping and iteration
 
@@ -96,7 +105,8 @@ atlas-texture profile images.
 
 This project shows systems work in a domain with no gameplay physics to lean
 on, where the engineering is all state, timing, and presentation. It also shows
-what I do when handed someone else's framework: extend it at its seams, keep my
-own logic separable, and leave the authoring workflow intact for the people
-generating content. Shipping to two platforms inside four days, then fixing
-what only broke on one of them, is the part I would point at first.
+how I spend a fixed budget: adopt the mature solution where one exists, extend
+it at its seams rather than forking it, and put original work into the systems
+that are actually specific to the game. Shipping to two platforms inside four
+days, then fixing what only broke on one of them, is the part I would point at
+first.
