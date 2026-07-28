@@ -191,6 +191,31 @@
       ]
     },
     {
+      "name": "Down Bad: Searching for Love & Blood",
+      "role": "Sole programmer and lead designer",
+      "description": "Sole programmer and lead designer for a Godot narrative game built as a simulated phone OS, shipped to web and Windows during a four-day GMTK Game Jam.",
+      "startDate": "2026",
+      "dateLabel": "GMTK Game Jam 2026",
+      "siteUrl": "/projects/down-bad/",
+      "url": "https://thingofnightmare.itch.io/down-bad-searching-for-love-blood",
+      "availability": "Playable",
+      "tags": ["gameplay", "systems", "tools", "ui-ux", "qa"],
+      "keywords": [
+        "Godot",
+        "GDScript",
+        "Dialogue Systems",
+        "UI Programming",
+        "Real-time Audio"
+      ],
+      "highlights": [
+        "Built the full codebase as the only programmer on a five-person team, shipping to browser and Windows inside a four-day jam and patching web-only regressions after release.",
+        "Designed a conversation runtime around an explicit state machine and a signal-driven service layer, so interface code subscribed to dialogue state instead of polling it.",
+        "Layered original runtime, flow-control, and pacing logic over the dialogue_manager addon rather than forking it, keeping the writers' authoring format intact.",
+        "Built a real-time messaging interface with dynamic message bubbles, typing indicators, timed delivery, branching response trays, and message tones synthesized at runtime.",
+        "Authored characters and conversation hooks as Resource catalogs so narrative scope could change without code changes, and built a crossfading music player with a real-time audio-spectrum visualizer."
+      ]
+    },
+    {
       "name": "Last Oasis",
       "role": "Primary gameplay and tooling programmer",
       "description": "Primary gameplay and tooling programmer for a browser-playable Godot game jam platformer.",
