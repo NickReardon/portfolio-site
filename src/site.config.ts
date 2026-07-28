@@ -26,8 +26,11 @@ export const site = {
   url: deployedUrl,
   isSearchIndexable: !isCloudflarePages || branch === productionBranch,
   role: "Gameplay and Systems Programmer",
-  focus:
-    "Unreal Engine, C++, modular gameplay architecture, and designer-friendly content workflows",
+  tagline:
+    "I build Unreal Engine gameplay systems that let designers create and tune content without writing new engine code.",
+  availability:
+    "Completing a B.S. in Computer Science at CSU Fullerton, Fall 2026. Open to gameplay, systems, and tools roles and internships.",
+  focus: "Unreal Engine, C++, and modular gameplay architecture",
   description:
     "A portfolio of Unreal Engine gameplay systems, technical design, tools, and game jam work.",
   defaultImage: "/images/social-card.png",
@@ -43,5 +46,6 @@ export const navigation = [
   { href: "/", label: "Home" },
   { href: "/projects/", label: "Projects" },
   { href: "/about/", label: "About" },
+  { href: "/resume/", label: "Resume" },
   { href: "/contact/", label: "Contact" },
 ];
