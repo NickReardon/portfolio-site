@@ -209,12 +209,12 @@
         "Real-time Audio"
       ],
       "highlights": [
-        "Built the full codebase as the only programmer on a five-person team, shipping to browser and Windows inside a four-day jam and patching web-only regressions after release.",
+        "Owned all engine work as the only programmer on a five-person team, shipping to browser and Windows inside a four-day jam and patching web-only regressions after release.",
         "Designed a conversation runtime around an explicit state machine and a signal-driven service layer, so interface code subscribed to dialogue state instead of polling it.",
         "Layered original runtime, flow-control, and pacing logic over the dialogue_manager addon rather than forking it, keeping the writers' authoring format intact.",
         "Built a real-time messaging interface with dynamic message bubbles, typing indicators, timed delivery, branching response trays, and message tones synthesized at runtime.",
         "Authored characters and conversation hooks as Resource catalogs so narrative scope could change without code changes during a shifting narrative scope.",
-        "Integrated and adapted existing dialogue and audio solutions instead of reimplementing them, reserving the jam's hours for the systems specific to this game."
+        "Wrote a music manager with a registry-driven playlist, crossfading, and scheduled track transitions over a plugin's audio system, and adapted an existing spectrum visualizer rather than writing frequency-analysis code, reserving jam hours for game-specific systems."
       ]
     },
     {

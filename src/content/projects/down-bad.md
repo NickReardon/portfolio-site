@@ -82,14 +82,15 @@ the systems needed to absorb that without code changes.
 
 ### Audio, and what I chose not to write
 
-The in-game music player wanted a spectrum visualizer. Rather than write
-frequency-analysis display code during a four-day jam, I adapted an existing
-implementation to the project's audio buses and visual style, and wired it into
-the music player alongside playlist handling, crossfading, and scheduled track
-transitions.
+I wrote the music manager itself: a registry-driven playlist, tween-based
+crossfading, and scheduled track transitions. It sits on a plugin's audio
+system rather than on playback infrastructure of my own. The spectrum
+visualizer in the music player is an existing implementation I adapted to the
+project's audio buses and visual style, not frequency-analysis code I wrote
+during the jam.
 
-That was the same call I made on dialogue. Both problems had mature existing
-solutions, and neither was what made this game distinct. Adapting them cost
+That split was deliberate, and it matches the call I made on dialogue: take the
+mature substrate, write the layer that is specific to this game. Adapting costs
 integration and debugging time instead of authoring time, which was the cheaper
 of the two on a four-day clock.
 
