@@ -536,6 +536,29 @@
     font-weight: 700;
   }
 
+  /* Media dropped into project markdown is framed to match ProjectMedia so a
+     plain markdown image or a raw <video> needs no per-page styling. */
+  .prose img,
+  .prose video {
+    border: 1px solid #d6d3d1;
+    border-radius: 0.5rem;
+    box-shadow: 0 16px 45px rgb(28 25 23 / 0.08);
+    display: block;
+    height: auto;
+    max-width: 100%;
+  }
+
+  .prose figure {
+    margin: 0;
+  }
+
+  .prose figcaption {
+    color: #57534e;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-top: 0.75rem;
+  }
+
   .project-media {
     margin: 0;
   }

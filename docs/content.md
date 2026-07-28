@@ -91,6 +91,26 @@ claims.
 - Set `mediaPending: true` only as a temporary implementation marker. Normal
   validation reports it; `npm run content:validate:release` rejects it.
 
+### Dropping in project media
+
+In-body media uses plain Markdown because project content is `.md` and cannot
+import components. `.prose img` and `.prose video` already frame that media to
+match the cover, so no per-page styling is needed.
+
+1. Put files under `public/images/projects/<project-slug>/`, lowercase
+   kebab-case, for example `public/images/projects/tethered/arena-combat.png`.
+2. Reference them from the project body with alternative text that describes
+   what the capture shows:
+   `![Arena encounter with wave counter and active spawn modifiers.](/images/projects/tethered/arena-combat.png)`
+3. For motion, use a raw `<video muted loop playsinline controls>` block with an
+   `aria-label`, or link an itch.io build when a clip is not available.
+4. Replace the project's `coverImage` and `ogImage` with a real capture and
+   delete the placeholder SVG.
+5. Set `mediaPending: false` once the project has real cover and body media.
+
+`npm run content:validate` warns while `mediaPending` is true;
+`npm run content:validate:release` fails, which is the gate for publishing.
+
 Before publishing project changes, run:
 
 ```powershell
