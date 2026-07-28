@@ -1,7 +1,7 @@
 ---
 title: "Down Bad: Searching for Love & Blood"
 description: "A Godot narrative game built as a simulated phone OS, with a state-machine dialogue runtime, signal-driven services, and real-time audio, shipped to web and Windows in four days."
-date: 2026-07-20
+date: 2026-07-26
 dateLabel: "GMTK Game Jam 2026"
 order: 15
 variant: "jam-postmortem"
@@ -22,7 +22,7 @@ draft: true
 Down Bad is a narrative game presented as a simulated smartphone operating
 system: a home screen, launchable apps, and a messaging app where the story
 plays out as live conversations. It shipped to browser and Windows during GMTK
-Game Jam 2026, a four-day jam.
+Game Jam 2026, a four-day jam on the theme "Countdown."
 
 I was the only programmer on a five-person team, and I led design. The rest of
 the team covered art, music composition, and narrative writing. The interesting
