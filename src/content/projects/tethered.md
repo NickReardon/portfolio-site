@@ -50,6 +50,11 @@ state carries across rooms and across runs.
 
 ## Architecture
 
+The architecture separates three kinds of state: what belongs to a player, what
+belongs to the current world, and what survives between runs. Keeping those
+boundaries explicit is what lets combat, encounters, travel, and upgrades change
+independently of one another.
+
 Tethered uses three Ability System Component (ASC) owners for different layers
 of gameplay state:
 

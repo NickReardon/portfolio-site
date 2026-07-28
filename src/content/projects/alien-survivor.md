@@ -8,7 +8,7 @@ variant: "jam-postmortem"
 tags: ["Unity", "Shooter", "Data-Driven Design", "Action"]
 projectType: "game"
 role: "Solo developer"
-status: "On hold"
+status: "Prototype"
 engine: "Unity"
 coverImage: "/images/projects/alien-survivor.png"
 coverAlt: "Alien Survivor cover art."
