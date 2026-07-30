@@ -12,6 +12,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
+    "check:first-flight": "node scripts/check-first-flight.mjs",
     "content:validate": "node scripts/validate-content.mjs",
     "content:validate:release": "node scripts/validate-content.mjs --strict-media",
     "resume:build": "node scripts/build-resume.mjs",
