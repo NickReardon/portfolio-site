@@ -26,7 +26,7 @@ const { Content } = await render(project);
 <BaseLayout
   title={project.data.title}
   description={project.data.description}
-  image={project.data.ogImage ?? project.data.coverImage}
+  image={project.data.ogImage ?? project.data.coverImage?.src}
   type="article"
 >
   <article>

@@ -10,7 +10,8 @@ interface VideoSource {
 
 interface Props {
   kind?: MediaKind;
-  src: string;
+  /** Pipeline-optimized when it comes from `image()`; a plain path otherwise. */
+  src: ImageMetadata | string;
   alt?: string;
   title?: string;
   caption?: string;
@@ -38,25 +39,47 @@ const {
   fetchPriority,
 } = Astro.props;
 const [aspectWidth, aspectHeight] = aspect.split("/").map(Number);
-const imageWidth = 1200;
-const imageHeight = Math.round(imageWidth * (aspectHeight / aspectWidth));
 const aspectStyle = `aspect-ratio: ${aspectWidth} / ${aspectHeight}`;
+
+// Only pipeline-managed images (from `image()`) can be optimized; a plain path
+// points at public/ and is served as authored.
+const optimizedImage = typeof src === "string" ? undefined : src;
+const rawSrc = typeof src === "string" ? src : src.src;
+
+// Cap generated widths at the source's own width. The detail page lays out up to
+// ~1100px, but several covers are only 508px, and asking for more just ships
+// bigger blurry files. Vectors scale on their own, so widths would only emit
+// identical copies.
+const mediaWidths =
+  optimizedImage && optimizedImage.format !== "svg"
+    ? [508, 768, 1100].filter((width) => width <= optimizedImage.width)
+    : undefined;
 ---
 
 <figure class="project-media">
   {
-    kind === "image" && (
-      <Image
-        src={src}
-        alt={alt}
-        width={imageWidth}
-        height={imageHeight}
-        loading={loading}
-        fetchpriority={fetchPriority}
-        style={aspectStyle}
-        class="project-media-frame object-cover"
-      />
-    )
+    kind === "image" &&
+      (optimizedImage ? (
+        <Image
+          src={optimizedImage}
+          alt={alt}
+          widths={mediaWidths}
+          sizes="(min-width: 1200px) 1100px, 100vw"
+          loading={loading}
+          fetchpriority={fetchPriority}
+          style={aspectStyle}
+          class="project-media-frame object-cover"
+        />
+      ) : (
+        <img
+          src={rawSrc}
+          alt={alt}
+          loading={loading}
+          fetchpriority={fetchPriority}
+          style={aspectStyle}
+          class="project-media-frame object-cover"
+        />
+      ))
   }
 
   {
@@ -76,7 +99,7 @@ const aspectStyle = `aspect-ratio: ${aspectWidth} / ${aspectHeight}`;
         {sources.map((source) => (
           <source src={source.src} type={source.type} />
         ))}
-        {sources.length === 0 && <source src={src} />}
+        {sources.length === 0 && <source src={rawSrc} />}
         Your browser does not support embedded video.
       </video>
     )
@@ -87,7 +110,7 @@ const aspectStyle = `aspect-ratio: ${aspectWidth} / ${aspectHeight}`;
       <iframe
         class="project-media-frame"
         style={aspectStyle}
-        src={src}
+        src={rawSrc}
         title={title}
         loading="lazy"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

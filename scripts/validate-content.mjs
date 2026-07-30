@@ -46,8 +46,19 @@ function parseFrontmatter(source, fileName) {
   );
 }
 
-function localAssetPath(assetPath) {
+function publicAssetPath(assetPath) {
   return path.join(root, "public", assetPath.replace(/^\//u, ""));
+}
+
+/**
+ * coverImage goes through Astro's asset pipeline, so it is written relative to
+ * the Markdown file that declares it. ogImage stays a site-absolute public path
+ * because social crawlers need a stable, unhashed URL.
+ */
+function localAssetPath(field, assetPath) {
+  return field === "coverImage"
+    ? path.join(projectsDirectory, assetPath)
+    : publicAssetPath(assetPath);
 }
 
 const errors = [];
@@ -90,9 +101,9 @@ for (const fileName of projectFiles) {
       errors.push(`${fileName}: published projects require coverAlt`);
     }
 
-    if (!data.ogImage) {
-      errors.push(`${fileName}: published projects require ogImage`);
-    }
+    // ogImage is no longer required: the project page falls back to coverImage,
+    // which is mandatory above, so every published project still has a social
+    // image. Set ogImage only to override that default.
   }
 
   for (const field of ["coverImage", "ogImage"]) {
@@ -102,7 +113,7 @@ for (const fileName of projectFiles) {
     }
 
     try {
-      await access(localAssetPath(assetPath));
+      await access(localAssetPath(field, assetPath));
     } catch {
       errors.push(`${fileName}: ${field} does not exist at ${assetPath}`);
     }

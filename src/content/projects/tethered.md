@@ -10,9 +10,8 @@ projectType: "system"
 role: "Lead System Designer and Gameplay Engineer"
 status: "In development"
 engine: "Unreal Engine 5.8"
-coverImage: "/images/projects/tethered-placeholder.svg"
+coverImage: "../../assets/projects/tethered-placeholder.svg"
 coverAlt: "Diagram showing Tethered gameplay system flow from input to gameplay tags, combos, attacks, and feedback."
-ogImage: "/images/projects/tethered-placeholder.svg"
 mediaPending: true
 featured: true
 draft: false

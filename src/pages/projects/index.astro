@@ -30,11 +30,15 @@ const projects = (await getCollection("projects"))
         projects.length > 0 ? (
           <div>
             <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {/* Only the first cover is eager. On a 3-column desktop the whole
+                  first row is above the fold, but on mobile cards 2 and 3 are
+                  far below it — and a lazy image that is already in view still
+                  loads promptly, it just yields priority to the document. */}
               {projects.map((project, index) => (
                 <ProjectCard
                   project={project}
                   headingLevel={2}
-                  imageLoading={index < 3 ? "eager" : "lazy"}
+                  imageLoading={index === 0 ? "eager" : "lazy"}
                   imageFetchPriority={index === 0 ? "high" : "auto"}
                   showFeatured
                 />

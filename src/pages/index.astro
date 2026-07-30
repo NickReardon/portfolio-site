@@ -68,13 +68,12 @@ const fallbackProjects =
       {
         fallbackProjects.length > 0 ? (
           <div class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {fallbackProjects.map((project, index) => (
-              <ProjectCard
-                project={project}
-                headingLevel={3}
-                imageLoading={index < 3 ? "eager" : "lazy"}
-                imageFetchPriority={index === 0 ? "high" : "auto"}
-              />
+            {/* The hero is text, so no cover is ever the LCP element and none
+                should be eager: the grid sits below the fold on every viewport.
+                Fetching them up front only steals slow-start bandwidth from the
+                document itself. */}
+            {fallbackProjects.map((project) => (
+              <ProjectCard project={project} headingLevel={3} />
             ))}
           </div>
         ) : (
