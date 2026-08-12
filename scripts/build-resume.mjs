@@ -49,6 +49,11 @@ const pdfPath =
 const renderCvCommand = existsSync(".venv/Scripts/rendercv.exe")
   ? ".venv/Scripts/rendercv.exe"
   : "rendercv";
+const pythonCommand = existsSync(".venv/Scripts/python.exe")
+  ? ".venv/Scripts/python.exe"
+  : existsSync(".venv/bin/python")
+    ? ".venv/bin/python"
+    : "python";
 const officialThemes = new Set(OFFICIAL_RENDER_CV_THEMES);
 const resume = readResume(
   join(".local", "publication", "resumes", `${normalizedTarget}.json`),
@@ -111,6 +116,7 @@ if (!officialThemes.has(theme)) {
 
 const renderCvDocument = createRenderCvDocument(resume, {
   theme,
+  target: normalizedTarget,
 });
 
 // RenderCV reads YAML, and JSON is valid YAML. Writing JSON keeps this script
@@ -158,6 +164,10 @@ const pageCount = countPdfPages(pdfPath);
 if (pageCount !== 1) {
   throw new Error(`Expected ${pdfPath} to be 1 page, but found ${pageCount}.`);
 }
+
+execFileSync(pythonCommand, ["scripts/check-resume-fill.py", pdfPath, "25"], {
+  stdio: "inherit",
+});
 
 console.log(`Resume PDF written to ${pdfPath}.`);
 
