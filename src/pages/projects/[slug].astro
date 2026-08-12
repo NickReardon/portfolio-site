@@ -1,0 +1,55 @@
+---
+import { getCollection, render } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import ProjectHeader from "../../components/ProjectHeader.astro";
+import ProjectMedia from "../../components/ProjectMedia.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { entrySlug, isVisibleContent } from "../../utils/content";
+
+interface Props {
+  project: CollectionEntry<"projects">;
+}
+
+export async function getStaticPaths() {
+  const projects = (await getCollection("projects")).filter(isVisibleContent);
+
+  return projects.map((project) => ({
+    params: { slug: entrySlug(project.id) },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+---
+
+<BaseLayout
+  title={project.data.title}
+  description={project.data.description}
+  image={project.data.ogImage ?? project.data.coverImage?.src}
+  type="article"
+>
+  <article>
+    <header class="section bg-site-subtle">
+      <ProjectHeader project={project} />
+      {
+        project.data.coverImage && (
+          <div class="mx-auto max-w-6xl px-5 pb-14">
+            <ProjectMedia
+              src={project.data.coverImage}
+              alt={project.data.coverAlt ?? ""}
+              loading="eager"
+              fetchPriority="high"
+            />
+          </div>
+        )
+      }
+    </header>
+
+    <div class="section mx-auto max-w-3xl px-5 py-14">
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </article>
+</BaseLayout>

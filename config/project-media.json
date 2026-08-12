@@ -1,0 +1,65 @@
+{
+  "fixture-project": {
+    "order": 1,
+    "variant": "case-study",
+    "projectType": "system",
+    "status": "Released",
+    "engine": "Fixture Engine",
+    "tags": ["Fixture", "Systems"],
+    "coverImage": "tethered-system-flow.svg",
+    "coverAlt": "Fictional fixture project diagram.",
+    "mediaPending": false
+  },
+  "tethered": {
+    "order": 10,
+    "variant": "case-study",
+    "projectType": "system",
+    "status": "In development",
+    "engine": "Unreal Engine 5.8",
+    "tags": ["Unreal Engine", "C++", "GAS", "Lyra", "Gameplay Systems"],
+    "coverImage": "tethered-system-flow.svg",
+    "coverAlt": "Diagram showing a modular gameplay-system flow.",
+    "mediaPending": false
+  },
+  "last-oasis": {
+    "order": 20,
+    "variant": "jam-postmortem",
+    "projectType": "game",
+    "status": "Released",
+    "engine": "Godot",
+    "tags": ["Game Jam", "Godot", "Platformer", "Gameplay Tools"],
+    "coverImage": "last-oasis.png",
+    "coverAlt": "Last Oasis cover art.",
+    "mediaPending": false
+  },
+  "a-totally-normal-bike-ride": {
+    "order": 30,
+    "variant": "jam-postmortem",
+    "projectType": "game",
+    "status": "Prototype",
+    "engine": "Godot",
+    "tags": ["Game Jam", "Godot", "Physics", "Prototype"],
+    "coverImage": "a-totally-normal-bike-ride.png",
+    "coverAlt": "A Totally Normal Bike Ride cover art.",
+    "mediaPending": false
+  },
+  "alien-survivor": {
+    "order": 40,
+    "variant": "jam-postmortem",
+    "projectType": "game",
+    "status": "Prototype",
+    "engine": "Unity",
+    "tags": ["Unity", "Shooter", "Data-Driven Design", "Action"],
+    "coverImage": "alien-survivor.png",
+    "coverAlt": "Alien Survivor cover art.",
+    "mediaPending": false
+  },
+  "stock-backtesting": {
+    "order": 50,
+    "variant": "case-study",
+    "projectType": "system",
+    "status": "Prototype",
+    "engine": "Python / PySide6",
+    "tags": ["Python", "PySide6", "Qt", "Desktop Tools", "Backtesting"]
+  }
+}

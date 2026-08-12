@@ -1,0 +1,89 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
+import { entrySlug } from "../utils/content";
+
+interface Props {
+  project: CollectionEntry<"projects">;
+  headingLevel?: 2 | 3;
+  imageLoading?: "eager" | "lazy";
+  imageFetchPriority?: "high" | "low" | "auto";
+  showFeatured?: boolean;
+}
+
+const {
+  project,
+  headingLevel = 2,
+  imageLoading = "lazy",
+  imageFetchPriority,
+  showFeatured = false,
+} = Astro.props;
+const { data } = project;
+const slug = entrySlug(project.id);
+const href = `/projects/${slug}/`;
+const Heading = `h${headingLevel}` as "h2" | "h3";
+
+// Never generate a width above the source's own: upscaling costs bytes and
+// returns blur, not detail. Several covers are only 508px wide today. Vectors
+// scale on their own, so asking for widths would just emit identical copies.
+const cover = data.coverImage;
+const coverWidths =
+  cover && cover.format !== "svg"
+    ? [254, 384, 508].filter((width) => width <= cover.width)
+    : undefined;
+---
+
+<article class="card group h-full overflow-hidden">
+  <a href={href} class="card-link grid h-full grid-rows-[auto_1fr]">
+    {
+      data.coverImage && (
+        <div class="aspect-video overflow-hidden bg-stone-200">
+          <Image
+            src={data.coverImage}
+            alt={data.coverAlt ?? ""}
+            widths={coverWidths}
+            sizes="(min-width: 1024px) 368px, (min-width: 768px) 50vw, 100vw"
+            loading={imageLoading}
+            fetchpriority={imageFetchPriority}
+            class="h-full w-full object-cover transition duration-300 group-hover:scale-[1.03]"
+          />
+        </div>
+      )
+    }
+    <div class="project-card-body flex h-full flex-col gap-4 p-5">
+      <div class="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p class="text-sm font-medium text-teal-800">{data.dateLabel}</p>
+          <Heading class="mt-1 text-xl font-semibold text-stone-950"
+            >{data.title}</Heading
+          >
+        </div>
+        {
+          showFeatured && data.featured && (
+            <span class="rounded-full border border-teal-700 px-3 py-1 text-xs font-semibold text-teal-900">
+              Featured
+            </span>
+          )
+        }
+      </div>
+
+      {
+        (data.role || data.status || data.engine) && (
+          <div class="project-card-meta">
+            {data.role && <span>{data.role}</span>}
+            {data.status && <span>{data.status}</span>}
+            {data.engine && <span>{data.engine}</span>}
+          </div>
+        )
+      }
+
+      <p class="project-card-description text-sm leading-6 text-stone-650">
+        {data.description}
+      </p>
+
+      <div class="mt-auto flex flex-wrap gap-2 pt-1">
+        {data.tags.map((tag) => <span class="tag">{tag}</span>)}
+      </div>
+    </div>
+  </a>
+</article>

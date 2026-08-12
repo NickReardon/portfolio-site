@@ -1,0 +1,23 @@
+# Cloudflare Pages custom headers.
+# https://developers.cloudflare.com/pages/configuration/headers/
+
+https://staging.nick-reardon.com/*
+  X-Robots-Tag: noindex, nofollow
+
+# Everything Astro emits here is content-hashed, so a given URL never changes
+# meaning. Safe to cache forever; a content change produces a new filename.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Resume PDFs are linked, not part of any page's critical path. Cache for a day
+# so repeat visits are cheap without pinning a stale copy for long.
+/resumes/*
+  Cache-Control: public, max-age=86400
+
+/resume.pdf
+  Cache-Control: public, max-age=86400
+
+# HTML is not hashed and carries the inlined stylesheet, so it must revalidate:
+# a stale document would pin stale CSS with it.
+/*
+  Cache-Control: public, max-age=0, must-revalidate

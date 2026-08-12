@@ -1,0 +1,23 @@
+name: Production Gate
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  staging-ready:
+    name: Require staging promotion
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Require staging as the source branch
+        if: github.event_name == 'pull_request'
+        run: |
+          if [ "${{ github.head_ref }}" != "staging" ]; then
+            echo "Production PRs must merge from staging into main."
+            echo "Current source branch: ${{ github.head_ref }}"
+            exit 1
+          fi

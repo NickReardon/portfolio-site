@@ -1,0 +1,45 @@
+name: Build and Budget
+
+# Runs on PRs into staging as well as main. The production gate only fires on
+# main, which is too late to learn that a page outgrew its first-flight budget —
+# by then the change has already landed on staging.
+on:
+  pull_request:
+    branches:
+      - main
+      - staging
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build and check first-flight budget
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Test publication boundary
+        run: npm test
+
+      - name: Check public repository privacy
+        run: npm run privacy:check
+
+      # Fictional fixtures prove the public repository builds without access to
+      # the private vault or personal publication output.
+      - name: Build with fictional fixtures
+        run: npm run build:fixture
+
+      - name: Check first-flight budget
+        run: npm run check:first-flight

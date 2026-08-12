@@ -1,0 +1,64 @@
+---
+import {
+  BriefcaseBusiness,
+  Code,
+  FileText,
+  Gamepad2,
+  Mail,
+} from "@lucide/astro";
+import ContactLink from "../components/ContactLink.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { profile } from "../data/publication";
+import { site } from "../site.config";
+---
+
+<BaseLayout title="Contact" description={`Contact ${site.name}.`}>
+  <section class="section bg-site-subtle">
+    <div class="mx-auto max-w-4xl px-5 py-14">
+      <p class="eyebrow">Contact</p>
+      <h1>Get in touch</h1>
+      <p class="mt-5 text-xl leading-8 text-stone-700">
+        {profile.contact.intro}
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="mx-auto grid max-w-4xl gap-4 px-5 py-14 sm:grid-cols-2">
+      <ContactLink
+        href={`mailto:${site.email}`}
+        label="Email"
+        detail={site.email}
+        icon={Mail}
+      />
+      {
+        site.githubUrl && (
+          <ContactLink
+            href={site.githubUrl}
+            label="GitHub"
+            detail="Project source and code samples"
+            icon={Code}
+          />
+        )
+      }
+      <ContactLink
+        href={site.linkedinUrl}
+        label="LinkedIn"
+        detail="Professional profile"
+        icon={BriefcaseBusiness}
+      />
+      <ContactLink
+        href={site.itchUrl}
+        label="Itch.io"
+        detail="Playable game jam builds"
+        icon={Gamepad2}
+      />
+      <ContactLink
+        href={site.resumeUrl}
+        label="Resume"
+        detail="Web resume and PDF"
+        icon={FileText}
+      />
+    </div>
+  </section>
+</BaseLayout>

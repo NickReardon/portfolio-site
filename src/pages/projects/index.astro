@@ -1,0 +1,61 @@
+---
+import { getCollection } from "astro:content";
+import ProjectCard from "../../components/ProjectCard.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { isVisibleContent, sortProjects } from "../../utils/content";
+
+const projects = (await getCollection("projects"))
+  .filter(isVisibleContent)
+  .sort(sortProjects);
+---
+
+<BaseLayout
+  title="Projects"
+  description="Portfolio projects and technical case studies."
+>
+  <section class="section bg-site-subtle">
+    <div class="mx-auto max-w-6xl px-5 py-14">
+      <p class="eyebrow">Projects</p>
+      <h1>Projects and case studies</h1>
+      <p class="mt-5 max-w-3xl text-xl leading-8 text-stone-700">
+        Playable game-jam projects, Unreal Engine systems work, and notes on
+        what I contributed to each project.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="mx-auto max-w-6xl px-5 py-14">
+      {
+        projects.length > 0 ? (
+          <div>
+            <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {/* Only the first cover is eager. On a 3-column desktop the whole
+                  first row is above the fold, but on mobile cards 2 and 3 are
+                  far below it — and a lazy image that is already in view still
+                  loads promptly, it just yields priority to the document. */}
+              {projects.map((project, index) => (
+                <ProjectCard
+                  project={project}
+                  headingLevel={2}
+                  imageLoading={index === 0 ? "eager" : "lazy"}
+                  imageFetchPriority={index === 0 ? "high" : "auto"}
+                  showFeatured
+                />
+              ))}
+            </div>
+            <p class="mt-8 text-sm text-stone-650">
+              More playable builds are available on my{" "}
+              <a class="text-link" href="https://thingofnightmare.itch.io/">
+                itch.io profile
+              </a>
+              .
+            </p>
+          </div>
+        ) : (
+          <p class="empty-state">More project writeups are coming soon.</p>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 800" role="img" aria-labelledby="title desc">
+  <title id="title">Portfolio devlog placeholder</title>
+  <desc id="desc">A stylized workspace with markdown cards and deployment arrows.</desc>
+  <rect width="1280" height="800" fill="#eef5f0"/>
+  <rect x="120" y="110" width="1040" height="580" rx="18" fill="#ffffff" stroke="#d6d3d1" stroke-width="6"/>
+  <rect x="190" y="190" width="330" height="420" rx="10" fill="#f5f5f4"/>
+  <rect x="590" y="190" width="500" height="420" rx="10" fill="#292524"/>
+  <path d="M240 260h200M240 325h150M240 390h220M240 455h170" stroke="#0f766e" stroke-width="18" stroke-linecap="round"/>
+  <path d="M675 290h330M675 365h250M675 440h300M675 515h180" stroke="#eef5f0" stroke-width="18" stroke-linecap="round"/>
+  <path d="M535 400h95" stroke="#d04f3a" stroke-width="22" stroke-linecap="round"/>
+  <path d="M610 360l50 40-50 40" fill="none" stroke="#d04f3a" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

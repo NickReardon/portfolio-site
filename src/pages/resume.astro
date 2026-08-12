@@ -1,0 +1,296 @@
+---
+import { Download, ExternalLink, FileText, Mail } from "@lucide/astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { resume } from "../data/publication";
+import { site } from "../site.config";
+
+const linkedInProfile = resume.basics.profiles.find(
+  (profile) => profile.network === "LinkedIn",
+);
+const itchProfile = resume.basics.profiles.find(
+  (profile) => profile.network === "Itch.io",
+);
+const githubProfile = resume.basics.profiles.find(
+  (profile) => profile.network === "GitHub",
+);
+
+function formatEducation(school: (typeof resume.education)[number]) {
+  const parts = [school.studyType, school.area].filter(Boolean);
+  return parts.join(" in ");
+}
+
+function formatDate(date: string | undefined) {
+  if (!date) {
+    return undefined;
+  }
+
+  if (date.toLowerCase() === "present") {
+    return "Present";
+  }
+
+  const [year, month] = date.split("-");
+  if (!month) {
+    return year;
+  }
+
+  return new Intl.DateTimeFormat("en", {
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(Date.UTC(Number(year), Number(month) - 1)));
+}
+
+function formatDateRange(
+  startDate: string | undefined,
+  endDate: string | undefined,
+) {
+  return [formatDate(startDate), formatDate(endDate)]
+    .filter(Boolean)
+    .join(" - ");
+}
+
+function projectMeta(project: (typeof resume.projects)[number]) {
+  const dateText =
+    project.dateLabel ?? formatDateRange(project.startDate, project.endDate);
+  return [dateText, ...(project.keywords ?? [])].filter(Boolean).join(" | ");
+}
+
+function projectPageHref(project: (typeof resume.projects)[number]) {
+  return project.siteUrl;
+}
+
+function playHref(project: (typeof resume.projects)[number]) {
+  return project.availability === "Playable" ? project.url : undefined;
+}
+
+function workMeta(job: (typeof resume.work)[number]) {
+  return [job.name, formatDateRange(job.startDate, job.endDate), job.location]
+    .filter(Boolean)
+    .join(" | ");
+}
+---
+
+<BaseLayout title="Resume" description={`Resume for ${resume.basics.name}.`}>
+  <section class="section border-b border-stone-200 bg-site-subtle">
+    <div
+      class="mx-auto grid max-w-6xl gap-8 px-5 py-12 sm:py-14 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end"
+    >
+      <div class="max-w-3xl">
+        <p class="eyebrow">Resume</p>
+        <h1>{resume.basics.name}</h1>
+        <p class="mt-5 text-xl leading-8 text-stone-700">
+          {resume.basics.label} focused on {site.focus}.
+        </p>
+      </div>
+
+      <div class="resume-actions">
+        <a class="button-primary" href={`mailto:${resume.basics.email}`}>
+          <Mail size={16} aria-hidden="true" />
+          Contact
+        </a>
+        <a
+          class="button-secondary"
+          href={site.resumePdfUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <ExternalLink size={16} aria-hidden="true" />
+          Open PDF
+        </a>
+        <a
+          class="button-secondary"
+          href={site.resumePdfUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          download
+        >
+          <Download size={16} aria-hidden="true" />
+          Download PDF
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div
+      class="resume-layout mx-auto grid max-w-6xl gap-8 px-5 py-14 lg:grid-cols-[minmax(0,1fr)_320px]"
+    >
+      <div class="space-y-8">
+        <section class="resume-panel">
+          <h2 class="eyebrow">Profile</h2>
+          <p class="resume-headline">
+            Gameplay systems with practical authoring workflows.
+          </p>
+          <p>{resume.basics.summary}</p>
+        </section>
+
+        {
+          resume.projects.length > 0 && (
+            <section class="resume-panel">
+              <h2 class="eyebrow">Project Experience</h2>
+              {resume.projects.map((project) => (
+                <div class="resume-entry">
+                  <div>
+                    <h3>{project.name}</h3>
+                    <p class="resume-meta">{projectMeta(project)}</p>
+                    {(projectPageHref(project) || playHref(project)) && (
+                      <p class="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+                        {projectPageHref(project) && (
+                          <a class="text-link" href={projectPageHref(project)}>
+                            Project page
+                          </a>
+                        )}
+                        {projectPageHref(project) && playHref(project) && (
+                          <span class="text-stone-400" aria-hidden="true">
+                            |
+                          </span>
+                        )}
+                        {playHref(project) && (
+                          <a
+                            class="text-link"
+                            href={playHref(project)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            Play on itch.io
+                          </a>
+                        )}
+                      </p>
+                    )}
+                  </div>
+                  {project.description && <p>{project.description}</p>}
+                  {project.highlights?.length > 0 && (
+                    <ul class="resume-highlights">
+                      {project.highlights.map((highlight) => (
+                        <li>{highlight}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
+            </section>
+          )
+        }
+
+        {
+          resume.work.length > 0 && (
+            <section class="resume-panel">
+              <h2 class="eyebrow">Experience</h2>
+              {resume.work.map((job) => (
+                <div class="resume-entry">
+                  <div>
+                    <h3>{job.position}</h3>
+                    <p class="resume-meta">{workMeta(job)}</p>
+                  </div>
+                  {job.highlights?.length > 0 && (
+                    <ul class="resume-highlights">
+                      {job.highlights.map((highlight) => (
+                        <li>{highlight}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              ))}
+            </section>
+          )
+        }
+      </div>
+
+      <aside class="resume-sidebar">
+        {
+          resume.education.length > 0 && (
+            <section class="resume-sidebar-block">
+              <h2>Education</h2>
+              <div class="mt-4 grid gap-4">
+                {resume.education.map((school) => (
+                  <div class="resume-sidebar-entry">
+                    <h3>{school.institution}</h3>
+                    <p>{formatEducation(school)}</p>
+                    {school.summary && <p>{school.summary}</p>}
+                    {school.highlights?.map((highlight) => (
+                      <p>{highlight}</p>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </section>
+          )
+        }
+
+        {
+          resume.skills.length > 0 && (
+            <section class="resume-sidebar-block">
+              <h2>Technical Focus</h2>
+              <div class="mt-4 grid gap-4">
+                {resume.skills.map((skill) => (
+                  <div class="resume-skill-group">
+                    <h3>{skill.name}</h3>
+                    <p>{skill.keywords.join(", ")}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )
+        }
+
+        <section class="resume-sidebar-block">
+          <h2>Links</h2>
+          <div class="resume-link-grid mt-4">
+            <a class="resume-link" href={`mailto:${resume.basics.email}`}>
+              <Mail size={16} aria-hidden="true" />
+              Email
+            </a>
+            {
+              githubProfile && (
+                <a
+                  class="resume-link"
+                  href={githubProfile.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <ExternalLink size={16} aria-hidden="true" />
+                  GitHub
+                </a>
+              )
+            }
+            {
+              linkedInProfile && (
+                <a
+                  class="resume-link"
+                  href={linkedInProfile.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <ExternalLink size={16} aria-hidden="true" />
+                  LinkedIn
+                </a>
+              )
+            }
+            {
+              itchProfile && (
+                <a
+                  class="resume-link"
+                  href={itchProfile.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <ExternalLink size={16} aria-hidden="true" />
+                  Itch.io
+                </a>
+              )
+            }
+            <a
+              class="resume-link"
+              href={site.resumePdfUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FileText size={16} aria-hidden="true" />
+              PDF
+            </a>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>

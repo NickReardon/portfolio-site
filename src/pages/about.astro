@@ -1,0 +1,67 @@
+---
+import { FileText } from "@lucide/astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { profile, resume } from "../data/publication";
+import { site } from "../site.config";
+---
+
+<BaseLayout
+  title="About"
+  description={`About ${site.name} and his gameplay systems work.`}
+>
+  <section class="section bg-site-subtle">
+    <div class="mx-auto max-w-4xl px-5 py-14">
+      <p class="eyebrow">About</p>
+      <h1>{site.name}</h1>
+      {
+        profile.about.map((paragraph, index) => (
+          <p
+            class={
+              index === 0
+                ? "mt-5 text-xl leading-8 text-stone-700"
+                : "mt-5 leading-7 text-stone-650"
+            }
+          >
+            {paragraph}
+          </p>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="mx-auto grid max-w-6xl gap-10 px-5 py-14 lg:grid-cols-3">
+      <div>
+        <p class="eyebrow">Skills</p>
+        <h2>Core strengths</h2>
+      </div>
+      <div class="grid gap-4 lg:col-span-2 sm:grid-cols-2">
+        {
+          resume.skills.slice(0, 4).map((skill) => (
+            <div class="info-panel">
+              <h3>{skill.name}</h3>
+              <p>{skill.keywords.join(", ")}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section border-t border-stone-200 bg-white">
+    <div class="mx-auto max-w-6xl px-5 py-14">
+      <p class="eyebrow">Current Focus</p>
+      <h2>{profile.focus}</h2>
+      <p class="mt-4 max-w-3xl leading-7 text-stone-650">
+        {profile.homepage[0]}
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a class="button-primary" href={site.resumeUrl}>
+          <FileText size={16} aria-hidden="true" />
+          Resume
+        </a>
+        <a class="button-secondary" href="/contact/">Get in Touch</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
