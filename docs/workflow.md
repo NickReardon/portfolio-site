@@ -173,9 +173,10 @@ Documentation locations:
 2. Dispatch `Publish Portfolio` from private vault `main`, targeting `staging`.
 3. The workflow builds and deploys one immutable package to staging, then runs
    HTTP, indexing, accessibility, performance, media, and PDF checks.
-4. Review staging, then open and merge the `staging` to `main` pull request.
-   Use a merge commit; squashing would discard the exact staged commit from
-   `main` and correctly block production promotion.
+4. Review staging, then open the `staging` to `main` pull request and select
+   **Create a merge commit**. Never squash or rebase a promotion PR: either
+   method discards the exact staged commit from `main` and correctly blocks
+   production promotion.
 5. Dispatch `Promote Portfolio Package` from private vault `main` with the
    successful staging run ID. This separate manual dispatch is the production
    approval gate because required-reviewer environments are unavailable on the
