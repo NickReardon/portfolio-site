@@ -7,7 +7,8 @@ committed here. Blog Markdown and public project media remain repository-owned.
 ## Requirements
 
 - Node.js `>=22.12.0` and npm.
-- Python plus `rendercv[full]==2.8` for real resume rendering.
+- Python, `rendercv[full]==2.8`, and pinned PyMuPDF for real resume rendering
+  and deterministic page-fill validation.
 - Access to the private vault for real publication builds.
 
 ## Local setup
@@ -37,6 +38,10 @@ npm run build
 
 Generated inputs and previews live under ignored `.local/`, `public/resume.pdf`,
 `public/resumes/`, and `public/images/social-card.png`. Never stage them.
+Each real resume build rasterizes its single PDF page at a fixed resolution and
+requires at least 70% of the usable body line bands to contain meaningful ink.
+The scan excludes header and footer zones, so a future footer cannot hide an
+under-filled body.
 
 ## Public CI
 

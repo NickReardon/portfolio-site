@@ -76,6 +76,7 @@ const DEFAULT_SUMMARY =
 
 export function createRenderCvDocument(resume, options = {}) {
   const theme = options.theme ?? DEFAULT_RENDER_CV_THEME;
+  const layout = getResumeLayout(options.target ?? "general");
   const socialNetworks = (resume.basics.profiles ?? [])
     .filter((profile) => ["GitHub", "LinkedIn"].includes(profile.network))
     .map((profile) =>
@@ -119,19 +120,19 @@ export function createRenderCvDocument(resume, options = {}) {
       },
       page: {
         size: "a4",
-        top_margin: "0.35in",
-        bottom_margin: "0.35in",
-        left_margin: "0.42in",
-        right_margin: "0.42in",
+        top_margin: layout.verticalMargin,
+        bottom_margin: layout.verticalMargin,
+        left_margin: layout.horizontalMargin,
+        right_margin: layout.horizontalMargin,
         show_footer: false,
       },
       typography: {
-        line_spacing: "0.45em",
+        line_spacing: layout.lineSpacing,
         font_size: {
-          body: "8.8pt",
-          name: "20pt",
-          headline: "8.8pt",
-          connections: "8.4pt",
+          body: layout.bodyFontSize,
+          name: layout.nameFontSize,
+          headline: layout.headlineFontSize,
+          connections: layout.connectionsFontSize,
           section_titles: "1em",
         },
       },
@@ -150,6 +151,42 @@ export function createRenderCvDocument(resume, options = {}) {
       },
     },
   });
+}
+
+function getResumeLayout(target) {
+  if (target === "general") {
+    return {
+      bodyFontSize: "10.4pt",
+      connectionsFontSize: "9.6pt",
+      headlineFontSize: "10.2pt",
+      horizontalMargin: "0.52in",
+      lineSpacing: "0.56em",
+      nameFontSize: "22pt",
+      verticalMargin: "0.48in",
+    };
+  }
+
+  if (target === "tools") {
+    return {
+      bodyFontSize: "11.05pt",
+      connectionsFontSize: "10pt",
+      headlineFontSize: "10.6pt",
+      horizontalMargin: "0.54in",
+      lineSpacing: "0.6em",
+      nameFontSize: "23pt",
+      verticalMargin: "0.62in",
+    };
+  }
+
+  return {
+    bodyFontSize: "11.2pt",
+    connectionsFontSize: "10pt",
+    headlineFontSize: "10.6pt",
+    horizontalMargin: "0.56in",
+    lineSpacing: "0.62em",
+    nameFontSize: "23pt",
+    verticalMargin: "0.52in",
+  };
 }
 
 function mapEducation(school) {
