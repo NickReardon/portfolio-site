@@ -39,7 +39,7 @@ npm run build
 Generated inputs and previews live under ignored `.local/`, `public/resume.pdf`,
 `public/resumes/`, and `public/images/social-card.png`. Never stage them.
 Each real resume build rasterizes its single PDF page at a fixed resolution and
-requires at least 70% of the usable body line bands to contain meaningful ink.
+requires at least 92% of the usable body line bands to contain meaningful ink.
 The scan excludes header and footer zones, so a future footer cannot hide an
 under-filled body.
 
