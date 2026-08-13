@@ -6,49 +6,81 @@ import pymupdf
 
 WHITE_THRESHOLD = 245
 RENDER_DPI = 120
+BODY_TOP_FRACTION = 0.12
+BODY_BOTTOM_FRACTION = 0.92
+HORIZONTAL_MARGIN_FRACTION = 0.05
+LINE_BAND_HEIGHT = 18
+MIN_DARK_PIXELS = 40
+MIN_DARK_SPAN = 40
+DARK_PIXEL_TABLE = bytes(
+    1 if value < WHITE_THRESHOLD else 0 for value in range(256)
+)
 
 
-def bottom_blank_percent(pdf_path: Path) -> float:
+def occupied_line_band_percent(pdf_path: Path) -> float:
     document = pymupdf.open(pdf_path)
     if len(document) != 1:
         raise ValueError(f"Expected one page, found {len(document)}.")
 
-    pixmap = document[0].get_pixmap(dpi=RENDER_DPI, alpha=False)
+    pixmap = document[0].get_pixmap(
+        dpi=RENDER_DPI,
+        colorspace=pymupdf.csGRAY,
+        alpha=False,
+    )
     samples = memoryview(pixmap.samples)
-    channels = pixmap.n
-    last_ink_row = -1
+    x_start = int(pixmap.width * HORIZONTAL_MARGIN_FRACTION)
+    x_end = int(pixmap.width * (1 - HORIZONTAL_MARGIN_FRACTION))
+    y_start = int(pixmap.height * BODY_TOP_FRACTION)
+    y_end = int(pixmap.height * BODY_BOTTOM_FRACTION)
+    occupied_bands = 0
+    total_bands = 0
 
-    for y in range(pixmap.height):
-        row_start = y * pixmap.width * channels
-        row_end = row_start + pixmap.width * channels
-        row = samples[row_start:row_end]
-        if any(value < WHITE_THRESHOLD for value in row):
-            last_ink_row = y
+    for band_start in range(y_start, y_end, LINE_BAND_HEIGHT):
+        band_end = min(band_start + LINE_BAND_HEIGHT, y_end)
+        dark_pixels = 0
+        first_dark_column = pixmap.width
+        last_dark_column = -1
 
-    if last_ink_row < 0:
-        return 100.0
+        for y in range(band_start, band_end):
+            row = samples[y * pixmap.width : (y + 1) * pixmap.width]
+            dark_mask = bytes(row[x_start:x_end]).translate(DARK_PIXEL_TABLE)
+            dark_pixels += dark_mask.count(1)
+            first = dark_mask.find(b"\x01")
+            if first >= 0:
+                first_dark_column = min(first_dark_column, x_start + first)
+                last_dark_column = max(
+                    last_dark_column,
+                    x_start + dark_mask.rfind(b"\x01"),
+                )
 
-    return (pixmap.height - 1 - last_ink_row) / pixmap.height * 100
+        total_bands += 1
+        if (
+            dark_pixels >= MIN_DARK_PIXELS
+            and last_dark_column - first_dark_column + 1 >= MIN_DARK_SPAN
+        ):
+            occupied_bands += 1
+
+    return occupied_bands / total_bands * 100
 
 
 def main() -> None:
     if len(sys.argv) != 3:
         raise SystemExit(
-            "Usage: check-resume-fill.py <resume.pdf> <max-bottom-blank-percent>"
+            "Usage: check-resume-fill.py <resume.pdf> <minimum-occupied-percent>"
         )
 
     pdf_path = Path(sys.argv[1])
-    maximum = float(sys.argv[2])
-    measured = bottom_blank_percent(pdf_path)
+    minimum = float(sys.argv[2])
+    measured = occupied_line_band_percent(pdf_path)
 
     print(
-        f"Resume page fill: {measured:.1f}% bottom whitespace "
-        f"(maximum {maximum:.1f}%)."
+        f"Resume page fill: {measured:.1f}% occupied body line bands "
+        f"(minimum {minimum:.1f}%)."
     )
-    if measured > maximum:
+    if measured < minimum:
         raise SystemExit(
-            f"Resume leaves {measured:.1f}% of the page blank at the bottom; "
-            f"maximum is {maximum:.1f}%."
+            f"Resume occupies only {measured:.1f}% of its body line bands; "
+            f"minimum is {minimum:.1f}%."
         )
 
 
