@@ -165,7 +165,7 @@ if (pageCount !== 1) {
   throw new Error(`Expected ${pdfPath} to be 1 page, but found ${pageCount}.`);
 }
 
-execFileSync(pythonCommand, ["scripts/check-resume-fill.py", pdfPath, "70"], {
+execFileSync(pythonCommand, ["scripts/check-resume-fill.py", pdfPath, "92"], {
   stdio: "inherit",
 });
 
