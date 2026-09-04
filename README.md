@@ -169,9 +169,13 @@ Check the credentials:
 op run --env-file ./.env.1password -- npx --yes wrangler whoami
 ```
 
-Cloudflare's Git integration builds `main` and `staging` automatically, so this
-is an escape hatch rather than the normal path. Deploy the built `dist`
-directory:
+The GitHub repository is connected to the Pages project, but Git-triggered
+builds are switched off: the project has `production_deployments_enabled: false`
+and `preview_deployment_setting: none`. Pushing to `main` or `staging` creates a
+deployment record that stays queued forever and never builds, so the live site
+does not change. Uploading `dist` with Wrangler is the only deployment path.
+
+Deploy the built `dist` directory:
 
 ```powershell
 npm run deploy:cloudflare -- --branch staging
