@@ -169,10 +169,18 @@ Check the credentials:
 op run --env-file ./.env.1password -- npx --yes wrangler whoami
 ```
 
-Deploy the built `dist` directory:
+Cloudflare's Git integration builds `main` and `staging` automatically, so this
+is an escape hatch rather than the normal path. Deploy the built `dist`
+directory:
 
 ```powershell
-npm run deploy:cloudflare -- --project-name <cloudflare-pages-project-name> --branch main
+npm run deploy:cloudflare -- --branch staging
 ```
 
-Use `--branch staging` for the staging Pages deployment.
+The Pages project name is baked into the script; without it Wrangler tries to
+prompt for a project and fails under `op run` with "This command cannot be run
+in a non-interactive context". Pass `--branch main` to upload to production.
+
+A manual upload has no `CF_PAGES_COMMIT_SHA`, so its build stamp reports
+`local` rather than a commit. That is deliberate: a hand-uploaded deployment
+does not correspond to any commit, and the stamp should say so.
