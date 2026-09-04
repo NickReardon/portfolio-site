@@ -1,58 +1,27 @@
-# Content and Publication Boundary
+# Tone and Content Authoring Guide
 
-## Ownership
+This document defines the guidelines for writing and formatting content on the portfolio site. It applies to case studies, pages, blog posts, and resume entries.
 
-- The private Obsidian vault is canonical for profile, About, Contact, career,
-  project case-study, and resume wording.
-- This repository owns blog Markdown, public media, Astro presentation code,
-  fictional fixtures, and generic extraction/rendering tooling.
-- `.local/publication/`, resume PDFs, and social cards are generated and
-  ignored. They must never be committed.
+## 1. Core Voice and Perspective
 
-The vault contract is defined by its existing `meta/rules/career.md`. It uses
-one control note, `career/Framings/Portfolio Profile.md`, and named sections on
-existing career notes. Do not create a second publication hierarchy here.
+- **Authoritative & Engineering-Focused**: Lead with technical decisions, architecture, and tradeoffs. Write from the perspective of an active developer explaining their systems design rather than a learner doing an exercise.
+- **Action-Oriented Verbs**: Use strong, descriptive verbs to describe work (e.g., _Architected_, _Implemented_, _Optimized_, _Migrated_) rather than passive or generalized verbs (_Helped with_, _Worked on_, _Learned about_).
+- **Designer-Centric Systems**: Frame systems programming in the context of user/designer enablement. Highlight how system choices (e.g., data assets, modular components, tags) allow others to extend content without compiling new code.
 
-## Extraction boundary
+## 2. Neutralizing Academic Context
 
-The extractor reads only:
+To avoid reading as a junior-level candidate, we frame academic experience neutrally:
 
-- allowlisted frontmatter needed for display and ordering;
-- approved `## Portfolio Copy` sections;
-- approved, role-scoped `## Resume Framing` bullets;
-- sources explicitly ordered in the profile note's resume recipes.
+- **Lead with Specialization**: Lead summaries and introductions with your role (e.g., _Gameplay and Systems Programmer_) rather than your status as a student.
+- **Reframe Assignments**: Frame course projects and capstones as collaborative engineering efforts or technical demonstrations. Mention the university context as secondary or within the education section rather than in the project's hook.
+- **Showcase Tradeoffs**: Instead of saying a project was "for a class," discuss the architectural decisions made to solve the project's constraints.
 
-It rejects draft sources, missing links, duplicate slugs, unknown recipe roles,
-malformed sections, path traversal, and every link into `career/Private`.
-Unrelated note bodies, source properties, interview notes, and arbitrary wiki
-links are not part of the publication graph.
+## 3. Confident & Direct Contributions
 
-## Project media
+- **No Defensive Disclaimers**: State exactly what you built, designed, or contributed. Do not write disclaimers explaining repository hosting (e.g., "the repo is on my teammate's account") or explaining what has not been built yet (e.g., "networking is not yet tested").
+- **Own the Scope**: If a feature wasn't built, frame it positively under architectural readiness (e.g., "designed to support server-authoritative GAS flows for future network expansion") rather than listing it as a missing feature.
 
-Media remains public and repository-owned. `config/project-media.json` maps a
-vault `portfolio_slug` to presentation metadata and files in
-`src/assets/projects/`. A missing mapping is a build error.
+## 4. Keeping Case Studies Objective
 
-Use lowercase kebab-case asset names. Meaningful images require useful alt text.
-Set `mediaPending: true` only while a replacement capture is planned; normal
-validation warns and release validation fails.
-
-## Local authoring loop
-
-Edit and approve wording in the vault, then run:
-
-```powershell
-npm run content:prepare -- --vault <absolute-vault-path>
-npm run resume:preview -- --target gameplay
-npm run build
-```
-
-Valid targets are `general`, `gameplay`, and `tools`. AI may help propose local
-edits, but neither public nor private CI calls a model. CI renders only committed
-approved wording.
-
-## Privacy fixtures
-
-`test/fixtures/vault` is deliberately fictional. Private sentinels sit beside
-approved fixture sections, and tests prove they do not reach extracted output.
-Public CI builds exclusively from those fixtures.
+- **No Interview/Coaching Notes**: Do not include sections like "Strongest Talking Points" or internal notes coaching yourself on how to pitch the project. The page should read as an objective case study.
+- **Key Takeaways**: Use a "Key Takeaways" section at the end of case studies to outline major architectural lessons, systems tradeoffs, and workflow improvements.

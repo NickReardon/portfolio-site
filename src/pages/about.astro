@@ -1,7 +1,6 @@
 ---
 import { FileText } from "@lucide/astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { profile, resume } from "../data/publication";
 import { site } from "../site.config";
 ---
 
@@ -13,19 +12,19 @@ import { site } from "../site.config";
     <div class="mx-auto max-w-4xl px-5 py-14">
       <p class="eyebrow">About</p>
       <h1>{site.name}</h1>
-      {
-        profile.about.map((paragraph, index) => (
-          <p
-            class={
-              index === 0
-                ? "mt-5 text-xl leading-8 text-stone-700"
-                : "mt-5 leading-7 text-stone-650"
-            }
-          >
-            {paragraph}
-          </p>
-        ))
-      }
+      <p class="mt-5 text-xl leading-8 text-stone-700">
+        I am a gameplay and systems programmer building Unreal Engine systems
+        with an emphasis on modular architecture, data-driven authoring, and
+        reliable runtime state.
+      </p>
+      <p class="mt-5 leading-7 text-stone-650">
+        I care about systems that work the way designers expect them to work:
+        sensible defaults, clear extension points, and enough flexibility to
+        grow without constant refactoring. I am currently completing my Bachelor
+        of Science in Computer Science at California State University,
+        Fullerton, with a primary focus on AAA gameplay, systems, and tools
+        work.
+      </p>
     </div>
   </section>
 
@@ -36,14 +35,34 @@ import { site } from "../site.config";
         <h2>Core strengths</h2>
       </div>
       <div class="grid gap-4 lg:col-span-2 sm:grid-cols-2">
-        {
-          resume.skills.slice(0, 4).map((skill) => (
-            <div class="info-panel">
-              <h3>{skill.name}</h3>
-              <p>{skill.keywords.join(", ")}</p>
-            </div>
-          ))
-        }
+        <div class="info-panel">
+          <h3>Gameplay Systems</h3>
+          <p>
+            Modular combat, encounter, spawn, travel, and persistence systems
+            with clear ownership of runtime state.
+          </p>
+        </div>
+        <div class="info-panel">
+          <h3>Unreal Engine and C++</h3>
+          <p>
+            Lyra, Gameplay Ability System, Gameplay Tags, Enhanced Input,
+            Blueprint-facing workflows, and engine-side debugging.
+          </p>
+        </div>
+        <div class="info-panel">
+          <h3>Content Authoring</h3>
+          <p>
+            Data assets, interfaces, small tools, and runtime routing patterns
+            that reduce friction when creating, placing, and tuning content.
+          </p>
+        </div>
+        <div class="info-panel">
+          <h3>AI and Encounters</h3>
+          <p>
+            Behavior Tree and EQS-driven enemy behavior, wave definitions, spawn
+            modifiers, and designer-tunable encounter pacing.
+          </p>
+        </div>
       </div>
     </div>
   </section>
@@ -51,9 +70,13 @@ import { site } from "../site.config";
   <section class="section border-t border-stone-200 bg-white">
     <div class="mx-auto max-w-6xl px-5 py-14">
       <p class="eyebrow">Current Focus</p>
-      <h2>{profile.focus}</h2>
+      <h2>What I am building next</h2>
       <p class="mt-4 max-w-3xl leading-7 text-stone-650">
-        {profile.homepage[0]}
+        My current Unreal Engine project, Tethered, is an action rogue-lite
+        prototype built around a Lyra-aligned architecture. Its systems include
+        a world-level Ability System Component for event coordination, seamless
+        travel state reconstruction, pluggable save backends, data-driven
+        encounters, spawn modifiers, and Gameplay Tag-based combat routing.
       </p>
       <div class="mt-8 flex flex-wrap gap-3">
         <a class="button-primary" href={site.resumeUrl}>

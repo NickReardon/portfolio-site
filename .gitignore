@@ -21,15 +21,8 @@ tmp/
 
 # local worktrees and agent scratch space
 .workspace/
-
-# generated resume build files
-.resume-build/
 .local/
 output/
-public/resume.pdf
-public/resumes/*.pdf
-public/images/social-card.png
-public/images/social-card.svg
 
 # environment variables
 .env
