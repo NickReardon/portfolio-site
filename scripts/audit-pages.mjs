@@ -98,13 +98,10 @@ function runPa11y() {
   mkdirSync(auditTmpDir, { recursive: true });
 
   return pages.reduce((exitCode, page) => {
-    const args = [cli.pa11y];
-    if (process.env.CI === "true") {
-      args.push("--config", join(root, "scripts", "pa11y-ci.json"));
-    }
-    args.push(urlFor(page.path));
-
-    const result = run(`Pa11y: ${urlFor(page.path)}`, process.execPath, args);
+    const result = run(`Pa11y: ${urlFor(page.path)}`, process.execPath, [
+      cli.pa11y,
+      urlFor(page.path),
+    ]);
     return exitCode === 0 ? result.status : exitCode;
   }, 0);
 }

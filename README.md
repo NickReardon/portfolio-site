@@ -1,94 +1,178 @@
 # Portfolio Site
 
-Static Astro portfolio website and generic publication tooling. Private career,
-profile, project, and resume sources live in the Obsidian vault and are never
-committed here. Blog Markdown and public project media remain repository-owned.
+Static Astro portfolio website for projects, devlogs, resume links, and contact
+links. The v1 architecture is intentionally simple: Astro, Tailwind 4, Markdown,
+GitHub, and Cloudflare Pages.
 
 ## Requirements
 
 - Node.js `>=22.12.0` and npm.
-- Python, `rendercv[full]==2.8`, and pinned PyMuPDF for real resume rendering
-  and deterministic page-fill validation.
-- Access to the private vault for real publication builds.
+- Python with `requirements.txt` installed; the privacy check reads PDFs.
+- 1Password CLI only for local Cloudflare deploy commands.
 
-## Local setup
-
-```powershell
-npm ci
-python -m venv .venv
-.\.venv\Scripts\python.exe -m pip install -r requirements-rendercv.txt
-```
-
-Optionally set the vault path in ignored `.env.local`:
-
-```text
-OBSIDIAN_VAULT_DIR=<absolute-vault-path>
-```
-
-`content:prepare` reads that ignored file. An explicit `--vault` wins when both
-are present:
+## Commands
 
 ```powershell
-npm run content:prepare -- --vault <absolute-vault-path>
-npm run resume:validate
-npm run resume:build
-npm run social:build
+npm install
+npm run dev
+npm run check
 npm run build
-```
-
-Generated inputs and previews live under ignored `.local/`, `public/resume.pdf`,
-`public/resumes/`, and `public/images/social-card.png`. Never stage them.
-Each real resume build rasterizes its single PDF page at a fixed resolution and
-requires at least 92% of the usable body line bands to contain meaningful ink.
-The scan excludes header and footer zones, so a future footer cannot hide an
-under-filled body.
-
-## Public CI
-
-The public repository is self-contained without private data. Its CI uses the
-fictional vault under `test/fixtures/vault`:
-
-```powershell
-npm test
+npm run resume:validate
 npm run privacy:check
-npm run build:fixture
-npm run check:first-flight
+npm run social:build
+npm run preview
 npm run format:check
 ```
 
-`content:prepare` fails when the profile, approved sources, exact publication
-sections, media slug metadata, or recipe links are missing or malformed.
+Heavier quality checks:
 
-## Structure
-
-```text
-config/project-media.json       public media keyed by vault project slug
-functions/robots.txt.ts         host-aware production/staging crawl policy
-scripts/publication/            strict vault parser and extractor
-src/content/blog/               public blog Markdown
-src/assets/projects/            public project media
-test/fixtures/vault/            fictional CI-only publication source
+```powershell
+npm run audit
+npm run audit:staging
+npm run audit:scores
 ```
 
-The generated public URLs are `/resume.pdf`,
-`/resumes/resume-gameplay.pdf`, and `/resumes/resume-tools.pdf`.
+`npm run privacy:check` runs automatically before every build. It scans every
+file Git would track — including the text, metadata and XMP of each PDF — and
+fails on a phone number, a postal code, or a local filesystem path. This
+repository is public, so a detail committed here is published twice: on the
+site and in Git history, where it cannot be recalled.
 
-## Deployment
+## Project Structure
 
-Cloudflare Git deployments are disabled. A manual workflow in the private vault
-builds one package from vault `main` plus a requested portfolio commit, deploys
-that package to staging, and runs acceptance checks. After review, a separate
-manual promotion workflow verifies the site SHA is contained in public `main`
-and deploys that exact stored package without rebuilding. The second dispatch is
-the production approval gate because required-reviewer environments are not
-available on the private repository's current GitHub plan.
+```text
+/
+├── docs/
+│   ├── content.md
+│   └── workflow.md
+├── public/
+│   ├── images/
+│   ├── resumes/
+│   └── resume.pdf
+├── scripts/
+│   ├── audit-pages.mjs
+│   ├── build-social-card.mjs
+│   ├── print-scores.mjs
+│   ├── privacy-check.py
+│   ├── resume-utils.mjs
+│   └── validate-resume.mjs
+├── src/
+│   ├── components/
+│   ├── content/
+│   │   ├── blog/
+│   │   └── projects/
+│   ├── data/
+│   │   └── resume.json
+│   ├── layouts/
+│   ├── pages/
+│   ├── styles/
+│   └── site.config.ts
+├── AGENTS.md
+├── astro.config.mjs
+└── package.json
+```
 
-Required private-repository configuration:
+## Content
 
-- Secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`.
-- Variable: `CLOUDFLARE_PAGES_PROJECT`.
-- Environment: `production`, for deployment history; the separate manual
-  promotion dispatch supplies the human approval gate.
+- Project markdown lives in `src/content/projects`.
+- Blog markdown lives in `src/content/blog`.
+- Content tone and authoring guidance lives in `docs/content.md`.
+- Draft entries can stay in the repo with `draft: true`; production builds
+  exclude them from lists and detail routes.
+- Static project and blog images live under `public/images`.
+- Resume content lives in `src/data/resume.json`. This is the only manually
+  edited resume source for both the `/resume/` page and generated PDF.
+- `public/resume.pdf` is generated from `src/data/resume.json` as a one-page A4
+  PDF and committed so normal site builds do not require RenderCV.
+- Rendered resume PDF variants live in `public/resumes/` and are listed on the
+  unlinked `/resume-pdfs/` page.
+- Update social links and identity text in `src/site.config.ts` as needed.
 
-See [docs/workflow.md](docs/workflow.md) for promotion and recovery details and
-[docs/content.md](docs/content.md) for the publication boundary.
+Use lowercase kebab-case for content slugs and asset filenames.
+
+### Resume PDFs
+
+Resume PDFs are placed by hand. Export whatever variants you want and drop them
+in `public/resumes/`; `/resume-pdfs` lists everything found there at build time,
+and `public/resume.pdf` is the copy the site links to as the default download.
+
+`src/data/resume.json` is separate: it is the source for the rendered `/resume`
+page only, and no longer generates any PDF. Validate it after editing:
+
+```powershell
+npm run resume:validate
+```
+
+Before committing a PDF exported from another tool, run `npm run privacy:check`.
+Word, Acrobat and Canva exports routinely carry your OS account name and local
+file paths in PDF metadata, which no visual review would catch.
+
+## Workflow
+
+Repository workflow conventions live in:
+
+- `AGENTS.md` for coding-agent operating instructions.
+- `docs/workflow.md` for branch names, commit frequency, commit messages, PR
+  descriptions, verification expectations, and release flow.
+
+Short version:
+
+- `main` is production.
+- `staging` is long-lived pre-production.
+- Work branches use `<type>/<short-kebab-summary>`.
+- Commits use `<type>(<scope>): <Description>`.
+- Verify with the smallest command set that covers the risk, usually
+  `npm run check` and `npm run build`.
+- Protect `main` with pull requests and require the
+  `Production Gate / Staging deployment is ready` check before merging from
+  `staging`.
+
+## Deploy To Cloudflare Pages
+
+Use these settings when importing the GitHub repository into Cloudflare Pages:
+
+- Production branch: `main`
+- Build command: `npm run build`
+- Build directory: `dist`
+
+After the first successful deploy, add `nick-reardon.com` as the production
+custom domain from the Cloudflare Pages project settings.
+
+For the long-lived pre-production environment, create a `staging` branch and
+enable preview builds for that branch. Add `staging.nick-reardon.com` as a
+custom domain for the `staging` branch. Keep the DNS record proxied through
+Cloudflare so it resolves to the branch deployment instead of production.
+
+Production builds use `https://nick-reardon.com` for canonical URLs and the
+sitemap. Staging and short-lived preview builds emit `noindex` metadata and a
+non-indexable `robots.txt`; their URLs are derived from the branch domain or
+Cloudflare Pages preview URL. Set `SITE_URL` in the build environment only when
+you need to override that default.
+
+### Local Wrangler Deploys With 1Password
+
+For local Wrangler commands, store the Cloudflare account ID and API token in
+1Password, then run Wrangler through `op run` so the values only exist in the
+subprocess environment.
+
+```powershell
+Copy-Item .env.1password.example .env.1password
+```
+
+Edit `.env.1password` so each `op://...` value points at your actual 1Password
+vault, item, and field. Prefer `CLOUDFLARE_API_TOKEN`; the older
+`CLOUDFLARE_API_KEY` flow also requires `CLOUDFLARE_EMAIL`.
+
+Check the credentials:
+
+```powershell
+op run --env-file ./.env.1password -- npx --yes wrangler whoami
+```
+
+Deploy the built `dist` directory:
+
+```powershell
+npm run deploy:cloudflare -- --project-name <cloudflare-pages-project-name> --branch main
+```
+
+Use `--branch staging` for the staging Pages deployment.
