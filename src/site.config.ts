@@ -24,10 +24,17 @@ const deployedUrl =
 // Stamped at build time so a deployed page can be traced back to a commit
 // without guessing from page content. Cloudflare Pages supplies these; a local
 // build reports "local".
+const commitSha = import.meta.env.CF_PAGES_COMMIT_SHA;
+
 export const build = {
-  commit: import.meta.env.CF_PAGES_COMMIT_SHA?.slice(0, 7) ?? "local",
+  commit: commitSha?.slice(0, 7) ?? "local",
+  commitUrl: commitSha
+    ? `https://github.com/NickReardon/portfolio-site/commit/${commitSha}`
+    : undefined,
   branch: branch ?? "local",
   time: new Date().toISOString(),
+  // Falls back to build time only when the commit date is unavailable.
+  updated: import.meta.env.BUILD_COMMIT_TIME ?? new Date().toISOString(),
 };
 
 export const site = {

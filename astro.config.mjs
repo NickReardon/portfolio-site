@@ -24,6 +24,9 @@ const commitSha =
 const commitBranch =
   process.env.CF_PAGES_BRANCH ??
   gitValue(["rev-parse", "--abbrev-ref", "HEAD"]);
+// The commit date, not the build time: rebuilding unchanged content should not
+// claim the site was updated.
+const commitTime = gitValue(["log", "-1", "--format=%cI"]);
 
 const productionBranch = "main";
 const stagingBranch = "staging";
@@ -65,6 +68,7 @@ export default defineConfig({
     define: {
       "import.meta.env.CF_PAGES_COMMIT_SHA": JSON.stringify(commitSha ?? null),
       "import.meta.env.CF_PAGES_BRANCH": JSON.stringify(commitBranch ?? null),
+      "import.meta.env.BUILD_COMMIT_TIME": JSON.stringify(commitTime ?? null),
     },
   },
 });
