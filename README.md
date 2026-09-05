@@ -80,12 +80,12 @@ site and in Git history, where it cannot be recalled.
 - Draft entries can stay in the repo with `draft: true`; production builds
   exclude them from lists and detail routes.
 - Static project and blog images live under `public/images`.
-- Resume content lives in `src/data/resume.json`. This is the only manually
-  edited resume source for both the `/resume/` page and generated PDF.
-- `public/resume.pdf` is generated from `src/data/resume.json` as a one-page A4
-  PDF and committed so normal site builds do not require RenderCV.
-- Rendered resume PDF variants live in `public/resumes/` and are listed on the
-  unlinked `/resume-pdfs/` page.
+- Resume content lives in `src/data/resume.json`. It is the source for the
+  `/resume/` page only; nothing generates a PDF from it.
+- `public/resume.pdf` is placed by hand and is the default download the site
+  links to.
+- Resume PDF variants live in `public/resumes/` and are listed on the unlinked
+  `/resume-pdfs/` page.
 - Update social links and identity text in `src/site.config.ts` as needed.
 
 Use lowercase kebab-case for content slugs and asset filenames.
@@ -169,10 +169,29 @@ Check the credentials:
 op run --env-file ./.env.1password -- npx --yes wrangler whoami
 ```
 
+The GitHub repository is connected to the Pages project, but Git-triggered
+builds are switched off: the project has `production_deployments_enabled: false`
+and `preview_deployment_setting: none`. Pushing to `main` or `staging` creates a
+deployment record that stays queued forever and never builds, so the live site
+does not change. Uploading `dist` with Wrangler is the only deployment path.
+
 Deploy the built `dist` directory:
 
 ```powershell
-npm run deploy:cloudflare -- --project-name <cloudflare-pages-project-name> --branch main
+npm run deploy:cloudflare -- --branch staging
 ```
 
-Use `--branch staging` for the staging Pages deployment.
+The Pages project name is baked into the script; without it Wrangler tries to
+prompt for a project and fails under `op run` with "This command cannot be run
+in a non-interactive context". Pass `--branch main` to upload to production.
+
+Because Wrangler uploads are the only deployment path, the build stamp falls
+back to the working tree's commit and branch when Cloudflare's
+`CF_PAGES_COMMIT_SHA` is absent. Check what a site is serving with:
+
+```powershell
+curl -s https://staging.nick-reardon.com/ | Select-String 'name="build"'
+```
+
+Build from a clean tree before deploying. The stamp records the commit, not
+whether uncommitted changes were included.

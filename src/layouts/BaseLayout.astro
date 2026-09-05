@@ -1,7 +1,7 @@
 ---
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
-import { site } from "../site.config";
+import { build, site } from "../site.config";
 import "../styles/global.css";
 
 interface Props {
@@ -35,6 +35,10 @@ const socialImageUrl = new URL(image, site.url).toString();
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
+    <meta
+      name="build"
+      content={`${build.commit} ${build.branch} ${build.time}`}
+    />
     {
       (noindex || !site.isSearchIndexable) && (
         <meta name="robots" content="noindex, nofollow" />

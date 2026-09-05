@@ -1,5 +1,5 @@
 ---
-import { site } from "../site.config";
+import { build, site } from "../site.config";
 ---
 
 <footer class="border-t border-stone-200 bg-white">
@@ -10,6 +10,13 @@ import { site } from "../site.config";
       &copy; {new Date().getFullYear()}
       {site.name}. Built with Astro and Cloudflare Pages.
     </p>
+    {
+      !site.isSearchIndexable && (
+        <p class="font-mono text-xs text-stone-500">
+          {build.branch} @ {build.commit} &middot; {build.time}
+        </p>
+      )
+    }
     <div class="flex flex-wrap gap-4">
       <a href={`mailto:${site.email}`} class="footer-link">Email</a>
       {

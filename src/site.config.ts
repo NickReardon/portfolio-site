@@ -21,6 +21,15 @@ const deployedUrl =
       ? (normalizeUrl(import.meta.env.CF_PAGES_URL) ?? productionUrl)
       : productionUrl);
 
+// Stamped at build time so a deployed page can be traced back to a commit
+// without guessing from page content. Cloudflare Pages supplies these; a local
+// build reports "local".
+export const build = {
+  commit: import.meta.env.CF_PAGES_COMMIT_SHA?.slice(0, 7) ?? "local",
+  branch: branch ?? "local",
+  time: new Date().toISOString(),
+};
+
 export const site = {
   name: "Nicholas Reardon",
   url: deployedUrl,

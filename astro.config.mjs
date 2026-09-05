@@ -1,8 +1,29 @@
 // @ts-check
+import { execFileSync } from "node:child_process";
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 
 import tailwindcss from "@tailwindcss/vite";
+
+// Cloudflare sets these on its own builds. A local Wrangler upload does not, so
+// fall back to the working tree's commit and branch: a hand-uploaded deployment
+// should still be traceable to what produced it.
+/**
+ * @param {string[]} args
+ */
+function gitValue(args) {
+  try {
+    return execFileSync("git", args, { encoding: "utf8" }).trim() || undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+const commitSha =
+  process.env.CF_PAGES_COMMIT_SHA ?? gitValue(["rev-parse", "HEAD"]);
+const commitBranch =
+  process.env.CF_PAGES_BRANCH ??
+  gitValue(["rev-parse", "--abbrev-ref", "HEAD"]);
 
 const productionBranch = "main";
 const stagingBranch = "staging";
@@ -41,5 +62,9 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    define: {
+      "import.meta.env.CF_PAGES_COMMIT_SHA": JSON.stringify(commitSha ?? null),
+      "import.meta.env.CF_PAGES_BRANCH": JSON.stringify(commitBranch ?? null),
+    },
   },
 });

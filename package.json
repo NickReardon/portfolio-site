@@ -18,7 +18,7 @@
     "clean": "rimraf dist .astro reports .audit-tmp",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "deploy:cloudflare": "npm run build && op run --env-file ./.env.1password -- npx --yes wrangler pages deploy dist",
+    "deploy:cloudflare": "npm run build && op run --env-file ./.env.1password -- npx --yes wrangler pages deploy dist --project-name portfolio-site",
     "audit": "npm run audit:lighthouse && npm run audit:pa11y",
     "audit:lighthouse": "node scripts/audit-pages.mjs lighthouse",
     "audit:pa11y": "node scripts/audit-pages.mjs pa11y",
