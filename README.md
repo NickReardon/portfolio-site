@@ -80,12 +80,12 @@ site and in Git history, where it cannot be recalled.
 - Draft entries can stay in the repo with `draft: true`; production builds
   exclude them from lists and detail routes.
 - Static project and blog images live under `public/images`.
-- Resume content lives in `src/data/resume.json`. This is the only manually
-  edited resume source for both the `/resume/` page and generated PDF.
-- `public/resume.pdf` is generated from `src/data/resume.json` as a one-page A4
-  PDF and committed so normal site builds do not require RenderCV.
-- Rendered resume PDF variants live in `public/resumes/` and are listed on the
-  unlinked `/resume-pdfs/` page.
+- Resume content lives in `src/data/resume.json`. It is the source for the
+  `/resume/` page only; nothing generates a PDF from it.
+- `public/resume.pdf` is placed by hand and is the default download the site
+  links to.
+- Resume PDF variants live in `public/resumes/` and are listed on the unlinked
+  `/resume-pdfs/` page.
 - Update social links and identity text in `src/site.config.ts` as needed.
 
 Use lowercase kebab-case for content slugs and asset filenames.
