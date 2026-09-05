@@ -185,6 +185,13 @@ The Pages project name is baked into the script; without it Wrangler tries to
 prompt for a project and fails under `op run` with "This command cannot be run
 in a non-interactive context". Pass `--branch main` to upload to production.
 
-A manual upload has no `CF_PAGES_COMMIT_SHA`, so its build stamp reports
-`local` rather than a commit. That is deliberate: a hand-uploaded deployment
-does not correspond to any commit, and the stamp should say so.
+Because Wrangler uploads are the only deployment path, the build stamp falls
+back to the working tree's commit and branch when Cloudflare's
+`CF_PAGES_COMMIT_SHA` is absent. Check what a site is serving with:
+
+```powershell
+curl -s https://staging.nick-reardon.com/ | Select-String 'name="build"'
+```
+
+Build from a clean tree before deploying. The stamp records the commit, not
+whether uncommitted changes were included.
