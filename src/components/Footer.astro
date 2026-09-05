@@ -10,29 +10,37 @@ import { build, site } from "../site.config";
       &copy; {new Date().getFullYear()}
       {site.name}. Built with Astro and Cloudflare Pages.
     </p>
-    {
-      !site.isSearchIndexable && (
-        <p class="font-mono text-xs text-stone-500">
-          {build.branch} @{" "}
-          {build.commitUrl ? (
-            <a href={build.commitUrl} class="footer-link">
-              {build.commit}
-            </a>
-          ) : (
-            build.commit
-          )}
-          {" · updated "}
-          <time datetime={build.updated}>
-            {new Intl.DateTimeFormat("en-US", {
-              dateStyle: "medium",
-              timeStyle: "short",
-              timeZone: "UTC",
-            }).format(new Date(build.updated))}{" "}
-            UTC
-          </time>
-        </p>
-      )
-    }
+    <p class="font-mono text-xs text-stone-500">
+      {!site.isSearchIndexable && `${build.branch} · `}
+      {
+        site.isSearchIndexable ? (
+          build.commit
+        ) : build.commitUrl ? (
+          <a href={build.commitUrl} class="footer-link">
+            {build.commit}
+          </a>
+        ) : (
+          build.commit
+        )
+      }
+      {
+        !site.isSearchIndexable && (
+          <>
+            {" · updated "}
+            {/* Rendered in UTC; the inline script below rewrites it to the
+                viewer's own timezone. */}
+            <time datetime={build.updated} data-localize>
+              {new Intl.DateTimeFormat("en-US", {
+                dateStyle: "medium",
+                timeStyle: "short",
+                timeZone: "UTC",
+              }).format(new Date(build.updated))}{" "}
+              UTC
+            </time>
+          </>
+        )
+      }
+    </p>
     <div class="flex flex-wrap gap-4">
       <a href={`mailto:${site.email}`} class="footer-link">Email</a>
       {
@@ -48,3 +56,12 @@ import { build, site } from "../site.config";
     </div>
   </div>
 </footer>
+
+<script is:inline>
+  for (const el of document.querySelectorAll("time[data-localize]")) {
+    el.textContent = new Date(el.dateTime).toLocaleString(undefined, {
+      dateStyle: "medium",
+      timeStyle: "short",
+    });
+  }
+</script>
