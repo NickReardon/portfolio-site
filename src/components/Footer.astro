@@ -35,6 +35,7 @@ import { build, site } from "../site.config";
               }).format(new Date(build.updated))}{" "}
               UTC
             </time>
+            {build.compareApiUrl && <span data-compare={build.compareApiUrl} />}
           </>
         )
       }
@@ -61,5 +62,21 @@ import { build, site } from "../site.config";
       dateStyle: "medium",
       timeStyle: "short",
     });
+  }
+
+  const compare = document.querySelector("[data-compare]");
+  if (compare) {
+    fetch(compare.dataset.compare)
+      .then((response) => (response.ok ? response.json() : null))
+      .then((result) => {
+        // Only ahead_by. behind_by counts the staging -> main merge commits,
+        // which live on main alone and are never merged back, so it grows
+        // without bound while saying nothing about content.
+        if (result?.ahead_by) {
+          compare.textContent = ` · ${result.ahead_by} ahead of main`;
+        }
+      })
+      // A rate-limited or offline compare just leaves the stamp as built.
+      .catch(() => {});
   }
 </script>
