@@ -175,15 +175,25 @@ and `preview_deployment_setting: none`. Pushing to `main` or `staging` creates a
 deployment record that stays queued forever and never builds, so the live site
 does not change. Uploading `dist` with Wrangler is the only deployment path.
 
-Deploy the built `dist` directory:
+Deploy from the checkout of the branch you are deploying:
 
 ```powershell
+git switch staging
 npm run deploy:cloudflare -- --branch staging
 ```
 
-The Pages project name is baked into the script; without it Wrangler tries to
-prompt for a project and fails under `op run` with "This command cannot be run
-in a non-interactive context". Pass `--branch main` to upload to production.
+Wrangler's `--branch` only tags the deployment; it does not affect the build.
+`scripts/deploy.mjs` sets `CF_PAGES_BRANCH` for the build from the same value,
+so the bundle and the deployment agree. It refuses to run when the checked-out
+branch differs from the deploy target, or when the working tree is dirty;
+`--allow-branch-mismatch` and `--allow-dirty` override.
+
+Deploy production from `main` the same way, after promoting `staging`:
+
+```powershell
+git switch main
+npm run deploy:cloudflare -- --branch main
+```
 
 Because Wrangler uploads are the only deployment path, the build stamp falls
 back to the working tree's commit and branch when Cloudflare's
