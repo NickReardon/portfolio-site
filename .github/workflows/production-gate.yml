@@ -10,7 +10,7 @@ jobs:
   staging-ready:
     name: Staging deployment is ready
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
 
     steps:
       - name: Require staging as the source branch
@@ -22,17 +22,48 @@ jobs:
             exit 1
           fi
 
-      - name: Check staging deployment
-        run: |
-          curl --fail --show-error --silent --location \
-            --max-time 20 \
-            --retry 3 \
-            --retry-delay 5 \
-            --user-agent "Mozilla/5.0 (compatible; portfolio-production-gate/1.0)" \
-            --output /tmp/staging-home.html \
-            https://staging.nick-reardon.com/
+      - uses: actions/checkout@v4
 
-          if ! grep -qi '<meta name="robots" content="noindex' /tmp/staging-home.html; then
-            echo "Staging responded, but it did not include expected noindex metadata."
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - run: npm ci
+
+      # This asserts the invariant rather than probing the deployed site. The
+      # previous version fetched staging.nick-reardon.com and looked for a
+      # noindex tag, which broke once Cloudflare started returning 403 to the
+      # runner's datacenter IP — a false failure that said nothing about the
+      # code. Cloudflare's own Pages check already proves staging deployed.
+      #
+      # The bug this guards against shipped earlier: indexability was keyed on
+      # CF_PAGES rather than the branch, so staging built as crawlable and
+      # production, deployed from a staging checkout, built as noindex.
+      - name: A staging build must not be indexable
+        env:
+          CF_PAGES_BRANCH: staging
+        run: |
+          npm run build
+          if ! grep -qi '<meta name="robots" content="noindex' dist/index.html; then
+            echo "A staging build did not emit noindex metadata."
+            exit 1
+          fi
+          if ! grep -q 'Disallow: /' dist/robots.txt; then
+            echo "A staging build did not emit a disallowing robots.txt."
+            exit 1
+          fi
+
+      - name: A production build must be indexable
+        env:
+          CF_PAGES_BRANCH: main
+        run: |
+          npm run build
+          if grep -qi '<meta name="robots" content="noindex' dist/index.html; then
+            echo "A production build emitted noindex metadata."
+            exit 1
+          fi
+          if ! grep -q 'Allow: /' dist/robots.txt; then
+            echo "A production build did not emit an allowing robots.txt."
             exit 1
           fi
