@@ -12,7 +12,6 @@ function normalizeUrl(url: string | undefined) {
 }
 
 const branch = import.meta.env.CF_PAGES_BRANCH;
-const isCloudflarePages = import.meta.env.CF_PAGES === "1";
 const deployedUrl =
   normalizeUrl(import.meta.env.SITE_URL) ??
   (branch === stagingBranch
@@ -40,7 +39,11 @@ export const build = {
 export const site = {
   name: "Nicholas Reardon",
   url: deployedUrl,
-  isSearchIndexable: !isCloudflarePages || branch === productionBranch,
+  // Keyed on the branch, not on whether Cloudflare ran the build. A local
+  // Wrangler upload sets no CF_PAGES, so keying on that made every manually
+  // deployed staging build advertise itself as indexable. Unknown branch means
+  // not production, so this fails closed.
+  isSearchIndexable: branch === productionBranch,
   role: "Gameplay and Systems Programmer",
   focus:
     "Unreal Engine, C++, modular gameplay architecture, and designer-friendly content workflows",
