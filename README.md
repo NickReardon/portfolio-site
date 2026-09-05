@@ -186,7 +186,12 @@ Wrangler's `--branch` only tags the deployment; it does not affect the build.
 `scripts/deploy.mjs` sets `CF_PAGES_BRANCH` for the build from the same value,
 so the bundle and the deployment agree. It refuses to run when the checked-out
 branch differs from the deploy target, or when the working tree is dirty;
-`--allow-branch-mismatch` and `--allow-dirty` override.
+`--allow-branch-mismatch` and `--allow-dirty` override those.
+
+Production is stricter and has no overrides. Deploying `main` requires the
+`main` branch checked out, a clean working tree, and local `main` level with
+`origin/main`. A bundle built for one branch and uploaded to another
+de-indexes production silently, so the escape hatch is deliberately absent.
 
 Deploy production from `main` the same way, after promoting `staging`:
 
