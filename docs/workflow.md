@@ -24,11 +24,6 @@ Do not create new worktrees in user-global scratch directories such as
 `~/.codex/worktrees/` unless that location is explicitly requested. The
 `.workspace/` directory is local-only and ignored by Git.
 
-Create local auxiliary worktrees inside this project under `.workspace/worktrees/`.
-Do not create new worktrees in user-global scratch directories such as
-`~/.codex/worktrees/` unless that location is explicitly requested. The
-`.workspace/` directory is local-only and ignored by Git.
-
 Recommended branch types:
 
 - `feat`: new pages, components, sections, or user-facing behavior.
@@ -97,9 +92,17 @@ All changes must reach `main` through a pull request. Do not push directly to
 case.
 
 Production PRs must use `staging` as the source branch and `main` as the target
-branch. The public gate enforces that source relationship. Deployment approval
-belongs to the private vault workflow, which stages a specific portfolio SHA
-before that SHA is promoted to public `main`.
+branch, and must be merged with a **merge commit**. Never squash or rebase a
+`staging` into `main` promotion: both rewrite the promoted commits under new
+SHAs, so `staging` stops being an ancestor of `main` and every later promotion
+conflicts against work that is already live. Squash merging is still fine for
+short-lived work branches going into `staging`.
+
+The `Production Gate / Staging deployment is ready` check must pass
+before merging; it verifies that the Cloudflare Pages staging deployment
+responds and still emits the expected non-indexable staging metadata. Humans
+should still validate `https://staging.nick-reardon.com` before production
+promotion.
 
 Every substantial PR or agent handoff should include:
 
@@ -170,25 +173,12 @@ Documentation locations:
 ## Release Flow
 
 1. Merge work branches into `staging`.
-2. Dispatch `Publish Portfolio` from private vault `main`, targeting `staging`.
-3. The workflow builds and deploys one immutable package to staging, then runs
-   HTTP, indexing, accessibility, performance, media, and PDF checks.
-4. Review staging, then open the `staging` to `main` pull request and select
-   **Create a merge commit**. Never squash or rebase a promotion PR: either
-   method discards the exact staged commit from `main` and correctly blocks
-   production promotion.
-5. Dispatch `Promote Portfolio Package` from private vault `main` with the
-   successful staging run ID. This separate manual dispatch is the production
-   approval gate because required-reviewer environments are unavailable on the
-   private repository's current GitHub plan.
-6. The promotion workflow proves the staged site SHA is contained in public
-   `main`, downloads and verifies the stored package, and uploads it to
-   production without rebuilding.
-7. Confirm production crawl policy, sitemap, and artifact hashes.
-
-Cloudflare Git deployments must remain disabled. Direct Wrangler uploads from
-the private workflow are the only deployment path. The package artifact is
-private and retained for seven days.
+2. Validate the staging deployment at `https://staging.nick-reardon.com`.
+3. Confirm metadata, draft visibility, canonical URLs, and key pages.
+4. Open a pull request from `staging` into `main`.
+5. Wait for the `Production Gate / Staging deployment is ready` check to pass.
+6. Merge the pull request into `main`.
+7. Validate production at `https://nick-reardon.com`.
 
 Use a production hotfix branch from `main` only when staging cannot wait. Backport
 or merge the hotfix into `staging` afterward so the branches do not diverge.
@@ -199,10 +189,14 @@ Configure a branch protection rule or ruleset for `main` with:
 
 - Require a pull request before merging.
 - Require status checks to pass before merging.
-- Required check: `Production Gate / Require staging promotion`.
+- Required check: `Production Gate / Staging deployment is ready`.
+- Allow merge commits, so `staging` promotions preserve ancestry. Squash and
+  rebase merging may stay enabled for work branches, but must not be used on a
+  `staging` into `main` pull request.
 - Require branches to be up to date before merging when practical.
 - Restrict direct pushes to repository maintainers only when emergency hotfix
   access is needed; otherwise block direct pushes to `main`.
 
-Cloudflare Pages keeps `main` as the production branch and `staging` as the
-long-lived preview branch, but Git-based automatic builds are disabled.
+Cloudflare Pages should also keep `main` as the production branch and `staging`
+as the long-lived preview branch with `staging.nick-reardon.com` attached to the
+`staging` branch deployment.

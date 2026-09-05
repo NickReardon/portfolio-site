@@ -1,28 +1,67 @@
-import { profile } from "./data/publication";
-
+const productionBranch = "main";
+const stagingBranch = "staging";
 const productionUrl = "https://nick-reardon.com";
+const stagingUrl = "https://staging.nick-reardon.com";
+
+function normalizeUrl(url: string | undefined) {
+  if (!url) {
+    return undefined;
+  }
+
+  return /^https?:\/\//u.test(url) ? url : `https://${url}`;
+}
+
+const branch = import.meta.env.CF_PAGES_BRANCH;
+const deployedUrl =
+  normalizeUrl(import.meta.env.SITE_URL) ??
+  (branch === stagingBranch
+    ? stagingUrl
+    : branch && branch !== productionBranch
+      ? (normalizeUrl(import.meta.env.CF_PAGES_URL) ?? productionUrl)
+      : productionUrl);
+
+// Stamped at build time so a deployed page can be traced back to a commit
+// without guessing from page content. Cloudflare Pages supplies these; a local
+// build reports "local".
+const commitSha = import.meta.env.CF_PAGES_COMMIT_SHA;
+
+export const build = {
+  commit: commitSha?.slice(0, 7) ?? "local",
+  commitUrl: commitSha
+    ? `https://github.com/NickReardon/portfolio-site/commit/${commitSha}`
+    : undefined,
+  branch: branch ?? "local",
+  time: new Date().toISOString(),
+  // Falls back to build time only when the commit date is unavailable.
+  updated: import.meta.env.BUILD_COMMIT_TIME ?? new Date().toISOString(),
+};
 
 export const site = {
-  name: profile.name,
-  url: productionUrl,
-  role: profile.role,
-  tagline: profile.homepage[0],
-  availability: profile.homepage[1],
-  focus: profile.focus,
-  description: profile.homepage[0],
+  name: "Nicholas Reardon",
+  url: deployedUrl,
+  // Keyed on the branch, not on whether Cloudflare ran the build. A local
+  // Wrangler upload sets no CF_PAGES, so keying on that made every manually
+  // deployed staging build advertise itself as indexable. Unknown branch means
+  // not production, so this fails closed.
+  isSearchIndexable: branch === productionBranch,
+  role: "Gameplay and Systems Programmer",
+  focus:
+    "Unreal Engine, C++, modular gameplay architecture, and designer-friendly content workflows",
+  description:
+    "A portfolio of Unreal Engine gameplay systems, technical design, tools, and game jam work.",
   defaultImage: "/images/social-card.png",
-  email: profile.contact.email,
+  email: "reardon.ntr@gmail.com",
   resumeUrl: "/resume/",
   resumePdfUrl: "/resume.pdf",
-  githubUrl: profile.links.github,
-  itchUrl: profile.links["itch.io"],
-  linkedinUrl: profile.links.linkedin,
+  githubUrl: "https://github.com/NickReardon",
+  itchUrl: "https://thingofnightmare.itch.io/",
+  linkedinUrl: "https://www.linkedin.com/in/nicholas-reardon/",
 };
 
 export const navigation = [
   { href: "/", label: "Home" },
   { href: "/projects/", label: "Projects" },
+  { href: "/blog/", label: "Blog" },
   { href: "/about/", label: "About" },
-  { href: "/resume/", label: "Resume" },
   { href: "/contact/", label: "Contact" },
 ];

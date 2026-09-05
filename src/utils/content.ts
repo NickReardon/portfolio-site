@@ -14,7 +14,12 @@ export function sortProjects(
   a: CollectionEntry<"projects">,
   b: CollectionEntry<"projects">,
 ) {
-  return a.data.order - b.data.order;
+  const featuredDelta = Number(b.data.featured) - Number(a.data.featured);
+  if (featuredDelta !== 0) {
+    return featuredDelta;
+  }
+
+  return b.data.date.valueOf() - a.data.date.valueOf();
 }
 
 export function sortNewestFirst<T extends { data: { date: Date } }>(

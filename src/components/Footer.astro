@@ -1,5 +1,5 @@
 ---
-import { site } from "../site.config";
+import { build, site } from "../site.config";
 ---
 
 <footer class="border-t border-stone-200 bg-white">
@@ -10,6 +10,29 @@ import { site } from "../site.config";
       &copy; {new Date().getFullYear()}
       {site.name}. Built with Astro and Cloudflare Pages.
     </p>
+    {
+      !site.isSearchIndexable && (
+        <p class="font-mono text-xs text-stone-500">
+          {build.branch} @{" "}
+          {build.commitUrl ? (
+            <a href={build.commitUrl} class="footer-link">
+              {build.commit}
+            </a>
+          ) : (
+            build.commit
+          )}
+          {" · updated "}
+          <time datetime={build.updated}>
+            {new Intl.DateTimeFormat("en-US", {
+              dateStyle: "medium",
+              timeStyle: "short",
+              timeZone: "UTC",
+            }).format(new Date(build.updated))}{" "}
+            UTC
+          </time>
+        </p>
+      )
+    }
     <div class="flex flex-wrap gap-4">
       <a href={`mailto:${site.email}`} class="footer-link">Email</a>
       {
@@ -22,7 +45,6 @@ import { site } from "../site.config";
       <a href={site.itchUrl} class="footer-link">Itch.io</a>
       <a href={site.linkedinUrl} class="footer-link">LinkedIn</a>
       <a href={site.resumeUrl} class="footer-link">Resume</a>
-      <a href="/blog/" class="footer-link">Blog</a>
     </div>
   </div>
 </footer>

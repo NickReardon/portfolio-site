@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 800" role="img" aria-labelledby="title desc">
+  <title id="title">Tethered project placeholder</title>
+  <desc id="desc">A stylized Unreal Engine systems diagram placeholder for Tethered.</desc>
+  <rect width="1280" height="800" fill="#eef5f0"/>
+  <rect x="96" y="88" width="1088" height="624" rx="18" fill="#ffffff" stroke="#d6d3d1" stroke-width="6"/>
+  <rect x="170" y="180" width="270" height="150" rx="10" fill="#292524"/>
+  <rect x="505" y="180" width="270" height="150" rx="10" fill="#134e4a"/>
+  <rect x="840" y="180" width="270" height="150" rx="10" fill="#292524"/>
+  <rect x="310" y="470" width="270" height="150" rx="10" fill="#134e4a"/>
+  <rect x="700" y="470" width="270" height="150" rx="10" fill="#292524"/>
+  <path d="M440 255h65M775 255h65M640 330v80M445 470l85-140M835 470l-85-140" stroke="#d04f3a" stroke-width="14" stroke-linecap="round"/>
+  <text x="205" y="252" fill="#ffffff" font-family="Arial, sans-serif" font-size="30" font-weight="700">Input</text>
+  <text x="545" y="252" fill="#ffffff" font-family="Arial, sans-serif" font-size="30" font-weight="700">Tags</text>
+  <text x="885" y="252" fill="#ffffff" font-family="Arial, sans-serif" font-size="30" font-weight="700">Attacks</text>
+  <text x="347" y="545" fill="#ffffff" font-family="Arial, sans-serif" font-size="30" font-weight="700">Combos</text>
+  <text x="742" y="545" fill="#ffffff" font-family="Arial, sans-serif" font-size="30" font-weight="700">Feedback</text>
+  <text x="160" y="132" fill="#292524" font-family="Arial, sans-serif" font-size="46" font-weight="700">Tethered Gameplay Systems</text>
+</svg>

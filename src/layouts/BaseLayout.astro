@@ -1,7 +1,7 @@
 ---
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
-import { site } from "../site.config";
+import { build, site } from "../site.config";
 import "../styles/global.css";
 
 interface Props {
@@ -32,10 +32,18 @@ const socialImageUrl = new URL(image, site.url).toString();
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
-    {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <meta
+      name="build"
+      content={`${build.commit} ${build.branch} ${build.time}`}
+    />
+    {
+      (noindex || !site.isSearchIndexable) && (
+        <meta name="robots" content="noindex, nofollow" />
+      )
+    }
     <link rel="canonical" href={canonicalUrl} />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <meta property="og:site_name" content={site.name} />
@@ -44,11 +52,9 @@ const socialImageUrl = new URL(image, site.url).toString();
     <meta property="og:type" content={type} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={socialImageUrl} />
-    {
-      /* Twitter falls back to the og: tags above for title and description, so
-        only the two tags without an og: equivalent are worth the bytes. */
-    }
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImageUrl} />
     <title>{pageTitle}</title>
   </head>
