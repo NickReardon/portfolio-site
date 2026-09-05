@@ -6,7 +6,8 @@ GitHub, and Cloudflare Pages.
 
 ## Requirements
 
-- Node.js `>=22.12.0` and npm.
+- Node.js `>=22.12.0` and npm. `.nvmrc` pins the major version for CI and for
+  the Cloudflare Pages build image.
 - Python with `requirements.txt` installed; the privacy check reads PDFs.
 - 1Password CLI only for local Cloudflare deploy commands.
 
