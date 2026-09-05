@@ -24,6 +24,7 @@ const deployedUrl =
 // without guessing from page content. Cloudflare Pages supplies these; a local
 // build reports "local".
 const commitSha = import.meta.env.CF_PAGES_COMMIT_SHA;
+const repo = "NickReardon/portfolio-site";
 
 export const build = {
   commit: commitSha?.slice(0, 7) ?? "local",
@@ -31,8 +32,15 @@ export const build = {
   // never does once a merge commit is involved.
   tree: import.meta.env.BUILD_TREE_SHA?.slice(0, 7) ?? "local",
   commitUrl: commitSha
-    ? `https://github.com/NickReardon/portfolio-site/commit/${commitSha}`
+    ? `https://github.com/${repo}/commit/${commitSha}`
     : undefined,
+  // Compared in the browser rather than at build time: a count baked into the
+  // build freezes the moment main moves, which is exactly when it stops being
+  // zero and starts being worth reading.
+  compareApiUrl:
+    branch && branch !== productionBranch
+      ? `https://api.github.com/repos/${repo}/compare/${productionBranch}...${branch}`
+      : undefined,
   branch: branch ?? "local",
   time: new Date().toISOString(),
   // Falls back to build time only when the commit date is unavailable.
