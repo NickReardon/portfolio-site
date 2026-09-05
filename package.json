@@ -19,6 +19,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "deploy:cloudflare": "node scripts/deploy.mjs",
+    "deploy:staging": "node scripts/deploy.mjs --branch staging",
+    "deploy:production": "node scripts/deploy.mjs --branch main",
     "audit": "npm run audit:lighthouse && npm run audit:pa11y",
     "audit:lighthouse": "node scripts/audit-pages.mjs lighthouse",
     "audit:pa11y": "node scripts/audit-pages.mjs pa11y",

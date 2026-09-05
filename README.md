@@ -163,6 +163,24 @@ Edit `.env.1password` so each `op://...` value points at your actual 1Password
 vault, item, and field. Prefer `CLOUDFLARE_API_TOKEN`; the older
 `CLOUDFLARE_API_KEY` flow also requires `CLOUDFLARE_EMAIL`.
 
+### Choosing a credential source
+
+`scripts/deploy.mjs` reads `DEPLOY_CREDENTIALS` from `.env` (gitignored; copy
+`.env.example`) to decide where Cloudflare credentials come from, so the same
+command works across environments:
+
+| Value         | Behaviour                                                                                                        |
+| ------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `op:<file>`   | Runs Wrangler under `op run --env-file <file>`. Secrets exist only inside the subprocess.                        |
+| `env`         | Credentials are already in the environment. Use in CI.                                                           |
+| `file:<file>` | Loads `KEY=VALUE` pairs from `<file>`. Use where 1Password is unavailable; keep that file out of the repository. |
+
+Unset means: use the environment if it already carries a token, otherwise
+1Password via `./.env.1password`. The script reports which source it used and
+never reads or prints the values themselves. `env` and `file:` are checked for a
+token before the build runs; `op:` references resolve at run time, so only
+Wrangler can validate them.
+
 Check the credentials:
 
 ```powershell
@@ -179,7 +197,7 @@ Deploy from the checkout of the branch you are deploying:
 
 ```powershell
 git switch staging
-npm run deploy:cloudflare -- --branch staging
+npm run deploy:staging
 ```
 
 Wrangler's `--branch` only tags the deployment; it does not affect the build.
@@ -192,8 +210,11 @@ Deploy production from `main` the same way, after promoting `staging`:
 
 ```powershell
 git switch main
-npm run deploy:cloudflare -- --branch main
+npm run deploy:production
 ```
+
+`deploy:cloudflare` still takes an explicit `-- --branch <name>` for preview
+branches.
 
 Because Wrangler uploads are the only deployment path, the build stamp falls
 back to the working tree's commit and branch when Cloudflare's
