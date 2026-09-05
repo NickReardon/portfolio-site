@@ -6,7 +6,8 @@ GitHub, and Cloudflare Pages.
 
 ## Requirements
 
-- Node.js `>=22.12.0` and npm.
+- Node.js `>=22.12.0` and npm. `.nvmrc` pins the major version for CI and for
+  the Cloudflare Pages build image.
 - Python with `requirements.txt` installed; the privacy check reads PDFs.
 - 1Password CLI only for local Cloudflare deploy commands.
 
@@ -32,11 +33,26 @@ npm run audit:staging
 npm run audit:scores
 ```
 
-`npm run privacy:check` runs automatically before every build. It scans every
-file Git would track — including the text, metadata and XMP of each PDF — and
-fails on a phone number, a postal code, or a local filesystem path. This
-repository is public, so a detail committed here is published twice: on the
-site and in Git history, where it cannot be recalled.
+`npm run privacy:check` scans every file Git would track — including the text,
+metadata and XMP of each PDF — and fails on a phone number, a postal code, or a
+local filesystem path.
+
+It runs as a **pre-commit hook**, because this repository is public and a commit
+is a publish: once pushed, the data is fetchable from GitHub and lives in the
+history, so a check in CI or code review would only report what was already
+published. The commit is the last point where refusing still prevents anything.
+
+`npm install` enables the hook by pointing `core.hooksPath` at `.githooks/`. To
+enable it by hand, or to confirm it is active:
+
+```powershell
+git config core.hooksPath .githooks
+git config --get core.hooksPath
+```
+
+`git commit --no-verify` bypasses it, and the hook needs Python with
+`requirements.txt` installed. Both are worth knowing before trusting it as the
+only gate.
 
 ## Project Structure
 

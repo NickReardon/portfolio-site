@@ -1,0 +1,16 @@
+#!/bin/sh
+# Refuse commits that would publish contact details or local paths.
+#
+# This repository is public, so a commit is a publish: by the time CI or a code
+# review could object, the data is already fetchable from GitHub and in the
+# history. That makes the commit itself the only useful gate.
+#
+# Enabled by `npm install` via the prepare script, which sets core.hooksPath.
+
+if ! python scripts/privacy-check.py; then
+  echo ""
+  echo "Commit blocked: see the findings above."
+  echo "This repository is public, so committing publishes."
+  echo "Use 'git commit --no-verify' only if you are certain the finding is wrong."
+  exit 1
+fi
