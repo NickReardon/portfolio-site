@@ -27,6 +27,11 @@ const commitBranch =
 // The commit date, not the build time: rebuilding unchanged content should not
 // claim the site was updated.
 const commitTime = gitValue(["log", "-1", "--format=%cI"]);
+// The content hash, not the commit hash. GitHub's merge button always mints a
+// new commit, so main and staging never share a commit SHA even when their
+// content is identical. Their trees do, which is what "is main up to date?"
+// actually asks.
+const treeSha = gitValue(["rev-parse", "HEAD^{tree}"]);
 
 const productionBranch = "main";
 const stagingBranch = "staging";
@@ -69,6 +74,7 @@ export default defineConfig({
       "import.meta.env.CF_PAGES_COMMIT_SHA": JSON.stringify(commitSha ?? null),
       "import.meta.env.CF_PAGES_BRANCH": JSON.stringify(commitBranch ?? null),
       "import.meta.env.BUILD_COMMIT_TIME": JSON.stringify(commitTime ?? null),
+      "import.meta.env.BUILD_TREE_SHA": JSON.stringify(treeSha ?? null),
     },
   },
 });

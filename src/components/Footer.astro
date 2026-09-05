@@ -12,20 +12,18 @@ import { build, site } from "../site.config";
     </p>
     <p class="font-mono text-xs text-stone-500">
       {!site.isSearchIndexable && `${build.branch} · `}
-      {
-        site.isSearchIndexable ? (
-          build.commit
-        ) : build.commitUrl ? (
-          <a href={build.commitUrl} class="footer-link">
-            {build.commit}
-          </a>
-        ) : (
-          build.commit
-        )
-      }
+      {build.tree}
       {
         !site.isSearchIndexable && (
           <>
+            {" · "}
+            {build.commitUrl ? (
+              <a href={build.commitUrl} class="footer-link">
+                {build.commit}
+              </a>
+            ) : (
+              build.commit
+            )}
             {" · updated "}
             {/* Rendered in UTC; the inline script below rewrites it to the
                 viewer's own timezone. */}

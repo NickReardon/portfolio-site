@@ -27,6 +27,9 @@ const commitSha = import.meta.env.CF_PAGES_COMMIT_SHA;
 
 export const build = {
   commit: commitSha?.slice(0, 7) ?? "local",
+  // Matches across branches whenever the content matches, which a commit SHA
+  // never does once a merge commit is involved.
+  tree: import.meta.env.BUILD_TREE_SHA?.slice(0, 7) ?? "local",
   commitUrl: commitSha
     ? `https://github.com/NickReardon/portfolio-site/commit/${commitSha}`
     : undefined,
