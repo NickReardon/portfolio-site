@@ -8,16 +8,16 @@ import { site } from "../site.config";
   title="About"
   description={`About ${site.name} and his gameplay systems work.`}
 >
-  <section class="section bg-site-subtle">
-    <div class="mx-auto max-w-4xl px-5 py-14">
+  <section class="section section-subtle">
+    <div class="shell shell-md">
       <p class="eyebrow">About</p>
       <h1>{site.name}</h1>
-      <p class="mt-5 text-xl leading-8 text-stone-700">
+      <p class="lede">
         I am a gameplay and systems programmer building Unreal Engine systems
         with an emphasis on modular architecture, data-driven authoring, and
         reliable runtime state.
       </p>
-      <p class="mt-5 leading-7 text-stone-650">
+      <p class="body-copy intro-detail">
         I care about systems that work the way designers expect them to work:
         sensible defaults, clear extension points, and enough flexibility to
         grow without constant refactoring. I am currently completing my Bachelor
@@ -29,12 +29,12 @@ import { site } from "../site.config";
   </section>
 
   <section class="section">
-    <div class="mx-auto grid max-w-6xl gap-10 px-5 py-14 lg:grid-cols-3">
+    <div class="shell skills-layout">
       <div>
         <p class="eyebrow">Skills</p>
         <h2>Core strengths</h2>
       </div>
-      <div class="grid gap-4 lg:col-span-2 sm:grid-cols-2">
+      <div class="skills-grid">
         <div class="info-panel">
           <h3>Gameplay Systems</h3>
           <p>
@@ -67,18 +67,18 @@ import { site } from "../site.config";
     </div>
   </section>
 
-  <section class="section border-t border-stone-200 bg-white">
-    <div class="mx-auto max-w-6xl px-5 py-14">
+  <section class="section section-divided-top section-surface">
+    <div class="shell">
       <p class="eyebrow">Current Focus</p>
       <h2>What I am building next</h2>
-      <p class="mt-4 max-w-3xl leading-7 text-stone-650">
+      <p class="body-copy focus-copy">
         My current Unreal Engine project, Tethered, is an action rogue-lite
         prototype built around a Lyra-aligned architecture. Its systems include
         a world-level Ability System Component for event coordination, seamless
         travel state reconstruction, pluggable save backends, data-driven
         encounters, spawn modifiers, and Gameplay Tag-based combat routing.
       </p>
-      <div class="mt-8 flex flex-wrap gap-3">
+      <div class="button-row focus-actions">
         <a class="button-primary" href={site.resumeUrl}>
           <FileText size={16} aria-hidden="true" />
           Resume
@@ -88,3 +88,56 @@ import { site } from "../site.config";
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .intro-detail {
+    margin-top: 1.25rem;
+  }
+
+  .focus-copy {
+    margin-top: 1rem;
+    max-width: 48rem;
+  }
+
+  .focus-actions {
+    margin-top: 2rem;
+  }
+
+  .skills-layout {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .skills-grid {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .info-panel {
+    border-top: 3px solid var(--accent-bright);
+    background: var(--surface);
+    padding: 1.15rem;
+  }
+
+  .info-panel p {
+    margin-top: 0.5rem;
+    color: var(--ink-muted);
+    line-height: 1.65;
+  }
+
+  @media (min-width: 40rem) {
+    .skills-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .skills-layout {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .skills-grid {
+      grid-column: span 2 / span 2;
+    }
+  }
+</style>
