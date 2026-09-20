@@ -3,8 +3,6 @@ import { execFileSync } from "node:child_process";
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 
-import tailwindcss from "@tailwindcss/vite";
-
 // Cloudflare sets these on its own builds. A local Wrangler upload does not, so
 // fall back to the working tree's commit and branch: a hand-uploaded deployment
 // should still be traceable to what produced it.
@@ -69,7 +67,6 @@ export default defineConfig({
     remotePatterns: [{ protocol: "https", hostname: "img.itch.zone" }],
   },
   vite: {
-    plugins: [tailwindcss()],
     define: {
       "import.meta.env.CF_PAGES_COMMIT_SHA": JSON.stringify(commitSha ?? null),
       "import.meta.env.CF_PAGES_BRANCH": JSON.stringify(commitBranch ?? null),

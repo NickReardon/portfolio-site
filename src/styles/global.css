@@ -1,52 +1,108 @@
-@import "tailwindcss";
-
-@theme {
-  --color-site-bg: #f6f7f4;
-  --color-site-subtle: #eef5f0;
-  --color-coral-100: #f8d8ce;
-  --color-coral-900: #7c2418;
-  --color-stone-650: #55534d;
-}
-
-/* The tokens the site is written against.
- *
- * Values marked "via Tailwind" are copied verbatim from the compiled
- * stylesheet, including their oklch form, so removing Tailwind changes no
- * rendered colour. Previously these existed twice: once as Tailwind utilities
- * reachable from markup, once as hardcoded hex in the component rules below,
- * which meant changing the palette meant editing both.
+/* Cascade layers, in ascending priority. Declared up front so the reset can
+ * never outrank the base and component rules it is supposed to sit underneath.
+ * Unlayered CSS beats every layer, which is why the reset is not unlayered:
+ * `a { color: inherit }` would otherwise defeat .text-link, and
+ * `h1 { font-size: inherit }` would flatten every heading on the site.
  */
-:root {
-  --page-bg: #f6f7f4;
-  --page-subtle: #eef5f0;
+@layer reset, base, components;
 
-  --surface: #fff;
-  --surface-sunken: #fafaf9;
-  --surface-muted: #f5f5f4;
-  --shade: #e7e5e4;
+/* Replaces Tailwind's preflight; only the parts this site relied on. */
+@layer reset {
+  /* Preflight set this and the whole site inherited it; without it every block
+     that does not name a line-height falls back to `normal` (~1.2) and body
+     copy tightens up everywhere. */
+  html {
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+  }
 
-  --ink: #1c1917;
-  --ink-strong: oklch(14.7% 0.004 49.25); /* via Tailwind: stone-950 */
-  --ink-soft: #292524;
-  --ink-body: #44403c;
-  --ink-muted: #55534d;
-  --ink-subtle: #57534e;
-  --ink-faint: oklch(55.3% 0.013 58.071); /* via Tailwind: stone-500 */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-  --accent: #134e4a;
-  --accent-mid: oklch(43.7% 0.078 188.216); /* via Tailwind: teal-800 */
-  --accent-bright: #0f766e;
+  * {
+    margin: 0;
+  }
 
-  --line: #d6d3d1;
-  --line-soft: oklch(92.3% 0.003 48.717); /* via Tailwind: stone-200 */
-  --line-strong: #a8a29e;
+  img,
+  svg,
+  video {
+    display: block;
+    max-width: 100%;
+    /* Preflight set this. Without it an <img> keeps the intrinsic height from
+       its height attribute, which beats any aspect-ratio the layout sets: the
+       project hero rendered at its full 475px instead of a 16/10 box. */
+    height: auto;
+  }
 
-  --badge-bg: #f8d8ce;
-  --badge-ink: #7c2418;
+  button,
+  input,
+  select,
+  textarea {
+    color: inherit;
+    font: inherit;
+  }
 
-  /* The one page-width measure every top-level band is laid out against. */
-  --shell-max: 72rem;
-  --shell-pad: 1.25rem;
+  ul,
+  ol {
+    list-style: none;
+    padding: 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  /* The tokens the site is written against.
+   *
+   * Values marked "via Tailwind" are copied verbatim from the compiled
+   * stylesheet, including their oklch form, so removing Tailwind changes no
+   * rendered colour. Previously these existed twice: once as Tailwind utilities
+   * reachable from markup, once as hardcoded hex in the component rules below,
+   * which meant changing the palette meant editing both.
+   */
+  :root {
+    --page-bg: #f6f7f4;
+    --page-subtle: #eef5f0;
+
+    --surface: #fff;
+    --surface-sunken: #fafaf9;
+    --surface-muted: #f5f5f4;
+    --shade: #e7e5e4;
+
+    --ink: #1c1917;
+    --ink-strong: oklch(14.7% 0.004 49.25); /* via Tailwind: stone-950 */
+    --ink-soft: #292524;
+    --ink-body: #44403c;
+    --ink-muted: #55534d;
+    --ink-subtle: #57534e;
+    --ink-faint: oklch(55.3% 0.013 58.071); /* via Tailwind: stone-500 */
+
+    --accent: #134e4a;
+    --accent-mid: oklch(43.7% 0.078 188.216); /* via Tailwind: teal-800 */
+    --accent-bright: #0f766e;
+
+    --line: #d6d3d1;
+    --line-soft: oklch(92.3% 0.003 48.717); /* via Tailwind: stone-200 */
+    --line-strong: #a8a29e;
+
+    --badge-bg: #f8d8ce;
+    --badge-ink: #7c2418;
+
+    /* The one page-width measure every top-level band is laid out against. */
+    --shell-max: 72rem;
+    --shell-pad: 1.25rem;
+  }
 }
 
 @layer base {
