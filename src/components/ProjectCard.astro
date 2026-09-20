@@ -187,6 +187,39 @@ const timeline = data.timeline ?? formatDate(data.date);
     line-height: 1.5rem;
   }
 
+  /* Wide enough for a row: the cover sits beside the content instead of above
+     it, and the content column gets the full remaining width. */
+  @media (min-width: 48rem) {
+    .card-link {
+      display: grid;
+      grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+    }
+
+    .card-media {
+      /* The row's height now comes from the content beside it, so the cover
+         fills whatever that turns out to be rather than setting it. The floor
+         keeps a short card's cover from collapsing to a strip. */
+      aspect-ratio: auto;
+      min-height: 13rem;
+      position: relative;
+    }
+
+    .card-media :global(img) {
+      position: absolute;
+      inset: 0;
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    /* The content column is now most of the page width, so the summary needs a
+       measure of its own or it runs well past a comfortable line length. */
+    .card-summary {
+      max-width: 68ch;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .card:hover .card-media :global(img) {
       transform: none;

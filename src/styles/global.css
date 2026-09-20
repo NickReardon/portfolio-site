@@ -251,22 +251,12 @@
     margin-top: 1.75rem;
   }
 
+  /* One card per row. The cards themselves turn horizontal at 48rem, so the
+     columns live inside the card rather than here. */
   .card-grid {
     display: grid;
     gap: 1.5rem;
     margin-top: 2rem;
-  }
-
-  @media (min-width: 48rem) {
-    .card-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
-  @media (min-width: 64rem) {
-    .card-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
   }
 
   .eyebrow {
