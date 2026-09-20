@@ -122,6 +122,9 @@ const timeline = data.timeline ?? formatDate(data.date);
   }
 
   .card-head {
+    /* Without this the badge stretches to the height of the date-plus-title
+       block beside it and renders as a tall blob rather than a pill. */
+    align-items: flex-start;
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
