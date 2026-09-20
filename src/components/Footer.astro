@@ -2,15 +2,13 @@
 import { build, site } from "../site.config";
 ---
 
-<footer class="border-t border-stone-200 bg-white">
-  <div
-    class="mx-auto flex max-w-6xl flex-col gap-4 px-5 py-8 text-sm text-stone-600 sm:flex-row sm:items-center sm:justify-between"
-  >
+<footer class="site-footer">
+  <div class="footer-inner">
     <p>
       &copy; {new Date().getFullYear()}
       {site.name}. Built with Astro and Cloudflare Pages.
     </p>
-    <p class="font-mono text-xs text-stone-500">
+    <p class="build-stamp">
       {!site.isSearchIndexable && `${build.branch} · `}
       {build.tree}
       {
@@ -18,7 +16,7 @@ import { build, site } from "../site.config";
           <>
             {" · "}
             {build.commitUrl ? (
-              <a href={build.commitUrl} class="footer-link">
+              <a href={build.commitUrl} class="text-link">
                 {build.commit}
               </a>
             ) : (
@@ -40,21 +38,63 @@ import { build, site } from "../site.config";
         )
       }
     </p>
-    <div class="flex flex-wrap gap-4">
-      <a href={`mailto:${site.email}`} class="footer-link">Email</a>
+    <div class="footer-links">
+      <a href={`mailto:${site.email}`} class="text-link">Email</a>
       {
         site.githubUrl && (
-          <a href={site.githubUrl} class="footer-link">
+          <a href={site.githubUrl} class="text-link">
             GitHub
           </a>
         )
       }
-      <a href={site.itchUrl} class="footer-link">Itch.io</a>
-      <a href={site.linkedinUrl} class="footer-link">LinkedIn</a>
-      <a href={site.resumeUrl} class="footer-link">Resume</a>
+      <a href={site.itchUrl} class="text-link">Itch.io</a>
+      <a href={site.linkedinUrl} class="text-link">LinkedIn</a>
+      <a href={site.resumeUrl} class="text-link">Resume</a>
     </div>
   </div>
 </footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--line-soft);
+    background: var(--surface);
+  }
+
+  .footer-inner {
+    color: var(--ink-subtle);
+    display: flex;
+    flex-direction: column;
+    font-size: 0.875rem;
+    gap: 1rem;
+    line-height: 1.25rem;
+    margin-inline: auto;
+    max-width: var(--shell-max);
+    padding: 2rem var(--shell-pad);
+  }
+
+  .build-stamp {
+    color: var(--ink-faint);
+    font-family:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+      "Courier New", monospace;
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  @media (min-width: 40rem) {
+    .footer-inner {
+      align-items: center;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+</style>
 
 <script is:inline>
   for (const el of document.querySelectorAll("time[data-localize]")) {
