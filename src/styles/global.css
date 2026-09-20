@@ -8,9 +8,46 @@
   --color-stone-650: #55534d;
 }
 
+/* The tokens the site is written against.
+ *
+ * Values marked "via Tailwind" are copied verbatim from the compiled
+ * stylesheet, including their oklch form, so removing Tailwind changes no
+ * rendered colour. Previously these existed twice: once as Tailwind utilities
+ * reachable from markup, once as hardcoded hex in the component rules below,
+ * which meant changing the palette meant editing both.
+ */
+:root {
+  --page-bg: #f6f7f4;
+  --page-subtle: #eef5f0;
+
+  --surface: #fff;
+  --surface-sunken: #fafaf9;
+  --surface-muted: #f5f5f4;
+  --shade: #e7e5e4;
+
+  --ink: #1c1917;
+  --ink-strong: oklch(14.7% 0.004 49.25); /* via Tailwind: stone-950 */
+  --ink-soft: #292524;
+  --ink-body: #44403c;
+  --ink-muted: #55534d;
+  --ink-subtle: #57534e;
+  --ink-faint: oklch(55.3% 0.013 58.071); /* via Tailwind: stone-500 */
+
+  --accent: #134e4a;
+  --accent-mid: oklch(43.7% 0.078 188.216); /* via Tailwind: teal-800 */
+  --accent-bright: #0f766e;
+
+  --line: #d6d3d1;
+  --line-soft: oklch(92.3% 0.003 48.717); /* via Tailwind: stone-200 */
+  --line-strong: #a8a29e;
+
+  --badge-bg: #f8d8ce;
+  --badge-ink: #7c2418;
+}
+
 @layer base {
   html {
-    background: var(--color-site-bg);
+    background: var(--page-bg);
   }
 
   body {
@@ -20,8 +57,8 @@
     /* Dynamic viewport unit keeps the footer at the true bottom on mobile,
        accounting for the browser's collapsing address bar. */
     min-height: 100dvh;
-    background: var(--color-site-bg);
-    color: #1c1917;
+    background: var(--page-bg);
+    color: var(--ink);
     font-family:
       Inter,
       ui-sans-serif,
@@ -42,7 +79,7 @@
   h1,
   h2,
   h3 {
-    color: #1c1917;
+    color: var(--ink);
     letter-spacing: 0;
   }
 
@@ -68,7 +105,7 @@
   }
 
   :focus-visible {
-    outline: 3px solid #134e4a;
+    outline: 3px solid var(--accent);
     outline-offset: 3px;
   }
 
@@ -78,18 +115,18 @@
 
   code {
     border-radius: 0.35rem;
-    background: #e7e5e4;
+    background: var(--shade);
     padding: 0.12rem 0.35rem;
-    color: #292524;
+    color: var(--ink-soft);
     font-size: 0.9em;
   }
 }
 
 @layer components {
   .skip-link {
-    background: #134e4a;
+    background: var(--accent);
     border-radius: 0.45rem;
-    color: white;
+    color: var(--surface);
     font-weight: 700;
     left: 1rem;
     padding: 0.7rem 1rem;
@@ -114,7 +151,7 @@
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: #134e4a;
+    color: var(--accent);
   }
 
   .brand-link {
@@ -131,7 +168,7 @@
   .nav-link {
     border: 1px solid transparent;
     border-radius: 0.45rem;
-    color: #44403c;
+    color: var(--ink-body);
     display: inline-flex;
     font-size: 0.9rem;
     font-weight: 650;
@@ -145,16 +182,16 @@
   }
 
   .nav-link:hover {
-    background: #f5f5f4;
-    border-color: #e7e5e4;
-    color: #1c1917;
+    background: var(--surface-muted);
+    border-color: var(--shade);
+    color: var(--ink);
   }
 
   .nav-link-current,
   .nav-link-current:hover {
-    background: #1c1917;
-    border-color: #1c1917;
-    color: white;
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--surface);
   }
 
   .button-primary,
@@ -177,24 +214,24 @@
   }
 
   .button-primary {
-    background: #134e4a;
-    color: white;
+    background: var(--accent);
+    color: var(--surface);
   }
 
   .button-primary:hover {
-    background: #0f766e;
+    background: var(--accent-bright);
     transform: translateY(-1px);
   }
 
   .button-secondary {
-    border: 1px solid #d6d3d1;
-    background: white;
-    color: #292524;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink-soft);
   }
 
   .button-secondary:hover {
-    border-color: #a8a29e;
-    background: #fafaf9;
+    border-color: var(--line-strong);
+    background: var(--surface-sunken);
     transform: translateY(-1px);
   }
 
@@ -205,14 +242,14 @@
 
   .text-link,
   .footer-link {
-    color: #134e4a;
+    color: var(--accent);
     font-weight: 700;
     text-decoration: none;
   }
 
   .text-link:hover,
   .footer-link:hover {
-    color: #134e4a;
+    color: var(--accent);
     text-decoration: underline;
   }
 
@@ -224,9 +261,9 @@
   }
 
   .card {
-    border: 1px solid #d6d3d1;
+    border: 1px solid var(--line);
     border-radius: 0.5rem;
-    background: white;
+    background: var(--surface);
     box-shadow: 0 16px 45px rgb(28 25 23 / 0.06);
     transition:
       border-color 160ms ease,
@@ -236,7 +273,7 @@
 
   .card:hover,
   .card:focus-within {
-    border-color: #134e4a;
+    border-color: var(--accent);
     box-shadow: 0 20px 55px rgb(28 25 23 / 0.11);
     transform: translateY(-2px);
   }
@@ -247,10 +284,10 @@
   }
 
   .tag {
-    border: 1px solid #d6d3d1;
+    border: 1px solid var(--line);
     border-radius: 999px;
-    background: #fafaf9;
-    color: #44403c;
+    background: var(--surface-sunken);
+    color: var(--ink-body);
     display: inline-flex;
     font-size: 0.78rem;
     font-weight: 650;
@@ -259,7 +296,7 @@
   }
 
   .project-card-meta {
-    color: #57534e;
+    color: var(--ink-subtle);
     display: flex;
     flex-wrap: wrap;
     font-size: 0.78rem;
@@ -274,7 +311,7 @@
   }
 
   .project-card-meta span + span::before {
-    background: #a8a29e;
+    background: var(--line-strong);
     border-radius: 999px;
     content: "";
     display: inline-block;
@@ -284,13 +321,13 @@
   }
 
   .project-detail {
-    border-top: 3px solid #0f766e;
-    background: white;
+    border-top: 3px solid var(--accent-bright);
+    background: var(--surface);
     padding: 0.9rem 1rem;
   }
 
   .project-detail dt {
-    color: #134e4a;
+    color: var(--accent);
     font-size: 0.72rem;
     font-weight: 750;
     letter-spacing: 0.13em;
@@ -298,36 +335,36 @@
   }
 
   .project-detail dd {
-    color: #292524;
+    color: var(--ink-soft);
     font-size: 0.95rem;
     font-weight: 700;
     margin-top: 0.35rem;
   }
 
   .empty-state {
-    border: 1px dashed #a8a29e;
+    border: 1px dashed var(--line-strong);
     border-radius: 0.5rem;
-    background: white;
-    color: #57534e;
+    background: var(--surface);
+    color: var(--ink-subtle);
     padding: 1.2rem;
   }
 
   .info-panel {
-    border-top: 3px solid #0f766e;
-    background: white;
+    border-top: 3px solid var(--accent-bright);
+    background: var(--surface);
     padding: 1.15rem;
   }
 
   .info-panel p {
     margin-top: 0.5rem;
-    color: #55534d;
+    color: var(--ink-muted);
     line-height: 1.65;
   }
 
   .contact-link {
-    border: 1px solid #d6d3d1;
+    border: 1px solid var(--line);
     border-radius: 0.5rem;
-    background: white;
+    background: var(--surface);
     color: inherit;
     display: grid;
     gap: 0.35rem 0.75rem;
@@ -341,19 +378,19 @@
   }
 
   .contact-link:hover {
-    border-color: #134e4a;
+    border-color: var(--accent);
     box-shadow: 0 14px 35px rgb(28 25 23 / 0.08);
     transform: translateY(-1px);
   }
 
   .contact-link svg {
-    color: #134e4a;
+    color: var(--accent);
     grid-row: 1 / span 2;
     margin-top: 0.08rem;
   }
 
   .contact-link span {
-    color: #134e4a;
+    color: var(--accent);
     font-size: 0.8rem;
     font-weight: 700;
     letter-spacing: 0.14em;
@@ -361,7 +398,7 @@
   }
 
   .contact-link strong {
-    color: #1c1917;
+    color: var(--ink);
     font-size: 1rem;
     line-height: 1.4;
   }
@@ -373,19 +410,19 @@
   }
 
   .resume-panel {
-    border-left: 4px solid #134e4a;
-    background: white;
+    border-left: 4px solid var(--accent);
+    background: var(--surface);
     padding: 1.4rem;
   }
 
   .resume-panel p {
-    color: #55534d;
+    color: var(--ink-muted);
     line-height: 1.7;
     margin-top: 0.75rem;
   }
 
   .resume-entry {
-    border-top: 1px solid #d6d3d1;
+    border-top: 1px solid var(--line);
     display: grid;
     gap: 0.75rem;
     padding-top: 1.2rem;
@@ -396,7 +433,7 @@
   }
 
   .resume-panel .resume-headline {
-    color: #1c1917;
+    color: var(--ink);
     font-size: 1.45rem;
     font-weight: 650;
     line-height: 1.2;
@@ -408,24 +445,24 @@
   }
 
   .resume-panel .resume-meta {
-    color: #134e4a;
+    color: var(--accent);
     font-size: 0.9rem;
     font-weight: 700;
     margin-top: 0.35rem;
   }
 
   .resume-title-link {
-    color: #134e4a;
+    color: var(--accent);
     text-decoration: none;
   }
 
   .resume-title-link:hover {
-    color: #0f766e;
+    color: var(--accent-bright);
     text-decoration: none;
   }
 
   .resume-highlights {
-    color: #55534d;
+    color: var(--ink-muted);
     line-height: 1.7;
     list-style: disc;
     padding-left: 1.2rem;
@@ -442,9 +479,9 @@
   }
 
   .resume-sidebar-block {
-    border: 1px solid #d6d3d1;
+    border: 1px solid var(--line);
     border-radius: 0.5rem;
-    background: white;
+    background: var(--surface);
     padding: 1.25rem;
   }
 
@@ -454,7 +491,7 @@
 
   .resume-sidebar-entry p,
   .resume-skill-group p {
-    color: #55534d;
+    color: var(--ink-muted);
     font-size: 0.92rem;
     line-height: 1.55;
     margin-top: 0.35rem;
@@ -468,9 +505,9 @@
 
   .resume-link {
     align-items: center;
-    border: 1px solid #d6d3d1;
+    border: 1px solid var(--line);
     border-radius: 0.45rem;
-    color: #134e4a;
+    color: var(--accent);
     display: inline-flex;
     font-weight: 700;
     gap: 0.5rem;
@@ -484,8 +521,8 @@
   }
 
   .resume-link:hover {
-    border-color: #134e4a;
-    color: #134e4a;
+    border-color: var(--accent);
+    color: var(--accent);
     transform: translateY(-1px);
   }
 
@@ -493,7 +530,8 @@
     align-items: end;
     background:
       linear-gradient(135deg, rgb(15 118 110 / 0.18), transparent 45%),
-      linear-gradient(45deg, rgb(208 79 58 / 0.24), transparent 55%), #e7e5e4;
+      linear-gradient(45deg, rgb(208 79 58 / 0.24), transparent 55%),
+      var(--shade);
     display: flex;
     height: 100%;
     padding: 1.25rem;
@@ -501,13 +539,13 @@
   }
 
   .project-placeholder span {
-    color: #292524;
+    color: var(--ink-soft);
     font-weight: 750;
     max-width: 16rem;
   }
 
   .prose {
-    color: #44403c;
+    color: var(--ink-body);
     font-size: 1.05rem;
     line-height: 1.8;
   }
@@ -535,7 +573,7 @@
   }
 
   .prose a {
-    color: #134e4a;
+    color: var(--accent);
     font-weight: 700;
   }
 }
