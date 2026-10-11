@@ -4,25 +4,28 @@ import { z } from "zod";
 
 const projects = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/projects" }),
-  schema: z.object({
-    title: z.string(),
-    description: z.string(),
-    date: z.coerce.date(),
-    timeline: z.string().optional(),
-    tags: z.array(z.string()),
-    projectType: z.enum(["game", "system", "writeup"]).default("writeup"),
-    role: z.string().optional(),
-    status: z.string().optional(),
-    engine: z.string().optional(),
-    coverImage: z.string().optional(),
-    coverAlt: z.string().optional(),
-    featured: z.boolean().default(false),
-    githubUrl: z.url().optional(),
-    videoUrl: z.url().optional(),
-    externalUrl: z.url().optional(),
-    externalLabel: z.string().optional(),
-    draft: z.boolean().default(false),
-  }),
+  // A function so the image() helper is available: covers are imported assets
+  // that Astro validates, hashes and optimizes, not public URL strings.
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      description: z.string(),
+      date: z.coerce.date(),
+      timeline: z.string().optional(),
+      tags: z.array(z.string()),
+      projectType: z.enum(["game", "system", "writeup"]).default("writeup"),
+      role: z.string().optional(),
+      status: z.string().optional(),
+      engine: z.string().optional(),
+      coverImage: image().optional(),
+      coverAlt: z.string().optional(),
+      featured: z.boolean().default(false),
+      githubUrl: z.url().optional(),
+      videoUrl: z.url().optional(),
+      externalUrl: z.url().optional(),
+      externalLabel: z.string().optional(),
+      draft: z.boolean().default(false),
+    }),
 });
 
 const blog = defineCollection({

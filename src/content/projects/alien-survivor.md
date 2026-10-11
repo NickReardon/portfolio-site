@@ -8,7 +8,7 @@ projectType: "game"
 role: "Solo developer"
 status: "On hold"
 engine: "Unity"
-coverImage: "/images/projects/alien-survivor.png"
+coverImage: "../../assets/projects/alien-survivor.png"
 coverAlt: "Alien Survivor cover art."
 featured: true
 externalUrl: "https://thingofnightmare.itch.io/alien-survivor"
