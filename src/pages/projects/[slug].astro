@@ -45,22 +45,18 @@ const timeline = project.data.timeline ?? formatDate(project.data.date);
   type="article"
 >
   <article>
-    <header class="section bg-site-subtle">
-      <div
-        class="mx-auto grid max-w-6xl gap-10 px-5 py-14 lg:grid-cols-[1fr_380px]"
-      >
+    <header class="section section-subtle">
+      <div class="shell project-hero">
         <div>
           <p class="eyebrow">{timeline}</p>
           <h1>{project.data.title}</h1>
-          <p class="mt-5 text-xl leading-8 text-stone-700">
-            {project.data.description}
-          </p>
-          <div class="mt-6 flex flex-wrap gap-2">
+          <p class="lede">{project.data.description}</p>
+          <div class="tag-row hero-tags">
             {project.data.tags.map((tag) => <span class="tag">{tag}</span>)}
           </div>
           {
             details.length > 0 && (
-              <dl class="mt-8 grid gap-3 sm:grid-cols-3">
+              <dl class="detail-grid">
                 {details.map((detail) => (
                   <div class="project-detail">
                     <dt>{detail.label}</dt>
@@ -72,7 +68,7 @@ const timeline = project.data.timeline ?? formatDate(project.data.date);
           }
           {
             links.length > 0 && (
-              <div class="mt-8 flex flex-wrap gap-3">
+              <div class="button-row hero-links">
                 {links.map(({ href, label, Icon }) => (
                   <a class="button-secondary" href={href}>
                     <Icon size={16} aria-hidden="true" />
@@ -86,24 +82,91 @@ const timeline = project.data.timeline ?? formatDate(project.data.date);
 
         {
           project.data.coverImage && (
-            <Image
-              src={project.data.coverImage}
-              alt={project.data.coverAlt ?? ""}
-              widths={[380, 760, 1520]}
-              sizes="(min-width: 64rem) 380px, 100vw"
-              loading="eager"
-              fetchpriority="high"
-              class="aspect-[16/10] w-full rounded-lg border border-stone-200 object-cover shadow-sm"
-            />
+            <div class="hero-media">
+              <Image
+                src={project.data.coverImage}
+                alt={project.data.coverAlt ?? ""}
+                widths={[380, 760, 1520]}
+                sizes="(min-width: 64rem) 380px, 100vw"
+                loading="eager"
+                fetchpriority="high"
+              />
+            </div>
           )
         }
       </div>
     </header>
 
-    <div class="section mx-auto max-w-3xl px-5 py-14">
+    <div class="section shell shell-sm">
       <div class="prose">
         <Content />
       </div>
     </div>
   </article>
 </BaseLayout>
+
+<style>
+  .project-hero {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .hero-tags {
+    margin-top: 1.5rem;
+  }
+
+  .hero-links {
+    margin-top: 2rem;
+  }
+
+  .detail-grid {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  .project-detail {
+    border-top: 3px solid var(--accent-bright);
+    background: var(--surface);
+    padding: 0.9rem 1rem;
+  }
+
+  .project-detail dt {
+    color: var(--accent);
+    font-size: 0.72rem;
+    font-weight: 750;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+  }
+
+  .project-detail dd {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-top: 0.35rem;
+  }
+
+  /* <Image> renders its own <img>; .hero-media is scoped and keeps this local. */
+  .hero-media :global(img) {
+    aspect-ratio: 16 / 10;
+    border: 1px solid var(--line-soft);
+    border-radius: 0.5rem;
+    box-shadow:
+      0 1px 3px 0 rgb(0 0 0 / 0.1),
+      0 1px 2px -1px rgb(0 0 0 / 0.1);
+    object-fit: cover;
+    width: 100%;
+  }
+
+  @media (min-width: 40rem) {
+    .detail-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .project-hero {
+      grid-template-columns: 1fr 380px;
+    }
+  }
+</style>

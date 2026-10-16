@@ -1,8 +1,8 @@
 # Portfolio Site
 
 Static Astro portfolio website for projects, devlogs, resume links, and contact
-links. The v1 architecture is intentionally simple: Astro, Tailwind 4, Markdown,
-GitHub, and Cloudflare Pages.
+links. The v1 architecture is intentionally simple: Astro with scoped styles,
+Markdown, GitHub, and Cloudflare Pages.
 
 ## Requirements
 

@@ -67,3 +67,24 @@ const socialImageUrl = new URL(image, site.url).toString();
     <Footer />
   </body>
 </html>
+
+<style>
+  .skip-link {
+    background: var(--accent);
+    border-radius: 0.45rem;
+    color: var(--surface);
+    font-weight: 700;
+    left: 1rem;
+    padding: 0.7rem 1rem;
+    position: fixed;
+    text-decoration: none;
+    top: 1rem;
+    transform: translateY(-150%);
+    transition: transform 160ms ease;
+    z-index: 50;
+  }
+
+  .skip-link:focus-visible {
+    transform: translateY(0);
+  }
+</style>

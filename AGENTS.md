@@ -10,8 +10,9 @@ workflow or deployment, and verified before handoff.
   changes. Do not revert or rewrite changes you did not make.
 - Prefer small, coherent changes over broad refactors. Keep unrelated cleanup out
   of feature and bugfix work.
-- Use the existing Astro, Tailwind, TypeScript, and content collection patterns
-  before adding new abstractions or dependencies.
+- Use the existing Astro, scoped style, TypeScript, and content collection
+  patterns before adding new abstractions or dependencies. Shared tokens and
+  base styles live in `src/styles/global.css`; component styles stay scoped.
 - Never commit secrets, local credential files, build output, audit output, or
   generated caches.
 - For user-facing visual changes, check desktop and mobile layouts before
