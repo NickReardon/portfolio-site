@@ -19,11 +19,11 @@ const systemProjects = projects.filter(
   title="Projects"
   description="Portfolio projects and technical case studies."
 >
-  <section class="section bg-site-subtle">
-    <div class="mx-auto max-w-6xl px-5 py-14">
+  <section class="section section-subtle">
+    <div class="shell">
       <p class="eyebrow">Projects</p>
       <h1>Projects and case studies</h1>
-      <p class="mt-5 max-w-3xl text-xl leading-8 text-stone-700">
+      <p class="lede">
         Playable game-jam projects, Unreal Engine systems work, and notes on
         what I contributed to each project.
       </p>
@@ -31,10 +31,10 @@ const systemProjects = projects.filter(
   </section>
 
   <section class="section">
-    <div class="mx-auto max-w-6xl px-5 py-14">
+    <div class="shell">
       {
         projects.length > 0 ? (
-          <div class="space-y-14">
+          <div class="project-groups">
             {playableProjects.length > 0 && (
               <section aria-labelledby="playable-projects">
                 <div class="section-heading">
@@ -46,7 +46,7 @@ const systemProjects = projects.filter(
                     Itch profile
                   </a>
                 </div>
-                <div class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <div class="card-grid">
                   {playableProjects.map((project, index) => (
                     <ProjectCard
                       project={project}
@@ -66,7 +66,7 @@ const systemProjects = projects.filter(
                     <h2 id="systems-projects">Technical case studies</h2>
                   </div>
                 </div>
-                <div class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <div class="card-grid">
                   {systemProjects.map((project, index) => (
                     <ProjectCard
                       project={project}
@@ -89,3 +89,13 @@ const systemProjects = projects.filter(
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .lede {
+    max-width: 48rem;
+  }
+
+  .project-groups > * + * {
+    margin-top: 3.5rem;
+  }
+</style>
