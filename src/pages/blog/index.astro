@@ -10,11 +10,11 @@ const posts = (await getCollection("blog"))
 ---
 
 <BaseLayout title="Blog" description="Devlog posts and technical notes.">
-  <section class="section bg-site-subtle">
-    <div class="mx-auto max-w-6xl px-5 py-14">
+  <section class="section section-subtle">
+    <div class="shell">
       <p class="eyebrow">Blog</p>
       <h1>Devlog and notes</h1>
-      <p class="mt-5 max-w-3xl text-xl leading-8 text-stone-700">
+      <p class="lede">
         Short notes on systems design, implementation tradeoffs, and what I
         learn while building projects.
       </p>
@@ -22,10 +22,10 @@ const posts = (await getCollection("blog"))
   </section>
 
   <section class="section">
-    <div class="mx-auto max-w-4xl px-5 py-14">
+    <div class="shell shell-md">
       {
         posts.length > 0 ? (
-          <div class="grid gap-4">
+          <div class="post-list">
             {posts.map((post) => (
               <BlogCard post={post} />
             ))}
@@ -37,3 +37,14 @@ const posts = (await getCollection("blog"))
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .lede {
+    max-width: 48rem;
+  }
+
+  .post-list {
+    display: grid;
+    gap: 1rem;
+  }
+</style>

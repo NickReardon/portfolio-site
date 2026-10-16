@@ -14,3 +14,53 @@ const { href, label, detail, icon: Icon } = Astro.props;
   <span>{label}</span>
   <strong>{detail}</strong>
 </a>
+
+<style>
+  .contact-link {
+    border: 1px solid var(--line);
+    border-radius: 0.5rem;
+    background: var(--surface);
+    color: inherit;
+    display: grid;
+    gap: 0.35rem 0.75rem;
+    grid-template-columns: auto minmax(0, 1fr);
+    padding: 1.2rem;
+    text-decoration: none;
+    transition:
+      border-color 160ms ease,
+      box-shadow 160ms ease,
+      transform 160ms ease;
+  }
+
+  .contact-link:hover {
+    border-color: var(--accent);
+    box-shadow: 0 14px 35px rgb(28 25 23 / 0.08);
+    transform: translateY(-1px);
+  }
+
+  .contact-link :global(svg) {
+    color: var(--accent);
+    grid-row: 1 / span 2;
+    margin-top: 0.08rem;
+  }
+
+  .contact-link span {
+    color: var(--accent);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .contact-link strong {
+    color: var(--ink);
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .contact-link:hover {
+      transform: none;
+    }
+  }
+</style>

@@ -1,16 +1,127 @@
-@import "tailwindcss";
+/* Cascade layers, in ascending priority. Declared up front so the reset can
+ * never outrank the base and component rules it is supposed to sit underneath.
+ * Unlayered CSS beats every layer, which is why the reset is not unlayered:
+ * `a { color: inherit }` would otherwise defeat .text-link, and
+ * `h1 { font-size: inherit }` would flatten every heading on the site.
+ */
+@layer reset, base, components;
 
-@theme {
-  --color-site-bg: #f6f7f4;
-  --color-site-subtle: #eef5f0;
-  --color-coral-100: #f8d8ce;
-  --color-coral-900: #7c2418;
-  --color-stone-650: #55534d;
+/* Replaces Tailwind's preflight; only the parts this site relied on. */
+@layer reset {
+  /* Preflight set this and the whole site inherited it; without it every block
+     that does not name a line-height falls back to `normal` (~1.2) and body
+     copy tightens up everywhere. */
+  html {
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  * {
+    margin: 0;
+  }
+
+  img,
+  svg,
+  video {
+    display: block;
+    max-width: 100%;
+    /* Preflight set this. Without it an <img> keeps the intrinsic height from
+       its height attribute, which beats any aspect-ratio the layout sets: the
+       project hero rendered at its full 475px instead of a 16/10 box. */
+    height: auto;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    color: inherit;
+    font: inherit;
+  }
+
+  ul,
+  ol {
+    list-style: none;
+    padding: 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-size: inherit;
+    font-weight: inherit;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  /* Preflight set this stack. Without it inline code falls back to the
+     browser's default monospace, which is Courier New on Windows. */
+  code,
+  kbd,
+  samp,
+  pre {
+    font-family: var(--font-mono);
+    font-size: 1em;
+  }
+
+  /* The tokens the site is written against.
+   *
+   * Values marked "via Tailwind" are copied verbatim from the compiled
+   * stylesheet, including their oklch form, so removing Tailwind changes no
+   * rendered colour. Previously these existed twice: once as Tailwind utilities
+   * reachable from markup, once as hardcoded hex in the component rules below,
+   * which meant changing the palette meant editing both.
+   */
+  :root {
+    --page-bg: #f6f7f4;
+    --page-subtle: #eef5f0;
+
+    --surface: #fff;
+    --surface-sunken: #fafaf9;
+    --surface-muted: #f5f5f4;
+    --shade: #e7e5e4;
+
+    --ink: #1c1917;
+    --ink-strong: oklch(14.7% 0.004 49.25); /* via Tailwind: stone-950 */
+    --ink-soft: #292524;
+    --ink-body: #44403c;
+    --ink-muted: #55534d;
+    --ink-subtle: #57534e;
+    --ink-faint: oklch(55.3% 0.013 58.071); /* via Tailwind: stone-500 */
+
+    --accent: #134e4a;
+    --accent-mid: oklch(43.7% 0.078 188.216); /* via Tailwind: teal-800 */
+    --accent-bright: #0f766e;
+
+    --line: #d6d3d1;
+    --line-soft: oklch(92.3% 0.003 48.717); /* via Tailwind: stone-200 */
+    --line-strong: #a8a29e;
+
+    --badge-bg: #f8d8ce;
+    --badge-ink: #7c2418;
+
+    --font-mono:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+      "Courier New", monospace;
+
+    /* The one page-width measure every top-level band is laid out against. */
+    --shell-max: 72rem;
+    --shell-pad: 1.25rem;
+  }
 }
 
 @layer base {
   html {
-    background: var(--color-site-bg);
+    background: var(--page-bg);
   }
 
   body {
@@ -20,8 +131,8 @@
     /* Dynamic viewport unit keeps the footer at the true bottom on mobile,
        accounting for the browser's collapsing address bar. */
     min-height: 100dvh;
-    background: var(--color-site-bg);
-    color: #1c1917;
+    background: var(--page-bg);
+    color: var(--ink);
     font-family:
       Inter,
       ui-sans-serif,
@@ -42,7 +153,7 @@
   h1,
   h2,
   h3 {
-    color: #1c1917;
+    color: var(--ink);
     letter-spacing: 0;
   }
 
@@ -68,7 +179,7 @@
   }
 
   :focus-visible {
-    outline: 3px solid #134e4a;
+    outline: 3px solid var(--accent);
     outline-offset: 3px;
   }
 
@@ -78,35 +189,98 @@
 
   code {
     border-radius: 0.35rem;
-    background: #e7e5e4;
+    background: var(--shade);
     padding: 0.12rem 0.35rem;
-    color: #292524;
+    color: var(--ink-soft);
     font-size: 0.9em;
   }
 }
 
 @layer components {
-  .skip-link {
-    background: #134e4a;
-    border-radius: 0.45rem;
-    color: white;
-    font-weight: 700;
-    left: 1rem;
-    padding: 0.7rem 1rem;
-    position: fixed;
-    text-decoration: none;
-    top: 1rem;
-    transform: translateY(-150%);
-    transition: transform 160ms ease;
-    z-index: 50;
-  }
-
-  .skip-link:focus-visible {
-    transform: translateY(0);
-  }
-
   .section {
     scroll-margin-top: 5rem;
+  }
+
+  /* Every top-level band is the same centred measure. The three widths were
+     max-w-6xl / max-w-4xl / max-w-3xl; a modifier moves the token rather than
+     restating the rule. */
+  .shell {
+    margin-inline: auto;
+    max-width: var(--shell-max);
+    padding: 3.5rem var(--shell-pad);
+  }
+
+  .shell-md {
+    --shell-max: 56rem;
+  }
+
+  .shell-sm {
+    --shell-max: 48rem;
+  }
+
+  /* Hero bands open a little tighter on small screens. */
+  .shell-hero {
+    padding-block: 3rem;
+  }
+
+  @media (min-width: 40rem) {
+    .shell-hero {
+      padding-block: 3.5rem;
+    }
+  }
+
+  .section-subtle {
+    background: var(--page-subtle);
+  }
+
+  .section-surface {
+    background: var(--surface);
+  }
+
+  .section-divided-top {
+    border-top: 1px solid var(--line-soft);
+  }
+
+  .section-divided-bottom {
+    border-bottom: 1px solid var(--line-soft);
+  }
+
+  /* The opening paragraph under every page heading. */
+  .lede {
+    color: var(--ink-body);
+    font-size: 1.25rem;
+    line-height: 2rem;
+    margin-top: 1.25rem;
+  }
+
+  .body-copy {
+    color: var(--ink-muted);
+    line-height: 1.75rem;
+  }
+
+  .button-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+  }
+
+  .card-grid {
+    display: grid;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  @media (min-width: 48rem) {
+    .card-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .card-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
   }
 
   .eyebrow {
@@ -114,47 +288,7 @@
     font-weight: 700;
     letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: #134e4a;
-  }
-
-  .brand-link {
-    border-radius: 0.45rem;
-    text-decoration: none;
-  }
-
-  .nav-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem;
-  }
-
-  .nav-link {
-    border: 1px solid transparent;
-    border-radius: 0.45rem;
-    color: #44403c;
-    display: inline-flex;
-    font-size: 0.9rem;
-    font-weight: 650;
-    line-height: 1;
-    padding: 0.62rem 0.72rem;
-    text-decoration: none;
-    transition:
-      background 160ms ease,
-      border-color 160ms ease,
-      color 160ms ease;
-  }
-
-  .nav-link:hover {
-    background: #f5f5f4;
-    border-color: #e7e5e4;
-    color: #1c1917;
-  }
-
-  .nav-link-current,
-  .nav-link-current:hover {
-    background: #1c1917;
-    border-color: #1c1917;
-    color: white;
+    color: var(--accent);
   }
 
   .button-primary,
@@ -177,24 +311,24 @@
   }
 
   .button-primary {
-    background: #134e4a;
-    color: white;
+    background: var(--accent);
+    color: var(--surface);
   }
 
   .button-primary:hover {
-    background: #0f766e;
+    background: var(--accent-bright);
     transform: translateY(-1px);
   }
 
   .button-secondary {
-    border: 1px solid #d6d3d1;
-    background: white;
-    color: #292524;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink-soft);
   }
 
   .button-secondary:hover {
-    border-color: #a8a29e;
-    background: #fafaf9;
+    border-color: var(--line-strong);
+    background: var(--surface-sunken);
     transform: translateY(-1px);
   }
 
@@ -203,16 +337,14 @@
     flex: 0 0 auto;
   }
 
-  .text-link,
-  .footer-link {
-    color: #134e4a;
+  .text-link {
+    color: var(--accent);
     font-weight: 700;
     text-decoration: none;
   }
 
-  .text-link:hover,
-  .footer-link:hover {
-    color: #134e4a;
+  .text-link:hover {
+    color: var(--accent);
     text-decoration: underline;
   }
 
@@ -224,9 +356,9 @@
   }
 
   .card {
-    border: 1px solid #d6d3d1;
+    border: 1px solid var(--line);
     border-radius: 0.5rem;
-    background: white;
+    background: var(--surface);
     box-shadow: 0 16px 45px rgb(28 25 23 / 0.06);
     transition:
       border-color 160ms ease,
@@ -236,21 +368,28 @@
 
   .card:hover,
   .card:focus-within {
-    border-color: #134e4a;
+    border-color: var(--accent);
     box-shadow: 0 20px 55px rgb(28 25 23 / 0.11);
     transform: translateY(-2px);
   }
 
   .card-link {
     border-radius: inherit;
+    display: block;
     text-decoration: none;
   }
 
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
   .tag {
-    border: 1px solid #d6d3d1;
+    border: 1px solid var(--line);
     border-radius: 999px;
-    background: #fafaf9;
-    color: #44403c;
+    background: var(--surface-sunken);
+    color: var(--ink-body);
     display: inline-flex;
     font-size: 0.78rem;
     font-weight: 650;
@@ -258,256 +397,35 @@
     padding: 0.42rem 0.62rem;
   }
 
-  .project-card-meta {
-    color: #57534e;
-    display: flex;
-    flex-wrap: wrap;
-    font-size: 0.78rem;
-    font-weight: 650;
-    gap: 0.4rem 0.6rem;
-    line-height: 1.4;
-  }
-
-  .project-card-meta span {
-    align-items: center;
-    display: inline-flex;
-  }
-
-  .project-card-meta span + span::before {
-    background: #a8a29e;
-    border-radius: 999px;
-    content: "";
-    display: inline-block;
-    height: 0.3rem;
-    margin-right: 0.6rem;
-    width: 0.3rem;
-  }
-
-  .project-detail {
-    border-top: 3px solid #0f766e;
-    background: white;
-    padding: 0.9rem 1rem;
-  }
-
-  .project-detail dt {
-    color: #134e4a;
-    font-size: 0.72rem;
-    font-weight: 750;
-    letter-spacing: 0.13em;
-    text-transform: uppercase;
-  }
-
-  .project-detail dd {
-    color: #292524;
-    font-size: 0.95rem;
-    font-weight: 700;
-    margin-top: 0.35rem;
-  }
-
   .empty-state {
-    border: 1px dashed #a8a29e;
+    border: 1px dashed var(--line-strong);
     border-radius: 0.5rem;
-    background: white;
-    color: #57534e;
+    background: var(--surface);
+    color: var(--ink-subtle);
     padding: 1.2rem;
-  }
-
-  .info-panel {
-    border-top: 3px solid #0f766e;
-    background: white;
-    padding: 1.15rem;
-  }
-
-  .info-panel p {
-    margin-top: 0.5rem;
-    color: #55534d;
-    line-height: 1.65;
-  }
-
-  .contact-link {
-    border: 1px solid #d6d3d1;
-    border-radius: 0.5rem;
-    background: white;
-    color: inherit;
-    display: grid;
-    gap: 0.35rem 0.75rem;
-    grid-template-columns: auto minmax(0, 1fr);
-    padding: 1.2rem;
-    text-decoration: none;
-    transition:
-      border-color 160ms ease,
-      box-shadow 160ms ease,
-      transform 160ms ease;
-  }
-
-  .contact-link:hover {
-    border-color: #134e4a;
-    box-shadow: 0 14px 35px rgb(28 25 23 / 0.08);
-    transform: translateY(-1px);
-  }
-
-  .contact-link svg {
-    color: #134e4a;
-    grid-row: 1 / span 2;
-    margin-top: 0.08rem;
-  }
-
-  .contact-link span {
-    color: #134e4a;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-  }
-
-  .contact-link strong {
-    color: #1c1917;
-    font-size: 1rem;
-    line-height: 1.4;
-  }
-
-  .resume-actions {
-    display: grid;
-    gap: 0.75rem;
-    min-width: min(100%, 18rem);
   }
 
   .resume-panel {
-    border-left: 4px solid #134e4a;
-    background: white;
+    border-left: 4px solid var(--accent);
+    background: var(--surface);
     padding: 1.4rem;
   }
 
   .resume-panel p {
-    color: #55534d;
+    color: var(--ink-muted);
     line-height: 1.7;
     margin-top: 0.75rem;
   }
 
-  .resume-entry {
-    border-top: 1px solid #d6d3d1;
-    display: grid;
-    gap: 0.75rem;
-    padding-top: 1.2rem;
-  }
-
-  .resume-entry + .resume-entry {
-    margin-top: 1.4rem;
-  }
-
-  .resume-panel .resume-headline {
-    color: #1c1917;
-    font-size: 1.45rem;
-    font-weight: 650;
-    line-height: 1.2;
-    margin-top: 0.5rem;
-  }
-
-  .resume-entry h3 {
-    font-size: 1.2rem;
-  }
-
   .resume-panel .resume-meta {
-    color: #134e4a;
+    color: var(--accent);
     font-size: 0.9rem;
     font-weight: 700;
     margin-top: 0.35rem;
   }
 
-  .resume-title-link {
-    color: #134e4a;
-    text-decoration: none;
-  }
-
-  .resume-title-link:hover {
-    color: #0f766e;
-    text-decoration: none;
-  }
-
-  .resume-highlights {
-    color: #55534d;
-    line-height: 1.7;
-    list-style: disc;
-    padding-left: 1.2rem;
-  }
-
-  .resume-highlights li + li {
-    margin-top: 0.35rem;
-  }
-
-  .resume-sidebar {
-    align-self: start;
-    display: grid;
-    gap: 1rem;
-  }
-
-  .resume-sidebar-block {
-    border: 1px solid #d6d3d1;
-    border-radius: 0.5rem;
-    background: white;
-    padding: 1.25rem;
-  }
-
-  .resume-sidebar h2 {
-    font-size: 1.15rem;
-  }
-
-  .resume-sidebar-entry p,
-  .resume-skill-group p {
-    color: #55534d;
-    font-size: 0.92rem;
-    line-height: 1.55;
-    margin-top: 0.35rem;
-  }
-
-  .resume-link-grid {
-    display: grid;
-    gap: 0.65rem;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .resume-link {
-    align-items: center;
-    border: 1px solid #d6d3d1;
-    border-radius: 0.45rem;
-    color: #134e4a;
-    display: inline-flex;
-    font-weight: 700;
-    gap: 0.5rem;
-    min-height: 2.55rem;
-    padding: 0.65rem;
-    text-decoration: none;
-    transition:
-      border-color 160ms ease,
-      color 160ms ease,
-      transform 160ms ease;
-  }
-
-  .resume-link:hover {
-    border-color: #134e4a;
-    color: #134e4a;
-    transform: translateY(-1px);
-  }
-
-  .project-placeholder {
-    align-items: end;
-    background:
-      linear-gradient(135deg, rgb(15 118 110 / 0.18), transparent 45%),
-      linear-gradient(45deg, rgb(208 79 58 / 0.24), transparent 55%), #e7e5e4;
-    display: flex;
-    height: 100%;
-    padding: 1.25rem;
-    width: 100%;
-  }
-
-  .project-placeholder span {
-    color: #292524;
-    font-weight: 750;
-    max-width: 16rem;
-  }
-
   .prose {
-    color: #44403c;
+    color: var(--ink-body);
     font-size: 1.05rem;
     line-height: 1.8;
   }
@@ -535,7 +453,7 @@
   }
 
   .prose a {
-    color: #134e4a;
+    color: var(--accent);
     font-weight: 700;
   }
 }
@@ -544,22 +462,6 @@
   .section-heading {
     align-items: start;
     flex-direction: column;
-  }
-
-  .nav-link {
-    font-size: 0.86rem;
-    padding-inline: 0.48rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .hero-actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .hero-actions .button-primary {
-    grid-column: 1 / -1;
   }
 }
 
@@ -574,9 +476,7 @@
   .button-primary:hover,
   .button-secondary:hover,
   .card:hover,
-  .card:focus-within,
-  .contact-link:hover,
-  .resume-link:hover {
+  .card:focus-within {
     transform: none;
   }
 }
