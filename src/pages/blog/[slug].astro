@@ -28,23 +28,27 @@ const { Content } = await render(post);
   type="article"
 >
   <article>
-    <header class="section bg-site-subtle">
-      <div class="mx-auto max-w-3xl px-5 py-14">
+    <header class="section section-subtle">
+      <div class="shell shell-sm">
         <p class="eyebrow">{formatDate(post.data.date)}</p>
         <h1>{post.data.title}</h1>
-        <p class="mt-5 text-xl leading-8 text-stone-700">
-          {post.data.description}
-        </p>
-        <div class="mt-6 flex flex-wrap gap-2">
+        <p class="lede">{post.data.description}</p>
+        <div class="tag-row post-tags">
           {post.data.tags.map((tag) => <span class="tag">{tag}</span>)}
         </div>
       </div>
     </header>
 
-    <div class="section mx-auto max-w-3xl px-5 py-14">
+    <div class="section shell shell-sm">
       <div class="prose">
         <Content />
       </div>
     </div>
   </article>
 </BaseLayout>
+
+<style>
+  .post-tags {
+    margin-top: 1.5rem;
+  }
+</style>

@@ -14,17 +14,50 @@ const href = `/blog/${slug}/`;
 const Heading = `h${headingLevel}` as "h2" | "h3";
 ---
 
-<article class="card p-5">
-  <a href={href} class="card-link block space-y-4">
+<article class="card blog-card">
+  <a href={href} class="card-link">
     <div>
-      <p class="text-sm font-medium text-teal-800">{formatDate(data.date)}</p>
-      <Heading class="mt-1 text-xl font-semibold text-stone-950"
-        >{data.title}</Heading
-      >
+      <p class="card-date">{formatDate(data.date)}</p>
+      <Heading class="card-title">{data.title}</Heading>
     </div>
-    <p class="text-sm leading-6 text-stone-650">{data.description}</p>
-    <div class="flex flex-wrap gap-2">
+    <p class="card-summary">{data.description}</p>
+    <div class="tag-row">
       {data.tags.map((tag) => <span class="tag">{tag}</span>)}
     </div>
   </a>
 </article>
+
+<style>
+  .blog-card {
+    padding: 1.25rem;
+  }
+
+  .blog-card .card-link {
+    display: block;
+  }
+
+  .blog-card .card-link > * + * {
+    margin-top: 1rem;
+  }
+
+  .card-date {
+    color: var(--accent-mid);
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+  }
+
+  .card-title {
+    color: var(--ink-strong);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.75rem;
+    margin-top: 0.25rem;
+  }
+
+  .card-summary {
+    color: var(--ink-muted);
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+  }
+</style>
