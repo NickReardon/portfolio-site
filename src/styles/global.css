@@ -63,6 +63,16 @@
     color: inherit;
   }
 
+  /* Preflight set this stack. Without it inline code falls back to the
+     browser's default monospace, which is Courier New on Windows. */
+  code,
+  kbd,
+  samp,
+  pre {
+    font-family: var(--font-mono);
+    font-size: 1em;
+  }
+
   /* The tokens the site is written against.
    *
    * Values marked "via Tailwind" are copied verbatim from the compiled
@@ -98,6 +108,10 @@
 
     --badge-bg: #f8d8ce;
     --badge-ink: #7c2418;
+
+    --font-mono:
+      ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+      "Courier New", monospace;
 
     /* The one page-width measure every top-level band is laid out against. */
     --shell-max: 72rem;
@@ -373,45 +387,12 @@
     padding: 0.42rem 0.62rem;
   }
 
-  .project-detail {
-    border-top: 3px solid var(--accent-bright);
-    background: var(--surface);
-    padding: 0.9rem 1rem;
-  }
-
-  .project-detail dt {
-    color: var(--accent);
-    font-size: 0.72rem;
-    font-weight: 750;
-    letter-spacing: 0.13em;
-    text-transform: uppercase;
-  }
-
-  .project-detail dd {
-    color: var(--ink-soft);
-    font-size: 0.95rem;
-    font-weight: 700;
-    margin-top: 0.35rem;
-  }
-
   .empty-state {
     border: 1px dashed var(--line-strong);
     border-radius: 0.5rem;
     background: var(--surface);
     color: var(--ink-subtle);
     padding: 1.2rem;
-  }
-
-  .info-panel {
-    border-top: 3px solid var(--accent-bright);
-    background: var(--surface);
-    padding: 1.15rem;
-  }
-
-  .info-panel p {
-    margin-top: 0.5rem;
-    color: var(--ink-muted);
-    line-height: 1.65;
   }
 
   .resume-panel {
@@ -471,17 +452,6 @@
   .section-heading {
     align-items: start;
     flex-direction: column;
-  }
-}
-
-@media (max-width: 480px) {
-  .hero-actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .hero-actions .button-primary {
-    grid-column: 1 / -1;
   }
 }
 
