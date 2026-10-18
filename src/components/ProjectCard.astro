@@ -31,8 +31,8 @@ const timeline = data.timeline ?? formatDate(data.date);
           <Image
             src={data.coverImage}
             alt=""
-            width={640}
-            height={400}
+            widths={[400, 800]}
+            sizes="(min-width: 64rem) 23rem, (min-width: 48rem) 50vw, 100vw"
             loading={imageLoading}
             fetchpriority={imageFetchPriority}
           />

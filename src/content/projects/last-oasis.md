@@ -8,7 +8,7 @@ projectType: "game"
 role: "Primary gameplay and tooling programmer"
 status: "Released"
 engine: "Godot"
-coverImage: "/images/projects/last-oasis.png"
+coverImage: "../../assets/projects/last-oasis.png"
 coverAlt: "Last Oasis cover art."
 featured: true
 externalUrl: "https://thingofnightmare.itch.io/last-oasis"

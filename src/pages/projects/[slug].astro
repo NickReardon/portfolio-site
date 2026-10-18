@@ -41,7 +41,7 @@ const timeline = project.data.timeline ?? formatDate(project.data.date);
 <BaseLayout
   title={project.data.title}
   description={project.data.description}
-  image={project.data.coverImage}
+  image={project.data.coverImage?.src}
   type="article"
 >
   <article>
@@ -86,8 +86,8 @@ const timeline = project.data.timeline ?? formatDate(project.data.date);
               <Image
                 src={project.data.coverImage}
                 alt={project.data.coverAlt ?? ""}
-                width={760}
-                height={475}
+                widths={[380, 760, 1520]}
+                sizes="(min-width: 64rem) 380px, 100vw"
                 loading="eager"
                 fetchpriority="high"
               />
