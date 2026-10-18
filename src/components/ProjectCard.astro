@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { Image } from "astro:assets";
-import { entrySlug, formatDate } from "../utils/content";
+import { coverBox, entrySlug, formatDate } from "../utils/content";
 
 interface Props {
   project: CollectionEntry<"projects">;
@@ -21,6 +21,17 @@ const slug = entrySlug(project.id);
 const href = `/projects/${slug}/`;
 const Heading = `h${headingLevel}` as "h2" | "h3";
 const timeline = data.timeline ?? formatDate(data.date);
+const cover = data.coverImage ? coverBox(data.coverImage) : null;
+
+/* The cover column is 424px above 60rem and 300px in the letterbox band; below
+   that the card is full-bleed.
+ *
+ * Known ceiling: today's covers are 508x254 itch.io exports, so the 16/10 crop
+ * caps at 406px and the 424px column scales it up about 4%. The column is sized
+ * for the art the cards want rather than the art they have; replacing the
+ * sources with something 1520px wide is what makes it sharp, and needs no
+ * change here. */
+const COVER_SIZES = "(min-width: 60rem) 424px, (min-width: 48rem) 300px, 100vw";
 ---
 
 <article class="card project-card">
@@ -28,14 +39,37 @@ const timeline = data.timeline ?? formatDate(data.date);
     <div class="card-media">
       {
         data.coverImage ? (
-          <Image
-            src={data.coverImage}
-            alt=""
-            widths={[400, 800]}
-            sizes="(min-width: 64rem) 23rem, (min-width: 48rem) 50vw, 100vw"
-            loading={imageLoading}
-            fetchpriority={imageFetchPriority}
-          />
+          <Fragment>
+            {/* Only painted in the letterbox band, where the cover is shown
+                whole and does not fill the slot. Same src as the cover, so it
+                costs a second paint rather than a second download. */}
+            <Image
+              class="cover-fill"
+              src={data.coverImage}
+              alt=""
+              aria-hidden="true"
+              width={cover!.width}
+              height={cover!.height}
+              widths={cover!.widths}
+              sizes={COVER_SIZES}
+              fit="cover"
+              position="center"
+              loading={imageLoading}
+            />
+            <Image
+              class="cover-main"
+              src={data.coverImage}
+              alt=""
+              width={cover!.width}
+              height={cover!.height}
+              widths={cover!.widths}
+              sizes={COVER_SIZES}
+              fit="cover"
+              position="center"
+              loading={imageLoading}
+              fetchpriority={imageFetchPriority}
+            />
+          </Fragment>
         ) : (
           <div class="card-placeholder">
             <span>{data.title}</span>
@@ -80,18 +114,28 @@ const timeline = data.timeline ?? formatDate(data.date);
     aspect-ratio: 16 / 10;
     background: var(--line-soft);
     overflow: hidden;
+    position: relative;
   }
 
-  /* The <Image> renders its own <img>, so this reaches past the scope on
-     purpose; .card-media is scoped and keeps the match local to this card. */
+  /* The <Image> renders its own <img>, so these reach past the scope on
+     purpose; .card-media is scoped and keeps the match local to this card.
+   *
+   * contain, not cover: the cover was already cropped to the slot's 16/10 in
+   * the frontmatter, so there is nothing left to trim here. In a 16/10 slot
+   * this fits exactly; in the taller letterbox slot it leaves even bars. */
   .card-media :global(img) {
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     transition: transform 300ms ease;
     width: 100%;
   }
 
-  .card:hover .card-media :global(img) {
+  /* Off everywhere but the letterbox band below. */
+  .card-media :global(.cover-fill) {
+    display: none;
+  }
+
+  .card:hover .card-media :global(.cover-main) {
     transform: scale(1.03);
   }
 
@@ -187,36 +231,99 @@ const timeline = data.timeline ?? formatDate(data.date);
     line-height: 1.5rem;
   }
 
-  /* Wide enough for a row: the cover sits beside the content instead of above
-     it, and the content column gets the full remaining width. */
-  @media (min-width: 48rem) {
+  /* The letterbox band: wide enough for a row, but not wide enough for the
+     content to fit the height of a 16/10 cover, because the tag row and the
+     role line have both wrapped by here.
+   *
+   * Rather than stack early or leave a band of empty card under the cover, the
+   * slot takes the full row height and the cover is shown whole inside it. The
+   * leftover is filled with a blurred, scaled copy of the cover, so the card
+   * reads as a deliberate letterbox instead of a short image. */
+  @media (min-width: 48rem) and (max-width: 59.999rem) {
     .card-link {
       display: grid;
       grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
-    }
-
-    .card-media {
-      /* The row's height now comes from the content beside it, so the cover
-         fills whatever that turns out to be rather than setting it. The floor
-         keeps a short card's cover from collapsing to a strip. */
-      aspect-ratio: auto;
-      min-height: 13rem;
-      position: relative;
-    }
-
-    .card-media :global(img) {
-      position: absolute;
-      inset: 0;
     }
 
     .card-body {
       padding: 1.5rem;
     }
 
+    .card-media {
+      align-self: stretch;
+      aspect-ratio: auto;
+    }
+
+    .card-media :global(img) {
+      inset: 0;
+      position: absolute;
+    }
+
+    .card-media :global(.cover-fill) {
+      display: block;
+      filter: blur(18px) saturate(1.3) brightness(0.85);
+      /* The backdrop is the one image here that should fill rather than fit. */
+      object-fit: cover;
+      /* Blur samples past the edges and leaves them translucent, so the copy
+         is scaled up until the soft border is outside the slot. */
+      transform: scale(1.2);
+    }
+
+    .card:hover .card-media :global(.cover-main) {
+      transform: none;
+    }
+  }
+
+  /* Wide enough for a row: the cover sits beside the content instead of above
+     it, and the content column gets the full remaining width.
+   *
+   * 60rem is the floor. Below it the tag row wraps to a second line, the
+   * content outgrows the cover, and a band of empty card opens under the
+   * image — so narrower pages stay stacked instead. */
+  @media (min-width: 60rem) {
+    .card-link {
+      display: grid;
+      grid-template-columns: minmax(0, 424px) minmax(0, 1fr);
+    }
+
+    /* The cover keeps the 16/10 shape it has when stacked rather than
+       stretching to the row. Letting it stretch tied the crop to the length of
+       the summary beside it, so two cards cropped their art differently. */
+    .card-media {
+      align-self: start;
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    /* Always reserve the two lines the longest role string needs. Reserving it
+       costs a blank line on the short ones; letting it wrap on demand would
+       make the row's height depend on the role, which is what the cover is
+       sized against. */
+    .card-meta {
+      align-content: start;
+      min-height: calc(2 * 1.4em + 0.4rem);
+    }
+
     /* The content column is now most of the page width, so the summary needs a
-       measure of its own or it runs well past a comfortable line length. */
+       measure of its own or it runs well past a comfortable line length.
+     *
+     * Clamping it is the other half of keeping the row a fixed height: the
+     * cover is a fixed 16/10 and the content is not, so without this a longer
+     * description leaves a band of empty card under the cover. Two lines of
+     * summary plus two of meta is 265px, which is the 424px cover's height.
+     *
+     * ponytail: 424px is tuned to a two-line summary, two-line meta and a
+     * one-line title. A third line of any of them reopens the gap; make the
+     * cover a function of the row instead if the copy needs the room. */
     .card-summary {
       max-width: 68ch;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      overflow: hidden;
     }
   }
 
