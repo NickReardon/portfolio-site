@@ -4,7 +4,12 @@ import type { CollectionEntry } from "astro:content";
 import { Image } from "astro:assets";
 import { Code, ExternalLink, Play } from "@lucide/astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { entrySlug, formatDate, isVisibleContent } from "../../utils/content";
+import {
+  coverBox,
+  entrySlug,
+  formatDate,
+  isVisibleContent,
+} from "../../utils/content";
 
 interface Props {
   project: CollectionEntry<"projects">;
@@ -36,6 +41,9 @@ const details = [
   { label: "Engine", value: project.data.engine },
 ].filter((detail) => Boolean(detail.value));
 const timeline = project.data.timeline ?? formatDate(project.data.date);
+const cover = project.data.coverImage
+  ? coverBox(project.data.coverImage)
+  : null;
 ---
 
 <BaseLayout
@@ -86,8 +94,12 @@ const timeline = project.data.timeline ?? formatDate(project.data.date);
               <Image
                 src={project.data.coverImage}
                 alt={project.data.coverAlt ?? ""}
-                widths={[380, 760, 1520]}
+                width={cover!.width}
+                height={cover!.height}
+                widths={cover!.widths}
                 sizes="(min-width: 64rem) 380px, 100vw"
+                fit="cover"
+                position="center"
                 loading="eager"
                 fetchpriority="high"
               />
