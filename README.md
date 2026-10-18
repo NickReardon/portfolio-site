@@ -73,6 +73,8 @@ only gate.
 │   ├── resume-utils.mjs
 │   └── validate-resume.mjs
 ├── src/
+│   ├── assets/
+│   │   └── projects/
 │   ├── components/
 │   ├── content/
 │   │   ├── blog/
@@ -95,7 +97,9 @@ only gate.
 - Content tone and authoring guidance lives in `docs/content.md`.
 - Draft entries can stay in the repo with `draft: true`; production builds
   exclude them from lists and detail routes.
-- Static project and blog images live under `public/images`.
+- Project cover images live in `src/assets/projects/` and are optimized by
+  Astro at build time; see `docs/content.md` for size and format guidance.
+- Blog images and other static images live under `public/images`.
 - Resume content lives in `src/data/resume.json`. It is the source for the
   `/resume/` page only; nothing generates a PDF from it.
 - `public/resume.pdf` is placed by hand and is the default download the site

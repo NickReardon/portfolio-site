@@ -25,3 +25,11 @@ To avoid reading as a junior-level candidate, we frame academic experience neutr
 
 - **No Interview/Coaching Notes**: Do not include sections like "Strongest Talking Points" or internal notes coaching yourself on how to pitch the project. The page should read as an objective case study.
 - **Key Takeaways**: Use a "Key Takeaways" section at the end of case studies to outline major architectural lessons, systems tradeoffs, and workflow improvements.
+
+## 5. Project Cover Images
+
+- **Location**: Project covers live in `src/assets/projects/`, not `public/`. Astro imports them, so a missing or mistyped file fails the build instead of shipping a broken image.
+- **Frontmatter**: Reference the cover with a path relative to the markdown file, e.g. `coverImage: "../../assets/projects/last-oasis.png"`, and always set `coverAlt`.
+- **Resolution**: Supply covers at least 1520px wide. The detail page requests up to 1520w for 2x screens, and Astro only generates widths up to the source's own width, so a smaller source caps the sharpness. Cards and the detail hero crop to 16:10 with `object-fit: cover`, so keep titles and key art away from the left and right edges of wider art.
+- **Format**: Commit PNG or JPEG sources. Astro converts them to WebP at build time and builds the `srcset`. SVG covers are passed through unchanged.
+- **Social previews**: A project's cover doubles as its `og:image`. Prefer a raster cover over SVG, since most social platforms do not render SVG previews.

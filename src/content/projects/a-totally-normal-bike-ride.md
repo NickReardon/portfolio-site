@@ -8,7 +8,7 @@ projectType: "game"
 role: "Gameplay programmer"
 status: "Prototype"
 engine: "Godot"
-coverImage: "/images/projects/a-totally-normal-bike-ride.png"
+coverImage: "../../assets/projects/a-totally-normal-bike-ride.png"
 coverAlt: "A Totally Normal Bike Ride cover art."
 featured: true
 externalUrl: "https://bcthunder.itch.io/a-totally-normal-bike-ride"
