@@ -82,33 +82,29 @@ function formatFileSize(bytes: number) {
   description="Rendered resume PDF variants for Nicholas Reardon."
   noindex
 >
-  <section class="section border-b border-stone-200 bg-site-subtle">
-    <div class="mx-auto max-w-6xl px-5 py-12 sm:py-14">
+  <section class="section section-divided-bottom section-subtle">
+    <div class="shell shell-hero">
       <p class="eyebrow">Resume PDFs</p>
       <h1>Rendered Resume PDFs</h1>
-      <p class="mt-5 max-w-3xl text-xl leading-8 text-stone-700">
-        Generated PDF variants for review and download.
-      </p>
+      <p class="lede">Generated PDF variants for review and download.</p>
     </div>
   </section>
 
   <section class="section">
-    <div class="mx-auto max-w-6xl px-5 py-14">
+    <div class="shell">
       {
         pdfs.length > 0 ? (
-          <div class="grid gap-4">
+          <div class="pdf-list">
             {pdfs.map((pdf) => (
               <article class="resume-panel">
-                <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div class="pdf-row">
                   <div>
-                    <h2 class="text-xl font-semibold text-stone-950">
-                      {pdf.label}
-                    </h2>
-                    <p class="resume-meta mt-1">
+                    <h2 class="pdf-title">{pdf.label}</h2>
+                    <p class="resume-meta pdf-file">
                       {pdf.fileName} | {pdf.size}
                     </p>
                   </div>
-                  <div class="flex flex-wrap gap-3">
+                  <div class="pdf-actions">
                     <a
                       class="button-secondary"
                       href={pdf.href}
@@ -130,7 +126,7 @@ function formatFileSize(bytes: number) {
         ) : (
           <section class="resume-panel">
             <h2>No PDFs Found</h2>
-            <p class="mt-3">
+            <p class="empty-note">
               Add PDFs to <code>public/resumes/</code> to list them here.
             </p>
           </section>
@@ -139,3 +135,49 @@ function formatFileSize(bytes: number) {
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .lede {
+    max-width: 48rem;
+  }
+
+  .pdf-list {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .pdf-row {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .pdf-title {
+    color: var(--ink-strong);
+    font-size: 1.25rem;
+    font-weight: 600;
+    line-height: 1.75rem;
+  }
+
+  .pdf-file {
+    margin-top: 0.25rem;
+  }
+
+  .pdf-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .empty-note {
+    margin-top: 0.75rem;
+  }
+
+  @media (min-width: 40rem) {
+    .pdf-row {
+      align-items: center;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+</style>

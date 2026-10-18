@@ -26,24 +26,22 @@ const recentPosts = (await getCollection("blog"))
 ---
 
 <BaseLayout>
-  <section class="section border-b border-stone-200 bg-site-subtle">
-    <div
-      class="mx-auto grid max-w-6xl gap-8 px-5 py-12 sm:py-14 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-end"
-    >
-      <div class="max-w-3xl">
+  <section class="section section-divided-bottom section-subtle">
+    <div class="shell shell-hero hero">
+      <div class="hero-copy">
         <p class="eyebrow">Portfolio</p>
-        <h1 class="mt-4">
+        <h1 class="hero-title">
           {site.name}
         </h1>
-        <p class="mt-4 text-xl leading-8 text-stone-700">
+        <p class="lede hero-lede">
           {site.role} focused on {site.focus}.
         </p>
-        <p class="mt-5 max-w-2xl leading-7 text-stone-650">
+        <p class="body-copy hero-body">
           I build modular gameplay systems in Unreal Engine, with a focus on
           where state lives, how systems communicate, and how designers author
           content without needing new systems code.
         </p>
-        <div class="hero-actions mt-7 flex flex-wrap gap-3">
+        <div class="button-row hero-actions">
           <a class="button-primary" href="/projects/">View Projects</a>
           <a class="button-secondary" href={site.resumeUrl}>
             <FileText size={16} aria-hidden="true" />
@@ -53,9 +51,9 @@ const recentPosts = (await getCollection("blog"))
         </div>
       </div>
 
-      <aside class="border-l-4 border-teal-700 pl-6">
+      <aside class="focus-list">
         <p class="eyebrow">Current Focus</p>
-        <ul class="mt-4 space-y-3 text-sm leading-6 text-stone-700">
+        <ul>
           <li>Lyra-based Unreal Engine gameplay architecture.</li>
           <li>Data-driven combat, encounters, travel, and persistence.</li>
           <li>Designer-friendly authoring workflows and technical writeups.</li>
@@ -65,7 +63,7 @@ const recentPosts = (await getCollection("blog"))
   </section>
 
   <section class="section">
-    <div class="mx-auto max-w-6xl px-5 py-14">
+    <div class="shell">
       <div class="section-heading">
         <div>
           <p class="eyebrow">Selected Work</p>
@@ -76,7 +74,7 @@ const recentPosts = (await getCollection("blog"))
 
       {
         fallbackProjects.length > 0 ? (
-          <div class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div class="card-grid">
             {fallbackProjects.map((project, index) => (
               <ProjectCard
                 project={project}
@@ -87,28 +85,28 @@ const recentPosts = (await getCollection("blog"))
             ))}
           </div>
         ) : (
-          <p class="empty-state mt-8">More project writeups are coming soon.</p>
+          <p class="empty-state spaced-lg">
+            More project writeups are coming soon.
+          </p>
         )
       }
     </div>
   </section>
 
-  <section class="section border-t border-stone-200 bg-white">
-    <div
-      class="mx-auto grid max-w-6xl gap-10 px-5 py-14 lg:grid-cols-[0.9fr_1.1fr]"
-    >
+  <section class="section section-divided-top section-surface">
+    <div class="shell closing">
       <div>
         <p class="eyebrow">About</p>
         <h2>
           Gameplay systems built around how people actually author content.
         </h2>
-        <p class="mt-4 leading-7 text-stone-650">
+        <p class="body-copy closing-copy">
           My strongest work comes from Tethered, a Lyra-based Unreal Engine
           action rogue-lite prototype, and from game jams where I build gameplay
           systems, traversal mechanics, and small authoring tools under real
           production pressure.
         </p>
-        <a class="button-secondary mt-6 inline-flex" href="/about/"
+        <a class="button-secondary closing-action" href="/about/"
           >Read more about me</a
         >
       </div>
@@ -123,16 +121,109 @@ const recentPosts = (await getCollection("blog"))
         </div>
         {
           recentPosts.length > 0 ? (
-            <div class="mt-6 grid gap-4">
+            <div class="post-list">
               {recentPosts.map((post) => (
                 <BlogCard post={post} headingLevel={3} />
               ))}
             </div>
           ) : (
-            <p class="empty-state mt-6">Devlog posts are coming soon.</p>
+            <p class="empty-state spaced">Devlog posts are coming soon.</p>
           )
         }
       </div>
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .hero {
+    display: grid;
+    gap: 2rem;
+  }
+
+  .hero-copy {
+    max-width: 48rem;
+  }
+
+  .hero-title {
+    margin-top: 1rem;
+  }
+
+  .hero-lede {
+    margin-top: 1rem;
+  }
+
+  .hero-body {
+    margin-top: 1.25rem;
+    max-width: 42rem;
+  }
+
+  .focus-list {
+    border-left: 4px solid var(--accent-bright);
+    padding-left: 1.5rem;
+  }
+
+  .focus-list ul {
+    color: var(--ink-body);
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  .focus-list li + li {
+    margin-top: 0.75rem;
+  }
+
+  .closing {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .closing-copy {
+    margin-top: 1rem;
+  }
+
+  .closing-action {
+    display: inline-flex;
+    margin-top: 1.5rem;
+  }
+
+  .post-list {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .spaced {
+    margin-top: 1.5rem;
+  }
+
+  .spaced-lg {
+    margin-top: 2rem;
+  }
+
+  /* Three actions do not fit on one line on a narrow phone; the primary takes
+     the full first row and the two secondaries share the second. */
+  @media (max-width: 30rem) {
+    .hero-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .hero-actions .button-primary {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .hero {
+      align-items: end;
+      grid-template-columns: minmax(0, 1fr) 340px;
+    }
+
+    .closing {
+      gap: 2.5rem;
+      grid-template-columns: 0.9fr 1.1fr;
+    }
+  }
+</style>

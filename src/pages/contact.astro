@@ -12,11 +12,11 @@ import { site } from "../site.config";
 ---
 
 <BaseLayout title="Contact" description={`Contact ${site.name}.`}>
-  <section class="section bg-site-subtle">
-    <div class="mx-auto max-w-4xl px-5 py-14">
+  <section class="section section-subtle">
+    <div class="shell shell-md">
       <p class="eyebrow">Contact</p>
       <h1>Get in touch</h1>
-      <p class="mt-5 text-xl leading-8 text-stone-700">
+      <p class="lede">
         I am open to gameplay programming, technical design, and internship
         conversations where reliable systems and fast iteration matter.
       </p>
@@ -24,7 +24,7 @@ import { site } from "../site.config";
   </section>
 
   <section class="section">
-    <div class="mx-auto grid max-w-4xl gap-4 px-5 py-14 sm:grid-cols-2">
+    <div class="shell shell-md contact-grid">
       <ContactLink
         href={`mailto:${site.email}`}
         label="Email"
@@ -62,3 +62,16 @@ import { site } from "../site.config";
     </div>
   </section>
 </BaseLayout>
+
+<style>
+  .contact-grid {
+    display: grid;
+    gap: 1rem;
+  }
+
+  @media (min-width: 40rem) {
+    .contact-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>
