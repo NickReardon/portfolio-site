@@ -23,15 +23,10 @@ const Heading = `h${headingLevel}` as "h2" | "h3";
 const timeline = data.timeline ?? formatDate(data.date);
 const cover = data.coverImage ? coverBox(data.coverImage) : null;
 
-/* The cover column is 424px above 60rem and 300px in the letterbox band; below
-   that the card is full-bleed.
- *
- * Known ceiling: today's covers are 508x254 itch.io exports, so the 16/10 crop
- * caps at 406px and the 424px column scales it up about 4%. The column is sized
- * for the art the cards want rather than the art they have; replacing the
- * sources with something 1520px wide is what makes it sharp, and needs no
- * change here. */
-const COVER_SIZES = "(min-width: 60rem) 424px, (min-width: 48rem) 300px, 100vw";
+/* Full-bleed while the card is vertical — half the page in the two-column
+   band, the whole page below it — then a cover column of up to 324px once the
+   card turns horizontal. */
+const COVER_SIZES = "(min-width: 60rem) 324px, (min-width: 40rem) 46vw, 100vw";
 ---
 
 <article class="card project-card">
@@ -39,37 +34,19 @@ const COVER_SIZES = "(min-width: 60rem) 424px, (min-width: 48rem) 300px, 100vw";
     <div class="card-media">
       {
         data.coverImage ? (
-          <Fragment>
-            {/* Only painted in the letterbox band, where the cover is shown
-                whole and does not fill the slot. Same src as the cover, so it
-                costs a second paint rather than a second download. */}
-            <Image
-              class="cover-fill"
-              src={data.coverImage}
-              alt=""
-              aria-hidden="true"
-              width={cover!.width}
-              height={cover!.height}
-              widths={cover!.widths}
-              sizes={COVER_SIZES}
-              fit="cover"
-              position="center"
-              loading={imageLoading}
-            />
-            <Image
-              class="cover-main"
-              src={data.coverImage}
-              alt=""
-              width={cover!.width}
-              height={cover!.height}
-              widths={cover!.widths}
-              sizes={COVER_SIZES}
-              fit="cover"
-              position="center"
-              loading={imageLoading}
-              fetchpriority={imageFetchPriority}
-            />
-          </Fragment>
+          <Image
+            class="cover-main"
+            src={data.coverImage}
+            alt=""
+            width={cover!.width}
+            height={cover!.height}
+            widths={cover!.widths}
+            sizes={COVER_SIZES}
+            fit="cover"
+            position="center"
+            loading={imageLoading}
+            fetchpriority={imageFetchPriority}
+          />
         ) : (
           <div class="card-placeholder">
             <span>{data.title}</span>
@@ -97,10 +74,10 @@ const COVER_SIZES = "(min-width: 60rem) 424px, (min-width: 48rem) 300px, 100vw";
       }
 
       <p class="card-summary">{data.description}</p>
+    </div>
 
-      <div class="tag-row">
-        {data.tags.map((tag) => <span class="tag">{tag}</span>)}
-      </div>
+    <div class="tag-row">
+      {data.tags.map((tag) => <span class="tag">{tag}</span>)}
     </div>
   </a>
 </article>
@@ -110,6 +87,18 @@ const COVER_SIZES = "(min-width: 60rem) 424px, (min-width: 48rem) 300px, 100vw";
     overflow: hidden;
   }
 
+  /* Vertical by default: cover band, text, then the tag bar. The cover goes
+     horizontal at 40rem, which is the width where a thumbnail column still
+     leaves the text enough room to read. */
+  .card-link {
+    display: grid;
+    /* The card stretches to the tallest in its row; without this the link
+       stops at its own content and the tag bars sit at different heights.
+       The text row takes the slack so the bar lands on the bottom edge. */
+    grid-template-rows: auto 1fr auto;
+    height: 100%;
+  }
+
   .card-media {
     aspect-ratio: 16 / 10;
     background: var(--line-soft);
@@ -117,22 +106,21 @@ const COVER_SIZES = "(min-width: 60rem) 424px, (min-width: 48rem) 300px, 100vw";
     position: relative;
   }
 
-  /* The <Image> renders its own <img>, so these reach past the scope on
+  /* The <Image> renders its own <img>, so this reaches past the scope on
      purpose; .card-media is scoped and keeps the match local to this card.
    *
-   * contain, not cover: the cover was already cropped to the slot's 16/10 in
-   * the frontmatter, so there is nothing left to trim here. In a 16/10 slot
-   * this fits exactly; in the taller letterbox slot it leaves even bars. */
+   * contain, never cover: the cover was already cropped to 16/10 in the
+   * frontmatter, so it is shown whole at that ratio everywhere. In the
+   * vertical band it fills the slot exactly; in the thumbnail column the slot
+   * is as tall as the text beside it, so the leftover shows as even bars of
+   * --line-soft above and below. */
   .card-media :global(img) {
     height: 100%;
+    inset: 0;
     object-fit: contain;
+    position: absolute;
     transition: transform 300ms ease;
     width: 100%;
-  }
-
-  /* Off everywhere but the letterbox band below. */
-  .card-media :global(.cover-fill) {
-    display: none;
   }
 
   .card:hover .card-media :global(.cover-main) {
@@ -147,22 +135,22 @@ const COVER_SIZES = "(min-width: 60rem) 424px, (min-width: 48rem) 300px, 100vw";
       var(--shade);
     display: flex;
     height: 100%;
-    padding: 1.25rem;
+    padding: 0.75rem;
     width: 100%;
   }
 
   .card-placeholder span {
     color: var(--ink-soft);
+    font-size: 0.875rem;
     font-weight: 750;
-    max-width: 16rem;
   }
 
   .card-body {
-    padding: 1.25rem;
+    padding: 0.85rem 1rem;
   }
 
   .card-body > * + * {
-    margin-top: 1rem;
+    margin-top: 0.6rem;
   }
 
   .card-head {
@@ -171,15 +159,15 @@ const COVER_SIZES = "(min-width: 60rem) 424px, (min-width: 48rem) 300px, 100vw";
     align-items: flex-start;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
+    gap: 0.5rem;
     justify-content: space-between;
   }
 
   .card-date {
     color: var(--accent-mid);
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     font-weight: 500;
-    line-height: 1.25rem;
+    line-height: 1.125rem;
   }
 
   .card-title {
@@ -187,26 +175,26 @@ const COVER_SIZES = "(min-width: 60rem) 424px, (min-width: 48rem) 300px, 100vw";
     font-size: 1.25rem;
     font-weight: 600;
     line-height: 1.75rem;
-    margin-top: 0.25rem;
+    margin-top: 0.15rem;
   }
 
   .card-badge {
     background: var(--badge-bg);
     border-radius: 999px;
     color: var(--badge-ink);
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 600;
     line-height: 1rem;
-    padding: 0.25rem 0.75rem;
+    padding: 0.15rem 0.6rem;
   }
 
   .card-meta {
     color: var(--ink-subtle);
     display: flex;
     flex-wrap: wrap;
-    font-size: 0.78rem;
+    font-size: 0.875rem;
     font-weight: 650;
-    gap: 0.4rem 0.6rem;
+    gap: 0.3rem 0.5rem;
     line-height: 1.4;
   }
 
@@ -221,109 +209,73 @@ const COVER_SIZES = "(min-width: 60rem) 424px, (min-width: 48rem) 300px, 100vw";
     content: "";
     display: inline-block;
     height: 0.3rem;
-    margin-right: 0.6rem;
+    margin-right: 0.5rem;
     width: 0.3rem;
   }
 
+  /* Clamped so the text column stays a predictable height next to a fixed
+     thumbnail; without it a long description decides the card's size. */
   .card-summary {
     color: var(--ink-muted);
-    font-size: 0.875rem;
-    line-height: 1.5rem;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    overflow: hidden;
   }
 
-  /* The letterbox band: wide enough for a row, but not wide enough for the
-     content to fit the height of a 16/10 cover, because the tag row and the
-     role line have both wrapped by here.
-   *
-   * Rather than stack early or leave a band of empty card under the cover, the
-   * slot takes the full row height and the cover is shown whole inside it. The
-   * leftover is filled with a blurred, scaled copy of the cover, so the card
-   * reads as a deliberate letterbox instead of a short image. */
-  @media (min-width: 48rem) and (max-width: 59.999rem) {
-    .card-link {
-      display: grid;
-      grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
-    }
-
-    .card-body {
-      padding: 1.5rem;
-    }
-
-    .card-media {
-      align-self: stretch;
-      aspect-ratio: auto;
-    }
-
-    .card-media :global(img) {
-      inset: 0;
-      position: absolute;
-    }
-
-    .card-media :global(.cover-fill) {
-      display: block;
-      filter: blur(18px) saturate(1.3) brightness(0.85);
-      /* The backdrop is the one image here that should fill rather than fit. */
-      object-fit: cover;
-      /* Blur samples past the edges and leaves them translucent, so the copy
-         is scaled up until the soft border is outside the slot. */
-      transform: scale(1.2);
-    }
-
-    .card:hover .card-media :global(.cover-main) {
-      transform: none;
-    }
+  /* Its own band across the full card, under both the text and the cover, so
+     the tags stop competing with the description for the text column. */
+  .tag-row {
+    /* --shade rather than --page-subtle: the latter is within a hair of the
+       page background, so the band read as though it sat outside the card. */
+    background: var(--shade);
+    border-top: 1px solid var(--line-soft);
+    gap: 0.35rem;
+    grid-column: 1 / -1;
+    padding: 0.55rem 1rem;
   }
 
-  /* Wide enough for a row: the cover sits beside the content instead of above
-     it, and the content column gets the full remaining width.
-   *
-   * 60rem is the floor. Below it the tag row wraps to a second line, the
-   * content outgrows the cover, and a band of empty card opens under the
-   * image — so narrower pages stay stacked instead. */
+  /* The card only turns horizontal once it has the row to itself, which is the
+     width where a cover column can be wide enough that its 16/10 height clears
+     the text beside it. That ordering is the whole point: the leftover height
+     then lands in the text column, where it is invisible, instead of under the
+     cover where it reads as a gap. */
   @media (min-width: 60rem) {
     .card-link {
-      display: grid;
-      grid-template-columns: minmax(0, 424px) minmax(0, 1fr);
+      /* Fixed, not a share: the cover's 16/10 height has to clear the text
+         beside it at every width or the gap under it comes back, and the card
+         is never narrower than about 920px here, so a share only ever shrank
+         it below what the longest card needs. 20.25rem gives a 202px cover
+         against a worst case of 186px of text.
+       *
+       * ponytail: that 186px is the longest role line in the collection today
+       * (Stock Backtesting wraps to two). A card whose role runs to three
+       * lines reopens the gap; widen this or clamp .card-meta if one lands. */
+      grid-template-columns: minmax(0, 20.25rem) minmax(0, 1fr);
+      /* The cover-and-text row takes the slack so the tag bar stays pinned to
+         the bottom edge of the card. */
+      grid-template-rows: 1fr auto;
     }
 
-    /* The cover keeps the 16/10 shape it has when stacked rather than
-       stretching to the row. Letting it stretch tied the crop to the length of
-       the summary beside it, so two cards cropped their art differently. */
+    /* The cover keeps its own 16/10 box rather than stretching to the row, so
+       the art is never boxed in bars. */
     .card-media {
       align-self: start;
     }
 
+    /* Centred against the taller cover, so the shorter text block sits level
+       with it instead of hanging from the top edge. */
     .card-body {
-      padding: 1.5rem;
+      align-self: center;
     }
 
-    /* Always reserve the two lines the longest role string needs. Reserving it
-       costs a blank line on the short ones; letting it wrap on demand would
-       make the row's height depend on the role, which is what the cover is
-       sized against. */
-    .card-meta {
-      align-content: start;
-      min-height: calc(2 * 1.4em + 0.4rem);
-    }
-
-    /* The content column is now most of the page width, so the summary needs a
-       measure of its own or it runs well past a comfortable line length.
-     *
-     * Clamping it is the other half of keeping the row a fixed height: the
-     * cover is a fixed 16/10 and the content is not, so without this a longer
-     * description leaves a band of empty card under the cover. Two lines of
-     * summary plus two of meta is 265px, which is the 424px cover's height.
-     *
-     * ponytail: 424px is tuned to a two-line summary, two-line meta and a
-     * one-line title. A third line of any of them reopens the gap; make the
-     * cover a function of the row instead if the copy needs the room. */
+    /* The text column is most of the page by now, so the description needs a
+       measure of its own or it runs well past a comfortable line length. */
     .card-summary {
       max-width: 68ch;
-      display: -webkit-box;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-      line-clamp: 2;
-      overflow: hidden;
     }
   }
 
