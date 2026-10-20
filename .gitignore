@@ -23,6 +23,8 @@ tmp/
 .workspace/
 .local/
 output/
+.claude/worktrees/
+.claude/settings.local.json
 
 # environment variables
 .env
