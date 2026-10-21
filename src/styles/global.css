@@ -75,39 +75,65 @@
 
   /* The tokens the site is written against.
    *
-   * Values marked "via Tailwind" are copied verbatim from the compiled
-   * stylesheet, including their oklch form, so removing Tailwind changes no
-   * rendered colour. Previously these existed twice: once as Tailwind utilities
-   * reachable from markup, once as hardcoded hex in the component rules below,
-   * which meant changing the palette meant editing both.
+   * Every colour is a role, not a shade: components name what the colour is
+   * for, never the value. Add a role only when an existing one genuinely does
+   * not fit — two roles sharing a value (--shade and --line-soft) is fine,
+   * two roles with the same job is how a palette drifts.
+   *
+   * Each role is one `light-dark()` pair, so a theme is a value swap rather
+   * than a second block of overrides that drifts out of sync. The pairs
+   * resolve off the computed `color-scheme` below: with no JavaScript the
+   * `light dark` default follows the operating system, and the header toggle
+   * pins it by setting data-theme on <html>.
+   *
+   * The ratios are each role's worst case across every band it can land on,
+   * in whichever theme is tighter. Keep any new ink at 4.5:1 or better.
    */
   :root {
-    --page-bg: #f6f7f4;
-    --page-subtle: #eef5f0;
+    color-scheme: light dark;
 
-    --surface: #fff;
-    --surface-sunken: #fafaf9;
-    --surface-muted: #f5f5f4;
-    --shade: #e7e5e4;
+    /* Page bands. */
+    --page-bg: light-dark(#f6f7f4, #1a1816);
+    --page-subtle: light-dark(#eef5f0, #16201c);
 
-    --ink: #1c1917;
-    --ink-strong: oklch(14.7% 0.004 49.25); /* via Tailwind: stone-950 */
-    --ink-soft: #292524;
-    --ink-body: #44403c;
-    --ink-muted: #55534d;
-    --ink-subtle: #57534e;
-    --ink-faint: oklch(55.3% 0.013 58.071); /* via Tailwind: stone-500 */
+    /* Raised and recessed panels inside a band. */
+    --surface: light-dark(#fff, #221f1d);
+    --surface-sunken: light-dark(#fafaf9, #1c1a18);
+    --surface-muted: light-dark(#f5f5f4, #272320);
+    --shade: light-dark(#e7e5e4, #2e2a26);
 
-    --accent: #134e4a;
-    --accent-mid: oklch(43.7% 0.078 188.216); /* via Tailwind: teal-800 */
-    --accent-bright: #0f766e;
+    /* The translucent masthead, which sits over whatever scrolls under it. */
+    --surface-veil: light-dark(rgb(255 255 255 / 0.9), rgb(34 31 29 / 0.9));
 
-    --line: #d6d3d1;
-    --line-soft: oklch(92.3% 0.003 48.717); /* via Tailwind: stone-200 */
-    --line-strong: #a8a29e;
+    /* Text, strongest to faintest. */
+    --ink-strong: light-dark(#0c0a09, #fafaf9); /* 13.6:1 — card titles */
+    --ink: light-dark(#1c1917, #ebe8e4); /* 11.7:1 — headings, body default */
+    --ink-soft: light-dark(#292524, #dcd8d3); /* 10.0:1 — code, 2ary buttons */
+    --ink-body: light-dark(#44403c, #c8c2bb); /* 8.1:1  — lede and prose */
+    --ink-muted: light-dark(#55534d, #b0a9a1); /* 6.1:1  — metadata */
+    --ink-faint: light-dark(#6f6965, #9a938b); /* 4.7:1  — stamps; AA floor */
 
-    --badge-bg: #f8d8ce;
-    --badge-ink: #7c2418;
+    /* Accent. Light runs dark-to-bright, dark runs bright-to-brighter: either
+       way --accent-bright is the hover end, one step further from the page.
+       It is a hover state, not a text colour — in light mode its 4.9:1 leaves
+       no room under AA for the small, bold type the accent is used on. */
+    --accent: light-dark(#134e4a, #2dd4bf); /* 7.7:1 */
+    --accent-mid: light-dark(#115e59, #5eead4); /* 6.8:1 */
+    --accent-bright: light-dark(#0f766e, #99f6e4); /* 4.9:1 */
+
+    /* Borders and rules. */
+    --line: light-dark(#d6d3d1, #38332f);
+    --line-soft: light-dark(#e7e5e4, #2b2724);
+    --line-strong: light-dark(#a8a29e, #544e48);
+
+    /* The one non-neutral pair: the project card's status badge. */
+    --badge-bg: light-dark(#f8d8ce, #3d1c14);
+    --badge-ink: light-dark(#7c2418, #f9c0ad); /* 7.4:1 on --badge-bg */
+
+    /* Shadow channels, not a whole shadow: each elevation keeps its own blur
+       and alpha. Dark drops to black, where a low-alpha lift reads as nothing
+       and the borders do the separating instead. */
+    --shadow-ink: light-dark(28 25 23, 0 0 0);
 
     --font-mono:
       ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
@@ -116,6 +142,17 @@
     /* The one page-width measure every top-level band is laid out against. */
     --shell-max: 72rem;
     --shell-pad: 1.25rem;
+  }
+
+  /* What the header toggle sets. Pinning `color-scheme` is the whole override:
+     every `light-dark()` pair above re-resolves against it, and the browser
+     switches its own form controls and scrollbars to match. */
+  :root[data-theme="light"] {
+    color-scheme: light;
+  }
+
+  :root[data-theme="dark"] {
+    color-scheme: dark;
   }
 }
 
@@ -356,7 +393,7 @@
     border: 1px solid var(--line);
     border-radius: 0.5rem;
     background: var(--surface);
-    box-shadow: 0 16px 45px rgb(28 25 23 / 0.06);
+    box-shadow: 0 16px 45px rgb(var(--shadow-ink) / 0.06);
     transition:
       border-color 160ms ease,
       box-shadow 160ms ease,
@@ -366,7 +403,7 @@
   .card:hover,
   .card:focus-within {
     border-color: var(--accent);
-    box-shadow: 0 20px 55px rgb(28 25 23 / 0.11);
+    box-shadow: 0 20px 55px rgb(var(--shadow-ink) / 0.11);
     transform: translateY(-2px);
   }
 
@@ -398,7 +435,7 @@
     border: 1px dashed var(--line-strong);
     border-radius: 0.5rem;
     background: var(--surface);
-    color: var(--ink-subtle);
+    color: var(--ink-muted);
     padding: 1.2rem;
   }
 
