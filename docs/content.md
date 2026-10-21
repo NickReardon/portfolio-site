@@ -25,3 +25,12 @@ To avoid reading as a junior-level candidate, we frame academic experience neutr
 
 - **No Interview/Coaching Notes**: Do not include sections like "Strongest Talking Points" or internal notes coaching yourself on how to pitch the project. The page should read as an objective case study.
 - **Key Takeaways**: Use a "Key Takeaways" section at the end of case studies to outline major architectural lessons, systems tradeoffs, and workflow improvements.
+
+## 5. Project Cover Images
+
+- **Location**: Project covers live in `src/assets/projects/`, not `public/`. Astro imports them, so a missing or mistyped file fails the build instead of shipping a broken image.
+- **Frontmatter**: Reference the cover with a path relative to the markdown file, e.g. `coverImage: "../../assets/projects/last-oasis.png"`, and always set `coverAlt`.
+- **Cropping**: Every slot that shows a cover is 16:10, and the build crops to that ratio (`fit="cover"`, centred) rather than leaving it to `object-fit`. Each cover therefore arrives at CSS already the right shape: a 16:10 slot shows all of it, and the taller letterbox slot used between 48rem and 60rem adds even bars above and below instead of cropping differently per card. Author at 16:10 where you can — a wider source loses its edges from the centre crop, and the current 2:1 itch.io exports lose about 10% from each side, so keep titles and key art away from the left and right edges.
+- **Resolution**: Supply covers at least 1520px wide. Astro only generates widths up to the source's own width, and the crop caps it further: a 508px-wide 2:1 export yields a 406px-wide 16:10 crop, which the widest card column then scales up. Nothing is ever upscaled by the crop itself, so a small source costs sharpness, not shape.
+- **Format**: Commit PNG or JPEG sources. Astro converts them to WebP at build time and builds the `srcset`. SVG covers are passed through unchanged.
+- **Social previews**: A project's cover doubles as its `og:image`. Prefer a raster cover over SVG, since most social platforms do not render SVG previews.

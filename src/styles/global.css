@@ -265,21 +265,18 @@
     margin-top: 1.75rem;
   }
 
+  /* Two columns only in the middle band, where the cards are vertical and a
+     pair of them fits. Above 60rem the card turns horizontal and takes the row
+     to itself; below 40rem there is only room for one. */
   .card-grid {
     display: grid;
-    gap: 1.5rem;
-    margin-top: 2rem;
+    gap: 1rem;
+    margin-top: 1.5rem;
   }
 
-  @media (min-width: 48rem) {
+  @media (min-width: 40rem) and (max-width: 59.999rem) {
     .card-grid {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
-  @media (min-width: 64rem) {
-    .card-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 

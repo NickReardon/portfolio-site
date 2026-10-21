@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { Image } from "astro:assets";
-import { entrySlug, formatDate } from "../utils/content";
+import { coverBox, entrySlug, formatDate } from "../utils/content";
 
 interface Props {
   project: CollectionEntry<"projects">;
@@ -21,6 +21,12 @@ const slug = entrySlug(project.id);
 const href = `/projects/${slug}/`;
 const Heading = `h${headingLevel}` as "h2" | "h3";
 const timeline = data.timeline ?? formatDate(data.date);
+const cover = data.coverImage ? coverBox(data.coverImage) : null;
+
+/* Full-bleed while the card is vertical — half the page in the two-column
+   band, the whole page below it — then a cover column of up to 324px once the
+   card turns horizontal. */
+const COVER_SIZES = "(min-width: 60rem) 324px, (min-width: 40rem) 46vw, 100vw";
 ---
 
 <article class="card project-card">
@@ -29,10 +35,15 @@ const timeline = data.timeline ?? formatDate(data.date);
       {
         data.coverImage ? (
           <Image
+            class="cover-main"
             src={data.coverImage}
             alt=""
-            width={640}
-            height={400}
+            width={cover!.width}
+            height={cover!.height}
+            widths={cover!.widths}
+            sizes={COVER_SIZES}
+            fit="cover"
+            position="center"
             loading={imageLoading}
             fetchpriority={imageFetchPriority}
           />
@@ -63,10 +74,10 @@ const timeline = data.timeline ?? formatDate(data.date);
       }
 
       <p class="card-summary">{data.description}</p>
+    </div>
 
-      <div class="tag-row">
-        {data.tags.map((tag) => <span class="tag">{tag}</span>)}
-      </div>
+    <div class="tag-row">
+      {data.tags.map((tag) => <span class="tag">{tag}</span>)}
     </div>
   </a>
 </article>
@@ -76,22 +87,43 @@ const timeline = data.timeline ?? formatDate(data.date);
     overflow: hidden;
   }
 
+  /* Vertical by default: cover band, text, then the tag bar. The cover goes
+     horizontal at 40rem, which is the width where a thumbnail column still
+     leaves the text enough room to read. */
+  .card-link {
+    display: grid;
+    /* The card stretches to the tallest in its row; without this the link
+       stops at its own content and the tag bars sit at different heights.
+       The text row takes the slack so the bar lands on the bottom edge. */
+    grid-template-rows: auto 1fr auto;
+    height: 100%;
+  }
+
   .card-media {
     aspect-ratio: 16 / 10;
     background: var(--line-soft);
     overflow: hidden;
+    position: relative;
   }
 
   /* The <Image> renders its own <img>, so this reaches past the scope on
-     purpose; .card-media is scoped and keeps the match local to this card. */
+     purpose; .card-media is scoped and keeps the match local to this card.
+   *
+   * contain, never cover: the cover was already cropped to 16/10 in the
+   * frontmatter, so it is shown whole at that ratio everywhere. In the
+   * vertical band it fills the slot exactly; in the thumbnail column the slot
+   * is as tall as the text beside it, so the leftover shows as even bars of
+   * --line-soft above and below. */
   .card-media :global(img) {
     height: 100%;
-    object-fit: cover;
+    inset: 0;
+    object-fit: contain;
+    position: absolute;
     transition: transform 300ms ease;
     width: 100%;
   }
 
-  .card:hover .card-media :global(img) {
+  .card:hover .card-media :global(.cover-main) {
     transform: scale(1.03);
   }
 
@@ -103,22 +135,22 @@ const timeline = data.timeline ?? formatDate(data.date);
       var(--shade);
     display: flex;
     height: 100%;
-    padding: 1.25rem;
+    padding: 0.75rem;
     width: 100%;
   }
 
   .card-placeholder span {
     color: var(--ink-soft);
+    font-size: 0.875rem;
     font-weight: 750;
-    max-width: 16rem;
   }
 
   .card-body {
-    padding: 1.25rem;
+    padding: 0.85rem 1rem;
   }
 
   .card-body > * + * {
-    margin-top: 1rem;
+    margin-top: 0.6rem;
   }
 
   .card-head {
@@ -127,15 +159,15 @@ const timeline = data.timeline ?? formatDate(data.date);
     align-items: flex-start;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
+    gap: 0.5rem;
     justify-content: space-between;
   }
 
   .card-date {
     color: var(--accent-mid);
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     font-weight: 500;
-    line-height: 1.25rem;
+    line-height: 1.125rem;
   }
 
   .card-title {
@@ -143,26 +175,26 @@ const timeline = data.timeline ?? formatDate(data.date);
     font-size: 1.25rem;
     font-weight: 600;
     line-height: 1.75rem;
-    margin-top: 0.25rem;
+    margin-top: 0.15rem;
   }
 
   .card-badge {
     background: var(--badge-bg);
     border-radius: 999px;
     color: var(--badge-ink);
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     font-weight: 600;
     line-height: 1rem;
-    padding: 0.25rem 0.75rem;
+    padding: 0.15rem 0.6rem;
   }
 
   .card-meta {
     color: var(--ink-subtle);
     display: flex;
     flex-wrap: wrap;
-    font-size: 0.78rem;
+    font-size: 0.875rem;
     font-weight: 650;
-    gap: 0.4rem 0.6rem;
+    gap: 0.3rem 0.5rem;
     line-height: 1.4;
   }
 
@@ -177,14 +209,74 @@ const timeline = data.timeline ?? formatDate(data.date);
     content: "";
     display: inline-block;
     height: 0.3rem;
-    margin-right: 0.6rem;
+    margin-right: 0.5rem;
     width: 0.3rem;
   }
 
+  /* Clamped so the text column stays a predictable height next to a fixed
+     thumbnail; without it a long description decides the card's size. */
   .card-summary {
     color: var(--ink-muted);
-    font-size: 0.875rem;
-    line-height: 1.5rem;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    overflow: hidden;
+  }
+
+  /* Its own band across the full card, under both the text and the cover, so
+     the tags stop competing with the description for the text column. */
+  .tag-row {
+    /* --shade rather than --page-subtle: the latter is within a hair of the
+       page background, so the band read as though it sat outside the card. */
+    background: var(--shade);
+    border-top: 1px solid var(--line-soft);
+    gap: 0.35rem;
+    grid-column: 1 / -1;
+    padding: 0.55rem 1rem;
+  }
+
+  /* The card only turns horizontal once it has the row to itself, which is the
+     width where a cover column can be wide enough that its 16/10 height clears
+     the text beside it. That ordering is the whole point: the leftover height
+     then lands in the text column, where it is invisible, instead of under the
+     cover where it reads as a gap. */
+  @media (min-width: 60rem) {
+    .card-link {
+      /* Fixed, not a share: the cover's 16/10 height has to clear the text
+         beside it at every width or the gap under it comes back, and the card
+         is never narrower than about 920px here, so a share only ever shrank
+         it below what the longest card needs. 20.25rem gives a 202px cover
+         against a worst case of 186px of text.
+       *
+       * ponytail: that 186px is the longest role line in the collection today
+       * (Stock Backtesting wraps to two). A card whose role runs to three
+       * lines reopens the gap; widen this or clamp .card-meta if one lands. */
+      grid-template-columns: minmax(0, 20.25rem) minmax(0, 1fr);
+      /* The cover-and-text row takes the slack so the tag bar stays pinned to
+         the bottom edge of the card. */
+      grid-template-rows: 1fr auto;
+    }
+
+    /* The cover keeps its own 16/10 box rather than stretching to the row, so
+       the art is never boxed in bars. */
+    .card-media {
+      align-self: start;
+    }
+
+    /* Centred against the taller cover, so the shorter text block sits level
+       with it instead of hanging from the top edge. */
+    .card-body {
+      align-self: center;
+    }
+
+    /* The text column is most of the page by now, so the description needs a
+       measure of its own or it runs well past a comfortable line length. */
+    .card-summary {
+      max-width: 68ch;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
