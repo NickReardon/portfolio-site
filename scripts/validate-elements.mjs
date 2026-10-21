@@ -78,6 +78,28 @@ assert.match(
   /title="&quot;&gt;&lt;script&gt;"/u,
 );
 
+// A scheme is not disarmed by escaping the attribute it sits in, so anything
+// that is not http(s) is refused before any markup exists.
+for (const href of [
+  "javascript:alert(1)",
+  "data:text/html,<script>alert(1)</script>",
+  "vbscript:msgbox(1)",
+  "file:///etc/passwd",
+]) {
+  assert.throws(
+    () => run(leaf("video", { href })),
+    /must be http\(s\)/u,
+    `expected ${href} to be refused`,
+  );
+}
+
+// A path smuggled in where a video id belongs does not reach the embed URL.
+assert.match(
+  run(leaf("video", { href: "https://youtu.be/..%2f..%2fevil" })).children[0]
+    .value,
+  /^<p><a href=/u,
+);
+
 // The two failure modes that keep the registry honest: an unknown name is a
 // build error rather than empty markup, and a required attribute is not
 // optional.

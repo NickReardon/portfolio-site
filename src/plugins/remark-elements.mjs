@@ -39,24 +39,37 @@ function videoHtml({ href, label }) {
     throw new Error(`video href is not a URL: ${href}`);
   }
 
+  /* `new URL` parses `javascript:` and `data:` as happily as it does https, and
+   * escaping an attribute does not disarm a scheme. Everything below writes
+   * this value into an href or src, so the allowlist belongs here, before any
+   * markup exists. */
+  if (url.protocol !== "https:" && url.protocol !== "http:") {
+    throw new Error(`video href must be http(s): ${href}`);
+  }
+
   if (YOUTUBE_HOSTS.has(url.hostname)) {
-    const id = url.hostname.endsWith("youtu.be")
+    const raw = url.hostname.endsWith("youtu.be")
       ? url.pathname.slice(1)
       : (url.searchParams.get("v") ?? url.pathname.split("/").pop());
+    // A video id is this alphabet and nothing else. Anything else is a path
+    // being smuggled into an embed URL whose host this plugin fixes.
+    const id = /^[\w-]+$/u.test(raw ?? "") ? raw : null;
 
     if (id) {
       // nocookie so an embed does not set tracking cookies on a page that asks
       // the visitor for nothing.
-      const src = `https://www.youtube-nocookie.com/embed/${escapeAttribute(id)}`;
+      const src = `https://www.youtube-nocookie.com/embed/${id}`;
       return `<iframe src="${src}" title="${title}" loading="lazy" allowfullscreen allow="accelerometer; encrypted-media; picture-in-picture"></iframe>`;
     }
   }
 
+  // `url.href` rather than the authored string: what was parsed and checked is
+  // what gets written, so no odd encoding slips between the two.
   if (MEDIA_FILE.test(url.pathname)) {
-    return `<video controls preload="metadata" src="${escapeAttribute(href)}"></video>`;
+    return `<video controls preload="metadata" src="${escapeAttribute(url.href)}"></video>`;
   }
 
-  return `<p><a href="${escapeAttribute(href)}">${title}</a></p>`;
+  return `<p><a href="${escapeAttribute(url.href)}">${title}</a></p>`;
 }
 
 /* name -> how it renders. `container` takes Markdown children, `leaf` takes
