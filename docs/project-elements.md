@@ -129,13 +129,21 @@ data placed at a position:
 ::video{href="https://youtube.com/watch?v=xxxxxxxxxxx" label="Systems breakdown"}
 ```
 
-Video embeds, and is always external. `href` points at a real video host and the
-directive renders a player; a video file is never committed, because git is the
-wrong store for a 100MB binary and Astro has no video pipeline to optimize one
-with. The cost is that GitHub supports no external video embeds of its own, so
-this directive has no preview where it is authored — a discussion renders the
-line as literal text. A video uploaded to the discussion instead does preview
-there, but yields a CDN URL, which section 7 rejects.
+Video embeds, and `href` always points at a dedicated video host. Two places it
+is never allowed to live, for different reasons:
+
+- **Not the repo.** Git is the wrong store for media that large, and unlike
+  images there is no build pipeline that would make committing it worthwhile:
+  Astro optimizes no video.
+- **Not GitHub's CDN.** A discussion attachment would preview where it is
+  authored and would play on the site, since there is no pipeline to lose. It is
+  excluded anyway, because an anonymized attachment URL has no documented
+  lifetime and the repo holds no copy to re-point at if it stops resolving. This
+  is a hosting rule, not a size rule: a clip well under the 10MB limit is still
+  excluded.
+
+The cost is no preview where the post is written, because GitHub embeds no
+external video of its own, so a discussion renders this line as literal text.
 
 A directive and not a fenced code block, for one reason: a fence opts its
 contents out of Markdown parsing entirely, so image paths inside it stay dumb
@@ -227,8 +235,9 @@ Two rules on top:
 
 - **Never inline a materialized SVG.** GitHub accepts SVG uploads and an SVG can
   carry script. Reference it as an `img` source instead.
-- **Videos are not materialized.** Use the `video` directive and a real host, per
-  section 4.
+- **Videos are neither materialized nor hotlinked.** A GitHub-hosted video is
+  rejected rather than carried through as a URL. Use the `video` directive and a
+  dedicated host, per section 4.
 
 ## 8. Parse Contract
 
