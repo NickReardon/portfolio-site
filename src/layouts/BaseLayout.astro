@@ -3,6 +3,8 @@ import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
 import { build, site } from "../site.config";
 import "../styles/global.css";
+// After global.css: the body elements style themselves with its tokens.
+import "../styles/elements.css";
 
 interface Props {
   title?: string;
@@ -57,6 +59,28 @@ const socialImageUrl = new URL(image, site.url).toString();
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImageUrl} />
     <title>{pageTitle}</title>
+    {
+      /* Before first paint, so a pinned theme never flashes the other one.
+        Inline and un-deferred on purpose: a bundled script runs too late.
+        Resolving the OS preference here as well is what lets the rest of the
+        theming key off data-theme alone. */
+    }
+    <script is:inline>
+      (() => {
+        let stored = null;
+        try {
+          stored = localStorage.getItem("theme");
+        } catch {
+          /* Private modes can refuse storage; fall back to the OS preference. */
+        }
+        document.documentElement.dataset.theme =
+          stored === "light" || stored === "dark"
+            ? stored
+            : matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+      })();
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
