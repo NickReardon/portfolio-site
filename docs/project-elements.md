@@ -1,11 +1,11 @@
 # Project Element Palette
 
-**Status: proposed.** This document describes the target model for project
-content and for parsing discussion-authored posts. The shipped schema in
-`src/content.config.ts` still uses `projectType` and three fixed link fields,
-and no directive plugin is configured yet, so treat every example here as the
-destination rather than current behavior. Fold the authoring half into
-`docs/content.md` once it lands.
+**Status: implemented.** The schema in `src/content.config.ts`, the body-element
+plugin in `src/plugins/remark-elements.mjs`, the index grouping in
+`src/site.config.ts` and the sync in `scripts/sync-discussions.mjs` all follow
+this document. What is not yet wired is the workflow that runs the sync, and the
+`Games` and `Software` discussion categories it reads from, which have to be
+created in the repository's settings.
 
 A complete file written against this model lives in
 `docs/examples/project-palette.md`.
@@ -48,19 +48,20 @@ Required on every project:
 
 Optional, fill what applies:
 
-| Element      | Type     | Typical user | Notes                                                                             |
-| ------------ | -------- | ------------ | --------------------------------------------------------------------------------- |
-| `timeline`   | string   | any          | Human range: "September 2025 - present". Replaces the formatted `date` in the UI. |
-| `status`     | string   | any          | Free text: "Unreleased", "Released", "On hold".                                   |
-| `genre`      | string   | games        | "Action rogue-lite". Half the descriptor line.                                    |
-| `stack`      | string   | any          | "Unreal Engine 5.8", "Python / PySide6".                                          |
-| `role`       | string   | any          | What you did on it.                                                               |
-| `tags`       | string[] | any          | Descriptive, many per project. Not a grouping key.                                |
-| `links`      | link[]   | any          | The header link row. See section 3.                                               |
-| `coverImage` | image    | any          | Repo-owned. See section 7.                                                        |
-| `coverAlt`   | string   | any          | Required whenever `coverImage` is set.                                            |
-| `featured`   | boolean  | any          | Sorts first. Defaults to `false`.                                                 |
-| `draft`      | boolean  | any          | Hidden in production builds. Defaults to `false`.                                 |
+| Element      | Type     | Typical user | Notes                                                                                                                                    |
+| ------------ | -------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `timeline`   | string   | any          | Human range: "September 2025 - present". Replaces the formatted `date` in the UI.                                                        |
+| `status`     | string   | any          | Free text: "Unreleased", "Released", "On hold".                                                                                          |
+| `genre`      | string   | games        | "Action rogue-lite". Half the descriptor line.                                                                                           |
+| `stack`      | string   | any          | "Unreal Engine 5.8", "Python / PySide6".                                                                                                 |
+| `role`       | string   | any          | What you did on it.                                                                                                                      |
+| `tags`       | string[] | any          | Descriptive, many per project. Not a grouping key.                                                                                       |
+| `links`      | link[]   | any          | The header link row. See section 3.                                                                                                      |
+| `coverImage` | image    | any          | Repo-owned. See section 7.                                                                                                               |
+| `coverAlt`   | string   | any          | Required whenever `coverImage` is set.                                                                                                   |
+| `featured`   | boolean  | any          | Sorts first. Defaults to `false`.                                                                                                        |
+| `draft`      | boolean  | any          | Hidden in production builds. Defaults to `false`.                                                                                        |
+| `discussion` | number   | synced only  | Written by the sync, never by hand: marks the file discussion-owned and pins its slug. Declared in the schema so `.strict()` accepts it. |
 
 `status`, `stack`, and `genre` compose the one-line descriptor, in that order,
 skipping whatever is absent:
@@ -151,9 +152,22 @@ strings — no optimization, and a typo'd filename ships broken instead of faili
 the build. A directive wraps Markdown, so what is inside is still real Markdown.
 The frontmatter fence works precisely because it holds data, not content.
 
-Directive names are a closed registry beside `projectCategories` in
-`src/site.config.ts`, and an unknown name fails the build rather than rendering
-as empty markup.
+Directive names are a closed registry in `src/plugins/remark-elements.mjs`, and
+an unknown name fails the build rather than rendering as empty markup. The
+registry sits in the plugin rather than in `src/site.config.ts` because
+`astro.config.mjs` loads it before the app's module graph exists.
+
+Three names are registered: `gallery` and `note` as containers, `video` as a
+leaf. `video` renders a nocookie YouTube embed for a watch URL, a `video`
+element for a direct media file, and a plain link for any other host, because a
+working link beats a build error for a host the plugin cannot frame.
+
+One cost worth recording. Astro 7 defaults to Sätteri, its Rust Markdown
+pipeline, which accepts no remark plugins; `remark-directive` extends the parser
+itself, so it cannot be ported to one. `astro.config.mjs` therefore opts back
+into `unified()`, whose feature set the docs describe as otherwise equivalent.
+Relative image paths are still optimized under it, which is the property section
+7 depends on.
 
 ## 5. Why `.strict()`
 
@@ -197,10 +211,25 @@ Repo-written files set `category` themselves. It is the one element that is
 required but not free-form, and section order lives beside `navigation`:
 
 ```ts
-export const projectCategories = ["Games", "Software", "Writeups"];
+export const projectCategories = [
+  {
+    name: "Games",
+    eyebrow: "Game Work",
+    heading: "Games and prototypes",
+    link: { href: site.itchUrl, label: "Itch profile" },
+  },
+  {
+    name: "Software",
+    eyebrow: "Systems Work",
+    heading: "Tools and technical case studies",
+  },
+];
 ```
 
-Anything not listed renders after the listed groups.
+Entries are objects rather than bare names because the headings are editorial:
+"Games" groups an unreleased Unreal project with browser jam builds, and only a
+written heading can say so. Anything not listed renders after the listed groups,
+under its own name.
 
 ## 7. Assets Stay Repo-Owned
 
