@@ -1,0 +1,35 @@
+# Template for the Blog category. The filename must stay equal to the category
+# slug, and this file only takes effect from the default branch.
+#
+# Deliberately no `labels:` key: the sync's publish gate is a label applied by
+# hand when a post is ready, so a template that pre-applied it would publish
+# every draft on creation.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The block below is mirrored into `src/content/blog/` by
+        `scripts/sync-discussions.mjs`. Keep the `yaml` fence first and fill in
+        every field: it is the post's frontmatter, so the build validates it
+        against the blog schema in `src/content.config.ts`.
+
+        Covers live in the repo, not here. Leave the post coverless or add
+        `coverImage` to the synced file afterwards.
+  - type: textarea
+    id: content
+    attributes:
+      label: Post
+      value: |
+        ```yaml
+        title: ""
+        description: ""
+        date: YYYY-MM-DD
+        tags: []
+        draft: false
+        ```
+
+        ## First section
+
+        Opening paragraph.
+    validations:
+      required: true
