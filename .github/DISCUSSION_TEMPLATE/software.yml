@@ -1,0 +1,57 @@
+# Template for the Software category. The filename must stay equal to the
+# category slug, and this file only takes effect from the default branch.
+#
+# Deliberately no `labels:` key: the sync's publish gate is a label applied by
+# hand when a post is ready, so a template that pre-applied it would publish
+# every draft on creation.
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The block below is mirrored into `src/content/projects/` by
+        `scripts/sync-discussions.mjs`. Keep the `yaml` fence first: it is the
+        project's frontmatter, validated against the schema in
+        `src/content.config.ts` at build time.
+
+        Fill what applies and delete the rest — every element here is optional.
+        `status` and `stack` are joined into one descriptor line, so "Archived"
+        and "Python / PySide6" read as a phrase. There is no `genre` line: the
+        palette is shared, and a tool simply does not fill that element.
+
+        Two things are not here on purpose. `category` is stamped from this
+        discussion's category, so it cannot be misspelled. Covers are committed
+        under `src/assets/projects/`, because Astro has to hash and crop them.
+
+        Images pasted into the body are downloaded into the repo on sync. Video
+        is not: host it and use `::video{href="..."}` in the body.
+  - type: textarea
+    id: content
+    attributes:
+      label: Project
+      value: |
+        ```yaml
+        title: ""
+        description: ""
+        date: YYYY-MM-DD
+        status: ""
+        stack: ""
+        role: ""
+        timeline: ""
+        tags: []
+        links:
+          - kind: "repo"
+            label: "Source"
+            href: ""
+        featured: false
+        draft: false
+        ```
+
+        ## Overview
+
+        What it is and what you did on it.
+
+        ## Implementation
+
+        The work worth showing.
+    validations:
+      required: true
