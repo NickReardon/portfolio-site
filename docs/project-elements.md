@@ -129,6 +129,14 @@ data placed at a position:
 ::video{href="https://youtube.com/watch?v=xxxxxxxxxxx" label="Systems breakdown"}
 ```
 
+Video embeds, and is always external. `href` points at a real video host and the
+directive renders a player; a video file is never committed, because git is the
+wrong store for a 100MB binary and Astro has no video pipeline to optimize one
+with. The cost is that GitHub supports no external video embeds of its own, so
+this directive has no preview where it is authored — a discussion renders the
+line as literal text. A video uploaded to the discussion instead does preview
+there, but yields a CDN URL, which section 7 rejects.
+
 A directive and not a fenced code block, for one reason: a fence opts its
 contents out of Markdown parsing entirely, so image paths inside it stay dumb
 strings — no optimization, and a typo'd filename ships broken instead of failing
@@ -200,6 +208,28 @@ edit. The merge rule: **the discussion owns prose and metadata, the repo owns
 assets.** Asset elements are carried over from the existing file, or absent if
 there is none.
 
+### Materializing attachments
+
+GitHub uploads a pasted or dropped image immediately and rewrites the body to an
+anonymized `*.githubusercontent.com` URL, which the API hands back verbatim in
+`body`. Copying that URL into a page would hotlink it: invisible to Astro, so no
+hash, no WebP, no `srcset`, and no build error when it stops resolving. Image
+URLs are proxied through Camo as well, and the docs state no lifetime for either
+kind.
+
+So the sync downloads them. For each supported image URL in a body — `.png`,
+`.gif`, `.jpg`, `.jpeg`, `.svg`, under GitHub's 10MB ceiling — write the bytes to
+`src/assets/projects/<slug>/<content-hash>.<ext>`, rewrite the reference to a
+relative path, and commit the binary beside the markdown. Hashing the content
+rather than naming by upload keeps a re-edited discussion from churning the tree.
+
+Two rules on top:
+
+- **Never inline a materialized SVG.** GitHub accepts SVG uploads and an SVG can
+  carry script. Reference it as an `img` source instead.
+- **Videos are not materialized.** Use the `video` directive and a real host, per
+  section 4.
+
 ## 8. Parse Contract
 
 A discussion becomes a page only when every step passes, in order:
@@ -214,6 +244,9 @@ A discussion becomes a page only when every step passes, in order:
    `.strict()`.
 5. Asset elements from step 4 are discarded and merged from the existing file per
    section 7.
+6. Image attachments in the body are materialized and their references rewritten,
+   per section 7. A video attachment is reported rather than committed, and the
+   post does not sync: a reference that cannot be made repo-owned never ships.
 
 Any failing step yields no page. The gate fails closed: a discussion that is not
 positively recognised as publishable does not ship.

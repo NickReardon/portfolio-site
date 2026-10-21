@@ -82,7 +82,8 @@ rather than the level, which keeps room transitions from reloading actor state
 that the run already owns.
 
 A leaf directive carries attributes and no content, for an element that is pure
-data placed at a position:
+data placed at a position. Video is always embedded from a real host rather than
+committed, so `href` is the only way it arrives:
 
 ::video{href="https://youtube.com/watch?v=xxxxxxxxxxx" label="Travel and persistence breakdown"}
 
@@ -102,6 +103,13 @@ because it is all plain Markdown text. A discussion renders `:::gallery` as a
 literal line and still shows the two images beneath it. That degradation is the
 reason these are directives and not fenced code blocks: a fence would opt its
 contents out of Markdown entirely, taking the image processing with it.
+
+Two caveats where the authoring surface cannot preview what the site renders.
+GitHub supports no external video embeds, so `::video` shows as a literal line
+there and only plays once built. And an image pasted into a discussion arrives
+as a `githubusercontent.com` URL, which the sync downloads into
+`src/assets/projects/` and rewrites to a relative path, because a remote URL is
+invisible to the build's image pipeline.
 
 ## Key Takeaways
 
