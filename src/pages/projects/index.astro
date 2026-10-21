@@ -2,17 +2,28 @@
 import { getCollection } from "astro:content";
 import ProjectCard from "../../components/ProjectCard.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { projectCategories } from "../../site.config";
 import { isVisibleContent, sortProjects } from "../../utils/content";
 
 const projects = (await getCollection("projects"))
   .filter(isVisibleContent)
   .sort(sortProjects);
-const playableProjects = projects.filter(
-  (project) => project.data.projectType === "game",
-);
-const systemProjects = projects.filter(
-  (project) => project.data.projectType !== "game",
-);
+const listed = new Set(projectCategories.map((category) => category.name));
+/* Listed categories in configured order, then any category a project authored
+   for itself, so an unconfigured group reads plainly instead of vanishing. */
+const groups = [
+  ...projectCategories,
+  ...[...new Set(projects.map((project) => project.data.category))]
+    .filter((name) => !listed.has(name))
+    .sort()
+    .map((name) => ({ name, eyebrow: "Projects", heading: name, link: null })),
+]
+  .map((group) => ({
+    ...group,
+    id: `projects-${group.name.toLowerCase().replace(/[^a-z0-9]+/gu, "-")}`,
+    entries: projects.filter((project) => project.data.category === group.name),
+  }))
+  .filter((group) => group.entries.length > 0);
 ---
 
 <BaseLayout
@@ -35,52 +46,35 @@ const systemProjects = projects.filter(
       {
         projects.length > 0 ? (
           <div class="project-groups">
-            {playableProjects.length > 0 && (
-              <section aria-labelledby="playable-projects">
+            {groups.map((group, groupIndex) => (
+              <section aria-labelledby={group.id}>
                 <div class="section-heading">
                   <div>
-                    <p class="eyebrow">Playable Work</p>
-                    <h2 id="playable-projects">Itch.io projects</h2>
+                    <p class="eyebrow">{group.eyebrow}</p>
+                    <h2 id={group.id}>{group.heading}</h2>
                   </div>
-                  <a class="text-link" href="https://thingofnightmare.itch.io/">
-                    Itch profile
-                  </a>
+                  {group.link && (
+                    <a class="text-link" href={group.link.href}>
+                      {group.link.label}
+                    </a>
+                  )}
                 </div>
                 <div class="card-grid">
-                  {playableProjects.map((project, index) => (
-                    <ProjectCard
-                      project={project}
-                      imageLoading={index < 3 ? "eager" : "lazy"}
-                      imageFetchPriority={index === 0 ? "high" : "auto"}
-                    />
-                  ))}
-                </div>
-              </section>
-            )}
-
-            {systemProjects.length > 0 && (
-              <section aria-labelledby="systems-projects">
-                <div class="section-heading">
-                  <div>
-                    <p class="eyebrow">Systems Work</p>
-                    <h2 id="systems-projects">Technical case studies</h2>
-                  </div>
-                </div>
-                <div class="card-grid">
-                  {systemProjects.map((project, index) => (
+                  {group.entries.map((project, index) => (
                     <ProjectCard
                       project={project}
                       imageLoading={index < 3 ? "eager" : "lazy"}
                       imageFetchPriority={
-                        playableProjects.length === 0 && index === 0
-                          ? "high"
-                          : "auto"
+                        /* Only the first card of the first rendered group is
+                           above the fold, whichever group that turns out to
+                           be. */
+                        groupIndex === 0 && index === 0 ? "high" : "auto"
                       }
                     />
                   ))}
                 </div>
               </section>
-            )}
+            ))}
           </div>
         ) : (
           <p class="empty-state">More project writeups are coming soon.</p>

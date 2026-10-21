@@ -2,12 +2,13 @@
 title: "Tethered"
 description: "Unreal Engine 5 action rogue-lite prototype focused on modular combat, encounter, travel, and persistence systems."
 date: 2026-01-25
+category: "Games"
+status: "Unreleased"
+stack: "Unreal Engine 5.8"
+genre: "action rogue-lite"
+role: "Lead System Designer and Gameplay Engineer"
 timeline: "September 2025 - present"
 tags: ["Unreal Engine", "C++", "GAS", "Lyra", "Gameplay Systems"]
-projectType: "system"
-role: "Lead System Designer and Gameplay Engineer"
-status: "In development"
-engine: "Unreal Engine 5.8"
 coverImage: "../../assets/projects/tethered-placeholder.svg"
 coverAlt: "Diagram showing Tethered gameplay system flow from input to gameplay tags, combos, attacks, and feedback."
 featured: true

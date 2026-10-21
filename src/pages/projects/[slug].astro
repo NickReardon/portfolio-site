@@ -26,19 +26,28 @@ export async function getStaticPaths() {
 
 const { project } = Astro.props;
 const { Content } = await render(project);
-const links = [
-  { href: project.data.githubUrl, label: "GitHub", Icon: Code },
-  { href: project.data.videoUrl, label: "Video", Icon: Play },
-  {
-    href: project.data.externalUrl,
-    label: project.data.externalLabel ?? "Live Site",
-    Icon: ExternalLink,
-  },
-].filter((link) => Boolean(link.href));
+/* `kind` only chooses an icon, so an unrecognised or absent one falls back to
+ * the generic mark instead of failing: a link to somewhere this map has never
+ * heard of is still a link. */
+const linkIcons: Record<string, typeof ExternalLink> = {
+  play: Play,
+  video: Play,
+  repo: Code,
+  docs: Code,
+  site: ExternalLink,
+};
+const links = project.data.links.map((link) => ({
+  ...link,
+  Icon: linkIcons[link.kind ?? ""] ?? ExternalLink,
+}));
+/* The card joins these into one line; here they stay labelled rows, because a
+ * detail page has the room and "Godot" is only obviously a stack next to the
+ * word. */
 const details = [
   { label: "Role", value: project.data.role },
   { label: "Status", value: project.data.status },
-  { label: "Engine", value: project.data.engine },
+  { label: "Stack", value: project.data.stack },
+  { label: "Genre", value: project.data.genre },
 ].filter((detail) => Boolean(detail.value));
 const timeline = project.data.timeline ?? formatDate(project.data.date);
 const cover = project.data.coverImage
@@ -164,8 +173,8 @@ const cover = project.data.coverImage
     border: 1px solid var(--line-soft);
     border-radius: 0.5rem;
     box-shadow:
-      0 1px 3px 0 rgb(0 0 0 / 0.1),
-      0 1px 2px -1px rgb(0 0 0 / 0.1);
+      0 1px 3px 0 rgb(var(--shadow-ink) / 0.1),
+      0 1px 2px -1px rgb(var(--shadow-ink) / 0.1);
     object-fit: cover;
     width: 100%;
   }

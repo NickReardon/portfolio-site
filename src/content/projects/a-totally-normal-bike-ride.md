@@ -2,17 +2,19 @@
 title: "A Totally Normal Bike Ride"
 description: "A Godot physics prototype about balancing a unicycle across telephone wires, built for a three-day game jam."
 date: 2025-01-24
+category: "Games"
+status: "Prototype"
+stack: "Godot"
+role: "Gameplay programmer"
 timeline: "Three-day game jam"
 tags: ["Game Jam", "Godot", "Physics", "Prototype"]
-projectType: "game"
-role: "Gameplay programmer"
-status: "Prototype"
-engine: "Godot"
+links:
+  - kind: "play"
+    label: "Play on itch.io"
+    href: "https://bcthunder.itch.io/a-totally-normal-bike-ride"
 coverImage: "../../assets/projects/a-totally-normal-bike-ride.png"
 coverAlt: "A Totally Normal Bike Ride cover art."
 featured: true
-externalUrl: "https://bcthunder.itch.io/a-totally-normal-bike-ride"
-externalLabel: "Play on itch.io"
 draft: false
 ---
 
