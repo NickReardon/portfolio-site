@@ -13,10 +13,14 @@ workflow or deployment, and verified before handoff.
 - Use the existing Astro, scoped style, TypeScript, and content collection
   patterns before adding new abstractions or dependencies. Shared tokens and
   base styles live in `src/styles/global.css`; component styles stay scoped.
+- Never write a colour literal in a component. Every colour comes from a token
+  in `src/styles/global.css`, and every colour token is a `light-dark()` pair,
+  so adding one means choosing both themes. Keep ink at 4.5:1 or better against
+  the band it sits on, in both themes.
 - Never commit secrets, local credential files, build output, audit output, or
   generated caches.
-- For user-facing visual changes, check desktop and mobile layouts before
-  finishing.
+- For user-facing visual changes, check desktop and mobile layouts in both
+  light and dark themes before finishing.
 - Update documentation in the same change when commands, deployment behavior,
   branching, content structure, or recurring workflows change.
 
