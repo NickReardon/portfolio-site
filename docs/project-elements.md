@@ -3,9 +3,9 @@
 **Status: implemented.** The schema in `src/content.config.ts`, the body-element
 plugin in `src/plugins/remark-elements.mjs`, the index grouping in
 `src/site.config.ts` and the sync in `scripts/sync-discussions.mjs` all follow
-this document. What is not yet wired is the workflow that runs the sync, and the
-`Games` and `Software` discussion categories it reads from, which have to be
-created in the repository's settings.
+this document. The sync workflow opens reviewed content PRs to staging. The
+repository categories, label, and Actions permissions require setup before
+activation; see [discussion-publishing.md](discussion-publishing.md).
 
 A complete file written against this model lives in
 `docs/examples/project-palette.md`.
@@ -313,7 +313,7 @@ as the free text it already contained, add `genre` to the games, and fold
 projects index stops filtering on `projectType` twice and loops over
 `projectCategories` instead.
 
-Two prerequisites that are not schema work: `remark-directive` has to be added
-and configured for section 4, and the two discussion templates under
-`.github/DISCUSSION_TEMPLATE/` still prefill `projectType` and predate section
-6, so they need splitting per sub-category.
+`remark-directive` is configured for section 4, and the discussion templates
+are split into Blog, Games, and Software. The event workflow and templates take
+effect from the default branch; complete the repository setup in
+[discussion-publishing.md](discussion-publishing.md) before activating sync.

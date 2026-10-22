@@ -16,6 +16,7 @@
 import { createHash } from "node:crypto";
 import { mkdir, readdir, readFile, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { pathToFileURL } from "node:url";
 import YAML from "yaml";
 
 /* Discussion category name, as it appears in GitHub, mapped to where its posts
@@ -62,7 +63,12 @@ const REQUIRED = ["title", "description", "date", "tags"];
  * path that the current web UI inserts. */
 const ATTACHMENT_HOST =
   /^https:\/\/(?:[a-z0-9-]+\.githubusercontent\.com\/|github\.com\/user-attachments\/)/u;
-const IMAGE_EXTENSION = /\.(png|gif|jpe?g|svg)(?:$|[?#])/iu;
+const IMAGE_TYPES = new Map([
+  ["image/png", "png"],
+  ["image/gif", "gif"],
+  ["image/jpeg", "jpg"],
+  ["image/svg+xml", "svg"],
+]);
 const VIDEO_EXTENSION = /\.(mp4|mov|webm)(?:$|[?#])/iu;
 /* GitHub's own ceiling for an image upload. A larger file did not come from the
  * attachment flow, so refuse it rather than commit it. */
@@ -73,6 +79,7 @@ const API = "https://api.github.com/graphql";
 const QUERY = `
 query ($owner: String!, $repo: String!, $cursor: String) {
   repository(owner: $owner, name: $repo) {
+    discussionCategories(first: 100) { nodes { name } }
     discussions(first: 50, after: $cursor) {
       pageInfo { hasNextPage endCursor }
       nodes {
@@ -81,7 +88,7 @@ query ($owner: String!, $repo: String!, $cursor: String) {
         body
         createdAt
         category { name }
-        labels(first: 20) { nodes { name } }
+        labels(first: 100) { nodes { name } pageInfo { hasNextPage } }
       }
     }
   }
@@ -89,7 +96,7 @@ query ($owner: String!, $repo: String!, $cursor: String) {
 
 /* Paginated rather than first:50-and-hope. A truncated response would read as
  * "these discussions no longer exist" and delete live posts. */
-async function fetchDiscussions(owner, repo, token) {
+export async function fetchDiscussions(owner, repo, token) {
   const all = [];
   let cursor = null;
 
@@ -116,7 +123,29 @@ async function fetchDiscussions(owner, repo, token) {
       throw new Error(payload.errors.map((error) => error.message).join("; "));
     }
 
-    const page = payload.data.repository.discussions;
+    const repository = payload.data?.repository;
+    if (!repository) throw new Error("GitHub returned no repository.");
+    const categories = new Set(
+      repository.discussionCategories.nodes.map(({ name }) => name),
+    );
+    const missing = Object.keys(COLLECTIONS).filter(
+      (name) => !categories.has(name),
+    );
+    if (missing.length)
+      throw new Error(`Missing discussion categories: ${missing.join(", ")}`);
+    const page = repository.discussions;
+    if (page.pageInfo.hasNextPage && !page.pageInfo.endCursor) {
+      throw new Error(
+        "Discussion pagination was incomplete; refusing to sync.",
+      );
+    }
+    if (
+      page.nodes.some((discussion) => discussion.labels.pageInfo.hasNextPage)
+    ) {
+      throw new Error(
+        "Discussion labels were truncated; refusing to unpublish content.",
+      );
+    }
     all.push(...page.nodes);
     cursor = page.pageInfo.hasNextPage ? page.pageInfo.endCursor : null;
   } while (cursor);
@@ -137,16 +166,21 @@ export function slugify(title) {
  * its file is first written, and read back out of the file on every later run.
  * Retitling a discussion therefore cannot move its page: the title is only
  * consulted for discussions this collection has never seen. */
-export function resolveSlug(number, title, existing) {
+export function resolveSlug(number, title, existing, reserved = new Set()) {
   const known = existing.get(number);
   if (known) {
     return known;
   }
 
   const base = slugify(title) || `discussion-${number}`;
-  const taken = new Set(existing.values());
-
-  return taken.has(base) ? `${base}-${number}` : base;
+  const taken = new Set([...existing.values(), ...reserved]);
+  let candidate = base;
+  let suffix = 0;
+  while (taken.has(candidate)) {
+    candidate = `${base}-${number}${suffix ? `-${suffix}` : ""}`;
+    suffix += 1;
+  }
+  return candidate;
 }
 
 /* Only files carrying a `discussion:` field are considered synced. Hand-written
@@ -156,9 +190,15 @@ export function readSyncedSlugs(files) {
   const synced = new Map();
 
   for (const { name, text } of files) {
-    const match = /^---\r?\n[\s\S]*?^discussion:\s*(\d+)\s*$/mu.exec(text);
-    if (match) {
-      synced.set(Number(match[1]), name.replace(/\.mdx?$/u, ""));
+    const front = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/u.exec(text);
+    const parsed = front ? YAML.parse(front[1]) : null;
+    if (Number.isSafeInteger(parsed?.discussion) && parsed.discussion > 0) {
+      if (synced.has(parsed.discussion)) {
+        throw new Error(
+          `Duplicate discussion ownership: #${parsed.discussion}`,
+        );
+      }
+      synced.set(parsed.discussion, name.replace(/\.mdx?$/u, ""));
     }
   }
 
@@ -175,7 +215,7 @@ export function serializeFrontmatter(data) {
 
       // JSON string syntax is valid YAML, so this escapes quotes and colons for
       // free rather than hand-rolling a quoting rule that gets it subtly wrong.
-      return `${key}: ${typeof value === "string" ? JSON.stringify(value) : value}`;
+      return `${key}: ${typeof value === "object" || typeof value === "string" ? JSON.stringify(value) : value}`;
     });
 
   return `---\n${lines.join("\n")}\n---\n`;
@@ -321,17 +361,29 @@ async function materialize(body, { slug, assets }) {
       );
     }
 
-    const bytes = Buffer.from(await response.arrayBuffer());
-
-    if (bytes.byteLength > MAX_ASSET_BYTES) {
+    const type = response.headers
+      .get("content-type")
+      ?.split(";")[0]
+      .trim()
+      .toLowerCase();
+    const extension = IMAGE_TYPES.get(type);
+    if (!extension) {
       throw new Error(
-        `attachment ${attachment.url} is ${bytes.byteLength} bytes, over the ${MAX_ASSET_BYTES} ceiling`,
+        `attachment ${attachment.url} is not a supported image (${type})`,
       );
     }
-
-    const extension = (IMAGE_EXTENSION.exec(attachment.url)?.[1] ?? "png")
-      .toLowerCase()
-      .replace("jpeg", "jpg");
+    const chunks = [];
+    let size = 0;
+    for await (const chunk of response.body) {
+      size += chunk.byteLength;
+      if (size > MAX_ASSET_BYTES) {
+        throw new Error(
+          `attachment ${attachment.url} exceeds the ${MAX_ASSET_BYTES} byte ceiling`,
+        );
+      }
+      chunks.push(chunk);
+    }
+    const bytes = Buffer.concat(chunks);
     // Named by content, so re-editing a discussion does not churn the tree with
     // a second copy of an unchanged image.
     const hash = createHash("sha256").update(bytes).digest("hex").slice(0, 16);
@@ -361,6 +413,10 @@ async function main() {
 
   const [owner, repo] = repository.split("/");
   const discussions = await fetchDiscussions(owner, repo, token);
+  return syncDiscussions(discussions);
+}
+
+export async function syncDiscussions(discussions) {
   let written = 0;
   let removed = 0;
   let assets = 0;
@@ -385,6 +441,8 @@ async function main() {
     );
 
     const existing = readSyncedSlugs(files);
+    const reserved = new Set(names.map((name) => name.replace(/\.mdx?$/u, "")));
+    const original = new Map(existing);
     const live = new Set();
 
     for (const [category, collection] of categories) {
@@ -398,8 +456,16 @@ async function main() {
           continue;
         }
 
-        const slug = resolveSlug(discussion.number, discussion.title, existing);
-        const current = files.find((file) => file.name === `${slug}.md`);
+        const slug = resolveSlug(
+          discussion.number,
+          discussion.title,
+          existing,
+          reserved,
+        );
+        const current = files.find(
+          (file) => file.name.replace(/\.mdx?$/u, "") === slug,
+        );
+        const filename = current?.name ?? `${slug}.md`;
         const split = splitFence(discussion.body);
 
         let prose;
@@ -414,11 +480,15 @@ async function main() {
         } catch (error) {
           // One unusable attachment rejects one post, and says why, rather than
           // failing the whole run or shipping a broken reference.
+          // Network failures must not delete the previously published page.
+          if (existing.has(discussion.number)) live.add(slug);
           skipped.push(`#${discussion.number}: ${error.message}`);
           continue;
         }
 
         live.add(slug);
+        existing.set(discussion.number, slug);
+        reserved.add(slug);
 
         const next = `${serializeFrontmatter({
           ...frontmatter,
@@ -426,16 +496,22 @@ async function main() {
         })}\n${prose}\n`;
 
         if (current?.text !== next) {
-          await writeFile(path.join(dir, `${slug}.md`), next, "utf8");
+          await writeFile(path.join(dir, filename), next, "utf8");
           written += 1;
         }
       }
     }
 
     // A synced file whose discussion is gone, unpublished, or recategorised.
-    for (const slug of existing.values()) {
+    for (const slug of original.values()) {
       if (!live.has(slug)) {
-        await unlink(path.join(dir, `${slug}.md`));
+        await unlink(
+          path.join(
+            dir,
+            files.find((file) => file.name.replace(/\.mdx?$/u, "") === slug)
+              .name,
+          ),
+        );
         removed += 1;
       }
     }
@@ -448,6 +524,11 @@ async function main() {
   for (const reason of skipped) {
     console.log(`Skipped ${reason}`);
   }
+  if (skipped.length)
+    throw new Error(
+      "Attachment sync failed; no publishing PR should be created.",
+    );
+  return { written, removed, assets };
 }
 
 async function selfCheck() {
@@ -554,8 +635,13 @@ async function selfCheck() {
   console.log("sync-discussions self-check passed.");
 }
 
-if (process.argv.includes("--self-check")) {
-  await selfCheck();
-} else {
-  await main();
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href
+) {
+  if (process.argv.includes("--self-check")) {
+    await selfCheck();
+  } else {
+    await main();
+  }
 }

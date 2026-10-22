@@ -28,7 +28,9 @@
     "audit:staging": "npm run audit:staging:lighthouse && npm run audit:staging:pa11y",
     "audit:staging:lighthouse": "node scripts/audit-pages.mjs lighthouse https://staging.nick-reardon.com",
     "audit:staging:pa11y": "node scripts/audit-pages.mjs pa11y https://staging.nick-reardon.com",
-    "astro": "astro"
+    "astro": "astro",
+    "discussions:sync": "node scripts/sync-discussions.mjs",
+    "discussions:validate": "node scripts/sync-discussions.mjs --self-check && node scripts/validate-discussions.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.3.3",
