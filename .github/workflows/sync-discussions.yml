@@ -60,11 +60,13 @@ jobs:
           base: staging
           branch: content/sync-discussions
           delete-branch: true
+          # The content and asset roots rather than their four subdirectories:
+          # git add aborts on a pathspec that matches nothing, and an asset
+          # directory only exists once a post has attached something. Listing
+          # src/assets/blog failed every sync until the first blog attachment.
           add-paths: |
-            src/content/blog
-            src/content/projects
-            src/assets/blog
-            src/assets/projects
+            src/content
+            src/assets
           commit-message: "content(discussions): Sync published discussions"
           title: "content(discussions): Sync published discussions"
           body: |
