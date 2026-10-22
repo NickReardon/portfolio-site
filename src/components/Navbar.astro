@@ -1,4 +1,5 @@
 ---
+import { Moon, Sun } from "@lucide/astro";
 import { navigation, site } from "../site.config";
 
 const currentPath = Astro.url.pathname;
@@ -29,22 +30,43 @@ const isCurrent = (href: string) =>
         ))
       }
     </div>
+
+    <button type="button" class="theme-toggle" data-theme-toggle>
+      {/* The icon names the theme the click moves to, matching the label. */}
+      <Moon class="theme-icon theme-to-dark" aria-hidden="true" />
+      <Sun class="theme-icon theme-to-light" aria-hidden="true" />
+    </button>
   </nav>
 </header>
 
 <style>
   .masthead {
     border-bottom: 1px solid var(--line-soft);
-    background: rgb(255 255 255 / 0.9);
+    background: var(--surface-veil);
     backdrop-filter: blur(8px);
   }
 
+  /* Brand and toggle share the top row, links take the one under it. The
+     toggle is placed rather than left to flow: inside .nav-links it was a
+     sixth item in an already-full wrap row, so it dropped to a line alone. */
   .masthead-inner {
     display: grid;
     gap: 1rem;
+    grid-template-columns: minmax(0, 1fr) auto;
     margin-inline: auto;
     max-width: var(--shell-max);
     padding: 1rem var(--shell-pad);
+  }
+
+  .nav-links {
+    grid-column: 1 / -1;
+  }
+
+  .theme-toggle {
+    align-self: center;
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
   }
 
   .brand {
@@ -65,7 +87,7 @@ const isCurrent = (href: string) =>
 
   .brand-role {
     display: block;
-    color: var(--ink-subtle);
+    color: var(--ink-muted);
     font-size: 0.875rem;
     line-height: 1.25rem;
   }
@@ -105,10 +127,61 @@ const isCurrent = (href: string) =>
     color: var(--surface);
   }
 
+  /* Hidden until the inline head script sets data-theme: without JavaScript
+     the colours still follow the OS, but nothing can act on a click. */
+  .theme-toggle {
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 0.45rem;
+    color: var(--ink-body);
+    cursor: pointer;
+    display: none;
+    padding: 0.5rem;
+    transition:
+      background 160ms ease,
+      border-color 160ms ease,
+      color 160ms ease;
+  }
+
+  :root[data-theme] .theme-toggle {
+    display: inline-flex;
+  }
+
+  .theme-toggle:hover {
+    background: var(--surface-muted);
+    border-color: var(--shade);
+    color: var(--ink);
+  }
+
+  .theme-icon {
+    height: 1.125rem;
+    width: 1.125rem;
+  }
+
+  .theme-to-light {
+    display: none;
+  }
+
+  :root[data-theme="dark"] .theme-to-dark {
+    display: none;
+  }
+
+  :root[data-theme="dark"] .theme-to-light {
+    display: block;
+  }
+
   @media (min-width: 40rem) {
     .masthead-inner {
       align-items: center;
-      grid-template-columns: minmax(0, 1fr) auto;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+    }
+
+    .nav-links {
+      grid-column: 2;
+    }
+
+    .theme-toggle {
+      grid-column: 3;
     }
   }
 
@@ -119,3 +192,34 @@ const isCurrent = (href: string) =>
     }
   }
 </style>
+
+<script>
+  const root = document.documentElement;
+  const toggle = document.querySelector<HTMLButtonElement>(
+    "[data-theme-toggle]",
+  );
+
+  if (toggle) {
+    const relabel = () => {
+      toggle.setAttribute(
+        "aria-label",
+        root.dataset.theme === "dark"
+          ? "Switch to light theme"
+          : "Switch to dark theme",
+      );
+    };
+
+    relabel();
+
+    toggle.addEventListener("click", () => {
+      const next = root.dataset.theme === "dark" ? "light" : "dark";
+      root.dataset.theme = next;
+      try {
+        localStorage.setItem("theme", next);
+      } catch {
+        /* Private modes can refuse storage; the theme still flips for this page. */
+      }
+      relabel();
+    });
+  }
+</script>

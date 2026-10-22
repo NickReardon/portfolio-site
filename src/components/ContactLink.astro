@@ -34,7 +34,8 @@ const { href, label, detail, icon: Icon } = Astro.props;
 
   .contact-link:hover {
     border-color: var(--accent);
-    box-shadow: 0 14px 35px rgb(28 25 23 / 0.08);
+    box-shadow: 0 14px 35px
+      color-mix(in srgb, var(--shadow-ink) 8%, transparent);
     transform: translateY(-1px);
   }
 

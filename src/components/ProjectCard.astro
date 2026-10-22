@@ -130,8 +130,8 @@ const COVER_SIZES = "(min-width: 60rem) 324px, (min-width: 40rem) 46vw, 100vw";
   .card-placeholder {
     align-items: end;
     background:
-      linear-gradient(135deg, rgb(15 118 110 / 0.18), transparent 45%),
-      linear-gradient(45deg, rgb(208 79 58 / 0.24), transparent 55%),
+      linear-gradient(135deg, var(--cover-accent), transparent 45%),
+      linear-gradient(45deg, var(--cover-highlight), transparent 55%),
       var(--shade);
     display: flex;
     height: 100%;
@@ -189,7 +189,7 @@ const COVER_SIZES = "(min-width: 60rem) 324px, (min-width: 40rem) 46vw, 100vw";
   }
 
   .card-meta {
-    color: var(--ink-subtle);
+    color: var(--ink-muted);
     display: flex;
     flex-wrap: wrap;
     font-size: 0.875rem;
