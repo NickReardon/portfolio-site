@@ -6,7 +6,7 @@ Markdown, GitHub, and Cloudflare Pages.
 
 ## Requirements
 
-- Node.js `>=22.12.0` and npm. `.nvmrc` pins the major version for CI and for
+- Node.js `>=22.22.0` and npm. `.nvmrc` pins the major version for CI and for
   the Cloudflare Pages build image.
 - Python with `requirements.txt` installed; the privacy check reads PDFs.
 - 1Password CLI only for local Cloudflare deploy commands.
@@ -89,6 +89,28 @@ only gate.
 ├── astro.config.mjs
 └── package.json
 ```
+
+## Theming
+
+The site ships light and dark. Every colour is a role token in
+`src/styles/global.css`, defined once as a `light-dark()` pair, so a theme is a
+value swap rather than a second stylesheet:
+
+```css
+--ink-body: light-dark(#44403c, #c8c2bb);
+```
+
+Which half applies follows the computed `color-scheme`. The default is
+`light dark`, so with no JavaScript the page follows the operating system. The
+header toggle pins a choice by setting `data-theme` on `<html>` and storing it
+in `localStorage`; an inline script in `BaseLayout.astro` reapplies it before
+first paint so a pinned theme never flashes the other one.
+
+Adding a colour means adding a token with both values, not a literal in a
+component. Keep ink at 4.5:1 or better against the band it sits on.
+
+The palette requires `light-dark()` support (Chrome 123+, Safari 17.5+,
+Firefox 120+). Project cover artwork keeps its authored colours in both themes.
 
 ## Content
 

@@ -173,8 +173,8 @@ const cover = project.data.coverImage
     border: 1px solid var(--line-soft);
     border-radius: 0.5rem;
     box-shadow:
-      0 1px 3px 0 rgb(var(--shadow-ink) / 0.1),
-      0 1px 2px -1px rgb(var(--shadow-ink) / 0.1);
+      0 1px 3px 0 color-mix(in srgb, var(--shadow-ink) 10%, transparent),
+      0 1px 2px -1px color-mix(in srgb, var(--shadow-ink) 10%, transparent);
     object-fit: cover;
     width: 100%;
   }
