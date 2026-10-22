@@ -2,17 +2,20 @@
 title: "Last Oasis"
 description: "A browser-playable Godot platformer with a state-machine character controller, traversal abilities, and jam-focused authoring tools."
 date: 2025-01-25
+category: "Games"
+status: "Released"
+stack: "Godot"
+genre: "platformer"
+role: "Primary gameplay and tooling programmer"
 timeline: "2025 game jam"
 tags: ["Game Jam", "Godot", "Platformer", "Gameplay Tools"]
-projectType: "game"
-role: "Primary gameplay and tooling programmer"
-status: "Released"
-engine: "Godot"
+links:
+  - kind: "play"
+    label: "Play on itch.io"
+    href: "https://thingofnightmare.itch.io/last-oasis"
 coverImage: "../../assets/projects/last-oasis.png"
 coverAlt: "Last Oasis cover art."
 featured: true
-externalUrl: "https://thingofnightmare.itch.io/last-oasis"
-externalLabel: "Play on itch.io"
 draft: false
 ---
 

@@ -2,6 +2,9 @@
 import { execFileSync } from "node:child_process";
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
+import { unified } from "@astrojs/markdown-remark";
+import remarkDirective from "remark-directive";
+import { remarkElements } from "./src/plugins/remark-elements.mjs";
 
 // Cloudflare sets these on its own builds. A local Wrangler upload does not, so
 // fall back to the working tree's commit and branch: a hand-uploaded deployment
@@ -60,6 +63,18 @@ const siteUrl =
 export default defineConfig({
   site: siteUrl,
   integrations: [sitemap()],
+  // Astro 7 defaults to Sätteri, its Rust Markdown pipeline, which takes no
+  // remark plugins. Body elements need one: remark-directive extends the
+  // parser itself to read `:::name`, which a Rust parser cannot be handed. So
+  // this opts back into unified, whose feature set is otherwise the same.
+  //
+  // remarkDirective parses the syntax; remarkElements decides what each name
+  // renders as, and rejects names it does not know.
+  markdown: {
+    processor: unified({
+      remarkPlugins: [remarkDirective, remarkElements],
+    }),
+  },
   vite: {
     define: {
       "import.meta.env.CF_PAGES_COMMIT_SHA": JSON.stringify(commitSha ?? null),

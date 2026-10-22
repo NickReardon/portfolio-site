@@ -3,6 +3,8 @@ import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
 import { build, site } from "../site.config";
 import "../styles/global.css";
+// After global.css: the body elements style themselves with its tokens.
+import "../styles/elements.css";
 
 interface Props {
   title?: string;

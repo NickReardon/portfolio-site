@@ -132,6 +132,11 @@ Firefox 120+). Project cover artwork keeps its authored colours in both themes.
 
 Use lowercase kebab-case for content slugs and asset filenames.
 
+For authoring through GitHub Discussions and reviewing generated content PRs,
+see [discussion publishing](docs/discussion-publishing.md). The sync preserves
+handwritten pages and repo-owned covers; it requires repository setup and the
+workflow on `main` before discussion events can activate it.
+
 ### Resume PDFs
 
 Resume PDFs are placed by hand. Export whatever variants you want and drop them
