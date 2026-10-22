@@ -28,4 +28,8 @@ jobs:
 
       - run: npm run format:check
 
+      - run: npm run elements:validate
+
+      - run: npm run discussions:validate
+
       - run: npm run build

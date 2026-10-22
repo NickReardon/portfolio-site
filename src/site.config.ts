@@ -69,6 +69,28 @@ export const site = {
   linkedinUrl: "https://www.linkedin.com/in/nicholas-reardon/",
 };
 
+/* The projects index renders one subsection per category, in this order. A
+ * project whose category is not listed here still renders, in a group of its own
+ * after these, so a new category is visible on the page before it is configured
+ * rather than silently dropping its projects.
+ *
+ * Headings live here rather than being derived from the name because they are
+ * editorial: "Games" groups an unreleased Unreal project with browser jam
+ * builds, and only the heading can say so. */
+export const projectCategories = [
+  {
+    name: "Games",
+    eyebrow: "Game Work",
+    heading: "Games and prototypes",
+    link: { href: site.itchUrl, label: "Itch profile" },
+  },
+  {
+    name: "Software",
+    eyebrow: "Systems Work",
+    heading: "Tools and technical case studies",
+  },
+];
+
 export const navigation = [
   { href: "/", label: "Home" },
   { href: "/projects/", label: "Projects" },

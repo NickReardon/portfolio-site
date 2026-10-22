@@ -22,6 +22,19 @@ export function sortProjects(
   return b.data.date.valueOf() - a.data.date.valueOf();
 }
 
+/* `status`, `stack` and `genre` are one sentence split across three elements, so
+ * they render as one line and a project fills whichever apply: "Unreleased
+ * Unreal Engine 5.8 action rogue-lite", or just "Released Godot" from a project
+ * that never named a genre. Three separate spans put the burden of reading them
+ * as a phrase on the reader. */
+export function projectDescriptor(data: {
+  status?: string;
+  stack?: string;
+  genre?: string;
+}) {
+  return [data.status, data.stack, data.genre].filter(Boolean).join(" ");
+}
+
 export function sortNewestFirst<T extends { data: { date: Date } }>(
   a: T,
   b: T,

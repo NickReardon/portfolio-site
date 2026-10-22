@@ -1,0 +1,88 @@
+name: Sync discussions
+
+on:
+  discussion:
+    types: [created, edited, deleted, labeled, unlabeled, category_changed]
+  workflow_dispatch:
+
+concurrency:
+  group: sync-discussions
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  discussions: read
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      ASTRO_TELEMETRY_DISABLED: "1"
+      PUPPETEER_SKIP_DOWNLOAD: "true"
+      CF_PAGES_BRANCH: staging
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: staging
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: npm ci
+      - run: pip install -r requirements.txt
+      - run: npm run discussions:validate
+      - name: Materialize published discussions
+        run: npm run discussions:sync
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Format generated Markdown
+        run: npx prettier --write src/content/blog src/content/projects
+
+      - run: npm run format:check
+      - run: npm run elements:validate
+      - run: npm run build
+      - run: python scripts/privacy-check.py
+
+      - name: Open or update the publishing PR
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.CONTENT_SYNC_TOKEN || github.token }}
+          base: staging
+          branch: content/sync-discussions
+          delete-branch: true
+          add-paths: |
+            src/content/blog
+            src/content/projects
+            src/assets/blog
+            src/assets/projects
+          commit-message: "content(discussions): Sync published discussions"
+          title: "content(discussions): Sync published discussions"
+          body: |
+            ## Summary
+
+            Mirror discussions carrying the publish label into repository content.
+            Review additions, removals, attachments, and rendered content before merging.
+
+            ## Verification
+
+            Sync regression checks, element checks, formatting, the staging build,
+            and the privacy scan passed before this PR was updated.
+
+            ## Deployment Notes
+
+            Targets staging. Production promotion remains a separate PR.
+            Templates and event-triggered sync require this workflow on main.
+
+            ## Screenshots
+
+            Review visible content on staging before production promotion.

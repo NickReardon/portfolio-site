@@ -2,17 +2,20 @@
 title: "Alien Survivor"
 description: "A browser-playable Unity prototype with data-driven weapons, upgrades, enemy spawning, and runtime tuning hooks."
 date: 2024-01-25
+category: "Games"
+status: "On hold"
+stack: "Unity"
+genre: "shooter"
+role: "Solo developer"
 timeline: "Fall 2024 prototype"
 tags: ["Unity", "Shooter", "Data-Driven Design", "Action"]
-projectType: "game"
-role: "Solo developer"
-status: "On hold"
-engine: "Unity"
+links:
+  - kind: "play"
+    label: "Play on itch.io"
+    href: "https://thingofnightmare.itch.io/alien-survivor"
 coverImage: "../../assets/projects/alien-survivor.png"
 coverAlt: "Alien Survivor cover art."
 featured: true
-externalUrl: "https://thingofnightmare.itch.io/alien-survivor"
-externalLabel: "Play on itch.io"
 draft: false
 ---
 
