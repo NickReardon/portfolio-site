@@ -29,6 +29,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
+          # Full history: the staging fast-forward below needs the commits
+          # connecting staging to main locally. A shallow clone cannot
+          # demonstrate that ancestry and the push is rejected.
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
@@ -83,12 +87,13 @@ jobs:
           git rebase origin/main
           git push origin HEAD:main
 
-          # Keep the staging preview in step with production. This is a
-          # fast-forward whenever staging is an ancestor of the commit just
-          # pushed, which is the normal state between promotions. If staging
-          # carries unmerged work the push is not a fast-forward: that is not a
-          # publishing failure, and staging picks the content up at its next
-          # promotion, so the run continues.
-          if ! git push origin HEAD:staging; then
-            echo "::warning::staging has diverged from main; it did not receive this content. It will pick it up at the next promotion."
+          # Keep the staging preview in step with production. Asking about
+          # ancestry directly says why staging is or is not getting this
+          # content; a bare push failure cannot distinguish unmerged work on
+          # staging from a transport problem.
+          git fetch origin staging
+          if git merge-base --is-ancestor origin/staging HEAD; then
+            git push origin HEAD:staging
+          else
+            echo "::warning::staging carries commits that are not on main, so it did not receive this content. It will pick it up at the next promotion."
           fi
