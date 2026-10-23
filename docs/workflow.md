@@ -201,9 +201,10 @@ Configure a branch protection rule or ruleset for `main` with:
   push is rejected without it. The bypass is scoped to that bot; every human
   path to `main` still goes through a pull request and the Production Gate.
 
-Do not require status checks on `staging`. A required check there blocks nothing
-useful and has previously stranded automation that cannot trigger a check run of
-its own.
+`staging` needs the same bypass actor, because the same job fast-forwards
+`staging` to the commit it just pushed to `main`. Do not require status checks on
+`staging`: a required check there blocks nothing useful and has previously
+stranded automation that cannot trigger a check run of its own.
 
 Cloudflare Pages should also keep `main` as the production branch and `staging`
 as the long-lived preview branch with `staging.nick-reardon.com` attached to the

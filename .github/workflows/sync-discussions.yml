@@ -82,3 +82,13 @@ jobs:
           git fetch origin main
           git rebase origin/main
           git push origin HEAD:main
+
+          # Keep the staging preview in step with production. This is a
+          # fast-forward whenever staging is an ancestor of the commit just
+          # pushed, which is the normal state between promotions. If staging
+          # carries unmerged work the push is not a fast-forward: that is not a
+          # publishing failure, and staging picks the content up at its next
+          # promotion, so the run continues.
+          if ! git push origin HEAD:staging; then
+            echo "::warning::staging has diverged from main; it did not receive this content. It will pick it up at the next promotion."
+          fi

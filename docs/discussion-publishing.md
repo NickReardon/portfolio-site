@@ -18,8 +18,9 @@ discussion format, rather than a poll. The category templates live under
 Create the `publish` label if it does not exist. Apply it only to material ready
 for review. It is deliberately absent from the template defaults.
 
-The sync job needs contents write and discussions read. It pushes to `main`, so
-`main`'s branch protection must list the GitHub Actions bot as a bypass actor.
+The sync job needs contents write and discussions read. It pushes to `main` and
+then fast-forwards `staging` to match, so the branch protection on both must list
+the GitHub Actions bot as a bypass actor.
 Everything else about that protection stays as it is: humans still reach `main`
 only through a pull request carrying `Production Gate / Staging deployment is
 ready`. Without the bypass the job validates, commits, and then fails on a
@@ -50,7 +51,10 @@ All three categories must exist; a missing category fails before any files chang
    category-change events run a full sync. Manual dispatch is also available.
 3. The workflow runs sync regression checks, formatting, element validation, an
    Astro production build, and the privacy scan. If all of them pass it commits
-   the result to `main`; if any fails, nothing is pushed.
+   the result to `main` and fast-forwards `staging` to match; if any fails,
+   nothing is pushed. When `staging` carries unmerged work the fast-forward is
+   not possible, so the run logs a warning and `staging` picks the content up at
+   its next promotion.
 4. Cloudflare Pages deploys `main`. Check the published page on desktop and
    mobile in both themes, and fix anything wrong by editing the discussion.
 
