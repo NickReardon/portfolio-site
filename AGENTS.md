@@ -62,6 +62,10 @@ Always perform branch promotion and merging through GitHub pull requests. Do not
 directly push one branch ref over another, including `staging` to `main`, unless
 the user explicitly overrides this rule for a specific operation.
 
+The one standing exception is the `Sync discussions` workflow, which commits
+published discussion content directly to `main`. That is the authoring loop, not
+branch promotion: see [discussion publishing](docs/discussion-publishing.md).
+
 Create local auxiliary worktrees inside the project under `.workspace/worktrees/`.
 Do not create new worktrees in user-global scratch directories such as
 `~/.codex/worktrees/` unless the user explicitly asks for that location.

@@ -196,6 +196,15 @@ Configure a branch protection rule or ruleset for `main` with:
 - Require branches to be up to date before merging when practical.
 - Restrict direct pushes to repository maintainers only when emergency hotfix
   access is needed; otherwise block direct pushes to `main`.
+- List the GitHub Actions bot as a bypass actor. `Sync discussions` publishes a
+  labelled discussion by pushing the validated content commit to `main`, and the
+  push is rejected without it. The bypass is scoped to that bot; every human
+  path to `main` still goes through a pull request and the Production Gate.
+
+`staging` needs the same bypass actor, because the same job fast-forwards
+`staging` to the commit it just pushed to `main`. Do not require status checks on
+`staging`: a required check there blocks nothing useful and has previously
+stranded automation that cannot trigger a check run of its own.
 
 Cloudflare Pages should also keep `main` as the production branch and `staging`
 as the long-lived preview branch with `staging.nick-reardon.com` attached to the
