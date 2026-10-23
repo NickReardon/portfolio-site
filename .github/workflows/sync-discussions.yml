@@ -74,26 +74,28 @@ jobs:
 
           if git diff --cached --quiet; then
             echo "No content changes to publish."
-            exit 0
+          else
+            git commit -m "content(discussions): Sync published discussions"
+
+            # Another commit may have landed on main while this job was
+            # building. Rebasing keeps the publish a fast-forward; a genuine
+            # conflict fails the run rather than guessing, and the next
+            # discussion event regenerates the whole tree from scratch anyway.
+            git fetch origin main
+            git rebase origin/main
+            git push origin HEAD:main
           fi
 
-          git commit -m "content(discussions): Sync published discussions"
-
-          # Another commit may have landed on main while this job was building.
-          # Rebasing keeps the publish a fast-forward; a genuine conflict fails
-          # the run rather than guessing, and the next discussion event
-          # regenerates the whole tree from scratch anyway.
-          git fetch origin main
-          git rebase origin/main
-          git push origin HEAD:main
-
-          # Keep the staging preview in step with production. Asking about
-          # ancestry directly says why staging is or is not getting this
-          # content; a bare push failure cannot distinguish unmerged work on
-          # staging from a transport problem.
-          git fetch origin staging
-          if git merge-base --is-ancestor origin/staging HEAD; then
-            git push origin HEAD:staging
+          # Keep the staging preview in step with production whether or not
+          # this run published anything. staging can be behind from an earlier
+          # run or from a promotion merge, and gating this on "there was
+          # something to commit" leaves it behind for good once main is already
+          # correct. Asking about ancestry directly also says why staging is or
+          # is not getting the content; a bare push failure cannot tell
+          # unmerged work on staging from a transport problem.
+          git fetch origin main staging
+          if git merge-base --is-ancestor origin/staging origin/main; then
+            git push origin "$(git rev-parse origin/main):refs/heads/staging"
           else
             echo "::warning::staging carries commits that are not on main, so it did not receive this content. It will pick it up at the next promotion."
           fi
