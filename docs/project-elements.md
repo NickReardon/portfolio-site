@@ -3,7 +3,7 @@
 **Status: implemented.** The schema in `src/content.config.ts`, the body-element
 plugin in `src/plugins/remark-elements.mjs`, the index grouping in
 `src/site.config.ts` and the sync in `scripts/sync-discussions.mjs` all follow
-this document. The sync workflow opens reviewed content PRs to staging. The
+this document. The sync workflow commits published discussions straight to `main`. The
 repository categories, label, and Actions permissions require setup before
 activation; see [discussion-publishing.md](discussion-publishing.md).
 
