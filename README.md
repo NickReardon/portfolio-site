@@ -132,8 +132,9 @@ Firefox 120+). Project cover artwork keeps its authored colours in both themes.
 
 Use lowercase kebab-case for content slugs and asset filenames.
 
-For authoring through GitHub Discussions and reviewing generated content PRs,
-see [discussion publishing](docs/discussion-publishing.md). The sync preserves
+For authoring through GitHub Discussions, where applying the `publish` label
+commits the generated page straight to `main`, see
+[discussion publishing](docs/discussion-publishing.md). The sync preserves
 handwritten pages and repo-owned covers; it requires repository setup and the
 workflow on `main` before discussion events can activate it.
 

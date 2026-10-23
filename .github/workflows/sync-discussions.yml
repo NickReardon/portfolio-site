@@ -12,7 +12,6 @@ concurrency:
 permissions:
   contents: write
   discussions: read
-  pull-requests: write
 
 jobs:
   sync:
@@ -21,12 +20,15 @@ jobs:
     env:
       ASTRO_TELEMETRY_DISABLED: "1"
       PUPPETEER_SKIP_DOWNLOAD: "true"
-      CF_PAGES_BRANCH: staging
+      CF_PAGES_BRANCH: main
     steps:
+      # Credentials are kept so the publish step below can push. The branch is
+      # main because a labelled discussion publishes straight to production:
+      # the gate is the publish label and draft flag in the discussion itself,
+      # plus the validation below, not a pull request nobody else reviews.
       - uses: actions/checkout@v4
         with:
-          ref: staging
-          persist-credentials: false
+          ref: main
 
       - uses: actions/setup-node@v4
         with:
@@ -53,38 +55,40 @@ jobs:
       - run: npm run build
       - run: python scripts/privacy-check.py
 
-      - name: Open or update the publishing PR
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ secrets.CONTENT_SYNC_TOKEN || github.token }}
-          base: staging
-          branch: content/sync-discussions
-          delete-branch: true
+      - name: Publish to main
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
           # The content and asset roots rather than their four subdirectories:
           # git add aborts on a pathspec that matches nothing, and an asset
           # directory only exists once a post has attached something. Listing
           # src/assets/blog failed every sync until the first blog attachment.
-          add-paths: |
-            src/content
-            src/assets
-          commit-message: "content(discussions): Sync published discussions"
-          title: "content(discussions): Sync published discussions"
-          body: |
-            ## Summary
+          git add -- src/content src/assets
 
-            Mirror discussions carrying the publish label into repository content.
-            Review additions, removals, attachments, and rendered content before merging.
+          if git diff --cached --quiet; then
+            echo "No content changes to publish."
+            exit 0
+          fi
 
-            ## Verification
+          git commit -m "content(discussions): Sync published discussions"
 
-            Sync regression checks, element checks, formatting, the staging build,
-            and the privacy scan passed before this PR was updated.
+          # Another commit may have landed on main while this job was building.
+          # Rebasing keeps the publish a fast-forward; a genuine conflict fails
+          # the run rather than guessing, and the next discussion event
+          # regenerates the whole tree from scratch anyway.
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
 
-            ## Deployment Notes
-
-            Targets staging. Production promotion remains a separate PR.
-            Templates and event-triggered sync require this workflow on main.
-
-            ## Screenshots
-
-            Review visible content on staging before production promotion.
+          # Keep the staging preview in step with production. This is a
+          # fast-forward whenever staging is an ancestor of the commit just
+          # pushed, which is the normal state between promotions. If staging
+          # carries unmerged work the push is not a fast-forward: that is not a
+          # publishing failure, and staging picks the content up at its next
+          # promotion, so the run continues.
+          if ! git push origin HEAD:staging; then
+            echo "::warning::staging has diverged from main; it did not receive this content. It will pick it up at the next promotion."
+          fi
