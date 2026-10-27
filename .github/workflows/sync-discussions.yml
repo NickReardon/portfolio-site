@@ -22,13 +22,16 @@ jobs:
       PUPPETEER_SKIP_DOWNLOAD: "true"
       CF_PAGES_BRANCH: main
     steps:
-      # Credentials are kept so the publish step below can push. The branch is
-      # main because a labelled discussion publishes straight to production:
-      # the gate is the publish label and draft flag in the discussion itself,
-      # plus the validation below, not a pull request nobody else reviews.
+      # The branch is main because a labelled discussion publishes straight to
+      # production: the gate is the publish label and draft flag in the
+      # discussion itself, plus the validation below, not a pull request
+      # nobody else reviews. Credentials are not persisted, so npm ci and the
+      # build never see a write token in .git/config; only the publish step
+      # gets one.
       - uses: actions/checkout@v4
         with:
           ref: main
+          persist-credentials: false
           # Full history: the staging fast-forward below needs the commits
           # connecting staging to main locally. A shallow clone cannot
           # demonstrate that ancestry and the push is rejected.
@@ -60,9 +63,12 @@ jobs:
       - run: python scripts/privacy-check.py
 
       - name: Publish to main
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
 
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
