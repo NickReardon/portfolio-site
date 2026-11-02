@@ -1,22 +1,20 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import PageHeader from "../components/PageHeader.astro";
 ---
 
 <BaseLayout
   title="Page not found"
   description="The page you are looking for does not exist."
 >
-  <section class="section section-subtle">
-    <div class="shell shell-md">
-      <p class="eyebrow">404</p>
-      <h1>Page not found</h1>
-      <p class="lede">
-        The page you are looking for does not exist or may have moved.
-      </p>
-      <div class="button-row">
-        <a class="button-primary" href="/">Back to home</a>
-        <a class="button-secondary" href="/projects/">View projects</a>
-      </div>
+  <PageHeader
+    eyebrow="404"
+    title="Page not found"
+    lede="The page you are looking for does not exist or may have moved."
+  >
+    <div class="button-row">
+      <a class="button-primary" href="/">Back to home</a>
+      <a class="button-secondary" href="/projects/">View projects</a>
     </div>
-  </section>
+  </PageHeader>
 </BaseLayout>

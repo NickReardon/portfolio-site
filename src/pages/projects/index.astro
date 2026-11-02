@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import PageHeader from "../../components/PageHeader.astro";
 import ProjectCard from "../../components/ProjectCard.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { projectCategories } from "../../site.config";
@@ -30,16 +31,11 @@ const groups = [
   title="Projects"
   description="Portfolio projects and technical case studies."
 >
-  <section class="section section-subtle">
-    <div class="shell">
-      <p class="eyebrow">Projects</p>
-      <h1>Projects and case studies</h1>
-      <p class="lede">
-        Playable game-jam projects, Unreal Engine systems work, and notes on
-        what I contributed to each project.
-      </p>
-    </div>
-  </section>
+  <PageHeader
+    eyebrow="Projects"
+    title="Projects and case studies"
+    lede="Playable game-jam projects, Unreal Engine systems work, and notes on what I contributed to each project."
+  />
 
   <section class="section">
     <div class="shell">
@@ -85,10 +81,6 @@ const groups = [
 </BaseLayout>
 
 <style>
-  .lede {
-    max-width: 48rem;
-  }
-
   .project-groups > * + * {
     margin-top: 3.5rem;
   }

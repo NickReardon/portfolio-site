@@ -1,5 +1,6 @@
 ---
 import { FileText } from "@lucide/astro";
+import PageHeader from "../components/PageHeader.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { site } from "../site.config";
 ---
@@ -8,25 +9,19 @@ import { site } from "../site.config";
   title="About"
   description={`About ${site.name} and his gameplay systems work.`}
 >
-  <section class="section section-subtle">
-    <div class="shell shell-md">
-      <p class="eyebrow">About</p>
-      <h1>{site.name}</h1>
-      <p class="lede">
-        I am a gameplay and systems programmer building Unreal Engine systems
-        with an emphasis on modular architecture, data-driven authoring, and
-        reliable runtime state.
-      </p>
-      <p class="body-copy intro-detail">
-        I care about systems that work the way designers expect them to work:
-        sensible defaults, clear extension points, and enough flexibility to
-        grow without constant refactoring. I am currently completing my Bachelor
-        of Science in Computer Science at California State University,
-        Fullerton, with a primary focus on AAA gameplay, systems, and tools
-        work.
-      </p>
-    </div>
-  </section>
+  <PageHeader
+    eyebrow="About"
+    title={site.name}
+    lede="I am a gameplay and systems programmer building Unreal Engine systems with an emphasis on modular architecture, data-driven authoring, and reliable runtime state."
+  >
+    <p class="body-copy intro-detail">
+      I care about systems that work the way designers expect them to work:
+      sensible defaults, clear extension points, and enough flexibility to grow
+      without constant refactoring. I am currently completing my Bachelor of
+      Science in Computer Science at California State University, Fullerton,
+      with a primary focus on AAA gameplay, systems, and tools work.
+    </p>
+  </PageHeader>
 
   <section class="section">
     <div class="shell skills-layout">

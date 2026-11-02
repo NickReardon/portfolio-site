@@ -164,8 +164,11 @@
 }
 
 @layer base {
+  /* Reserve the scrollbar's width on short pages too, so centred content does
+     not shift sideways between pages that scroll and pages that do not. */
   html {
     background: var(--page-bg);
+    scrollbar-gutter: stable;
   }
 
   body {
