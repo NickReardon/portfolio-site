@@ -2,6 +2,7 @@
 import { Download, ExternalLink } from "@lucide/astro";
 import { existsSync, readdirSync, statSync } from "node:fs";
 import { join } from "node:path";
+import PageHeader from "../components/PageHeader.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 interface ResumePdf {
@@ -82,13 +83,11 @@ function formatFileSize(bytes: number) {
   description="Rendered resume PDF variants for Nicholas Reardon."
   noindex
 >
-  <section class="section section-divided-bottom section-subtle">
-    <div class="shell shell-hero">
-      <p class="eyebrow">Resume PDFs</p>
-      <h1>Rendered Resume PDFs</h1>
-      <p class="lede">Generated PDF variants for review and download.</p>
-    </div>
-  </section>
+  <PageHeader
+    eyebrow="Resume PDFs"
+    title="Rendered Resume PDFs"
+    lede="Generated PDF variants for review and download."
+  />
 
   <section class="section">
     <div class="shell">
