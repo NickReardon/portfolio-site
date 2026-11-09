@@ -1,19 +1,21 @@
 ---
-/* The opening band of every top-level page. One width, one padding and one
-   text measure, so the heading holds still when navigating between pages.
+/* The opening band of every top-level page. One padding and one text measure,
+   so the heading holds still when navigating between pages. Set width to match
+   the shell of the content below, so the heading lines up with it.
    Extra copy goes in the default slot; side buttons in the "actions" slot. */
 interface Props {
   eyebrow: string;
   title: string;
   lede: string;
+  width?: "full" | "md";
 }
 
-const { eyebrow, title, lede } = Astro.props;
+const { eyebrow, title, lede, width = "full" } = Astro.props;
 const hasActions = Astro.slots.has("actions");
 ---
 
 <section class="section section-subtle">
-  <div class="shell page-header">
+  <div class:list={["shell", { "shell-md": width === "md" }, "page-header"]}>
     <div class="page-header-copy">
       <p class="eyebrow">{eyebrow}</p>
       <h1>{title}</h1>
