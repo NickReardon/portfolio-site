@@ -7,21 +7,18 @@ import {
   Mail,
 } from "@lucide/astro";
 import ContactLink from "../components/ContactLink.astro";
+import PageHeader from "../components/PageHeader.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { site } from "../site.config";
 ---
 
 <BaseLayout title="Contact" description={`Contact ${site.name}.`}>
-  <section class="section section-subtle">
-    <div class="shell shell-md">
-      <p class="eyebrow">Contact</p>
-      <h1>Get in touch</h1>
-      <p class="lede">
-        I am open to gameplay programming, technical design, and internship
-        conversations where reliable systems and fast iteration matter.
-      </p>
-    </div>
-  </section>
+  <PageHeader
+    eyebrow="Contact"
+    title="Get in touch"
+    lede="I am open to gameplay programming, technical design, and internship conversations where reliable systems and fast iteration matter."
+    width="md"
+  />
 
   <section class="section">
     <div class="shell shell-md contact-grid">
