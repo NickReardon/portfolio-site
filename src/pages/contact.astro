@@ -17,11 +17,10 @@ import { site } from "../site.config";
     eyebrow="Contact"
     title="Get in touch"
     lede="I am open to gameplay programming, technical design, and internship conversations where reliable systems and fast iteration matter."
-    width="md"
   />
 
   <section class="section">
-    <div class="shell shell-md contact-grid">
+    <div class="shell contact-grid">
       <ContactLink
         href={`mailto:${site.email}`}
         label="Email"
@@ -61,14 +60,20 @@ import { site } from "../site.config";
 </BaseLayout>
 
 <style>
+  /* The grid is the shell, so it centres at full width; the cap goes on the
+     grid tracks instead, keeping the left edge on the shell's. */
   .contact-grid {
     display: grid;
     gap: 1rem;
+    grid-template-columns: minmax(0, var(--measure-list));
   }
 
   @media (min-width: 40rem) {
     .contact-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: repeat(
+        2,
+        minmax(0, calc((var(--measure-list) - 1rem) / 2))
+      );
     }
   }
 </style>

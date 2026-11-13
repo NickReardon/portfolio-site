@@ -29,7 +29,7 @@ const { Content } = await render(post);
 >
   <article>
     <header class="section section-subtle">
-      <div class="shell shell-sm">
+      <div class="shell">
         <p class="eyebrow">{formatDate(post.data.date)}</p>
         <h1>{post.data.title}</h1>
         <p class="lede">{post.data.description}</p>
@@ -39,7 +39,7 @@ const { Content } = await render(post);
       </div>
     </header>
 
-    <div class="section shell shell-sm">
+    <div class="section shell">
       <div class="prose">
         <Content />
       </div>

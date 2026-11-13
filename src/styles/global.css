@@ -149,6 +149,11 @@
     /* The one page-width measure every top-level band is laid out against. */
     --shell-max: 72rem;
     --shell-pad: 1.25rem;
+
+    /* Line-length caps for content inside a shell. They narrow the content,
+       never the shell, so every band keeps the navbar's left edge. */
+    --measure-text: 48rem;
+    --measure-list: 56rem;
   }
 
   /* What the header toggle sets. Pinning `color-scheme` is the whole override:
@@ -248,21 +253,14 @@
     scroll-margin-top: 5rem;
   }
 
-  /* Every top-level band is the same centred measure. The three widths were
-     max-w-6xl / max-w-4xl / max-w-3xl; a modifier moves the token rather than
-     restating the rule. */
+  /* Every top-level band is the same centred measure, so headings and content
+     start on the navbar's left edge on every page. Narrow content with a
+     --measure-* cap on the content itself, not a narrower shell: a narrower
+     centred shell moves the left edge and the heading jumps between pages. */
   .shell {
     margin-inline: auto;
     max-width: var(--shell-max);
     padding: 3.5rem var(--shell-pad);
-  }
-
-  .shell-md {
-    --shell-max: 56rem;
-  }
-
-  .shell-sm {
-    --shell-max: 48rem;
   }
 
   /* Hero bands open a little tighter on small screens. */
@@ -298,6 +296,7 @@
     font-size: 1.25rem;
     line-height: 2rem;
     margin-top: 1.25rem;
+    max-width: var(--measure-text);
   }
 
   .body-copy {
@@ -471,6 +470,7 @@
   }
 
   .prose {
+    max-width: var(--measure-text);
     color: var(--ink-body);
     font-size: 1.05rem;
     line-height: 1.8;

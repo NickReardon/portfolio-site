@@ -15,11 +15,10 @@ const posts = (await getCollection("blog"))
     eyebrow="Blog"
     title="Devlog and notes"
     lede="Short notes on systems design, implementation tradeoffs, and what I learn while building projects."
-    width="md"
   />
 
   <section class="section">
-    <div class="shell shell-md">
+    <div class="shell">
       {
         posts.length > 0 ? (
           <div class="post-list">
@@ -39,5 +38,6 @@ const posts = (await getCollection("blog"))
   .post-list {
     display: grid;
     gap: 1rem;
+    max-width: var(--measure-list);
   }
 </style>
