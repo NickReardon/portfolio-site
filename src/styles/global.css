@@ -263,17 +263,6 @@
     padding: 3.5rem var(--shell-pad);
   }
 
-  /* Hero bands open a little tighter on small screens. */
-  .shell-hero {
-    padding-block: 3rem;
-  }
-
-  @media (min-width: 40rem) {
-    .shell-hero {
-      padding-block: 3.5rem;
-    }
-  }
-
   .section-subtle {
     background: var(--page-subtle);
   }
@@ -483,6 +472,12 @@
   .prose h2 {
     font-size: 1.75rem;
     margin-top: 2.2rem;
+  }
+
+  /* The shell already pads the top of the band; a leading heading's margin
+     would stack on it and push articles lower than every other page. */
+  .prose > :first-child {
+    margin-top: 0;
   }
 
   .prose h3 {

@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import { FileText } from "@lucide/astro";
 import BlogCard from "../components/BlogCard.astro";
+import PageHeader from "../components/PageHeader.astro";
 import ProjectCard from "../components/ProjectCard.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { site } from "../site.config";
@@ -26,41 +27,34 @@ const recentPosts = (await getCollection("blog"))
 ---
 
 <BaseLayout>
-  <section class="section section-divided-bottom section-subtle">
-    <div class="shell shell-hero hero">
-      <div class="hero-copy">
-        <p class="eyebrow">Portfolio</p>
-        <h1 class="hero-title">
-          {site.name}
-        </h1>
-        <p class="lede hero-lede">
-          {site.role} focused on {site.focus}.
-        </p>
-        <p class="body-copy hero-body">
-          I build modular gameplay systems in Unreal Engine, with a focus on
-          where state lives, how systems communicate, and how designers author
-          content without needing new systems code.
-        </p>
-        <div class="button-row hero-actions">
-          <a class="button-primary" href="/projects/">View Projects</a>
-          <a class="button-secondary" href={site.resumeUrl}>
-            <FileText size={16} aria-hidden="true" />
-            Resume
-          </a>
-          <a class="button-secondary" href="/contact/">Contact</a>
-        </div>
-      </div>
-
-      <aside class="focus-list">
-        <p class="eyebrow">Current Focus</p>
-        <ul>
-          <li>Lyra-based Unreal Engine gameplay architecture.</li>
-          <li>Data-driven combat, encounters, travel, and persistence.</li>
-          <li>Designer-friendly authoring workflows and technical writeups.</li>
-        </ul>
-      </aside>
+  <PageHeader
+    eyebrow="Portfolio"
+    title={site.name}
+    lede={`${site.role} focused on ${site.focus}.`}
+  >
+    <p class="body-copy hero-body">
+      I build modular gameplay systems in Unreal Engine, with a focus on where
+      state lives, how systems communicate, and how designers author content
+      without needing new systems code.
+    </p>
+    <div class="button-row hero-actions">
+      <a class="button-primary" href="/projects/">View Projects</a>
+      <a class="button-secondary" href={site.resumeUrl}>
+        <FileText size={16} aria-hidden="true" />
+        Resume
+      </a>
+      <a class="button-secondary" href="/contact/">Contact</a>
     </div>
-  </section>
+
+    <aside class="focus-list" slot="actions">
+      <p class="eyebrow">Current Focus</p>
+      <ul>
+        <li>Lyra-based Unreal Engine gameplay architecture.</li>
+        <li>Data-driven combat, encounters, travel, and persistence.</li>
+        <li>Designer-friendly authoring workflows and technical writeups.</li>
+      </ul>
+    </aside>
+  </PageHeader>
 
   <section class="section">
     <div class="shell">
@@ -136,23 +130,9 @@ const recentPosts = (await getCollection("blog"))
 </BaseLayout>
 
 <style>
-  .hero {
-    display: grid;
-    gap: 2rem;
-  }
-
-  .hero-copy {
-    max-width: 48rem;
-  }
-
-  .hero-title {
-    margin-top: 1rem;
-  }
-
-  .hero-lede {
-    margin-top: 1rem;
-  }
-
+  /* The hero is the shared PageHeader; these are only its home-page overrides:
+     a supporting paragraph at a body-copy measure, and the focus list in the
+     actions column. */
   .hero-body {
     margin-top: 1.25rem;
     max-width: 42rem;
@@ -216,9 +196,10 @@ const recentPosts = (await getCollection("blog"))
   }
 
   @media (min-width: 64rem) {
-    .hero {
-      align-items: end;
-      grid-template-columns: minmax(0, 1fr) 340px;
+    /* The actions column sizes to its content, which for prose is its longest
+       unwrapped line; pin it to the width the old hero gave it. */
+    .focus-list {
+      width: 340px;
     }
 
     .closing {
