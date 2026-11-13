@@ -1,21 +1,21 @@
 ---
-/* The opening band of every top-level page. One padding and one text measure,
-   so the heading holds still when navigating between pages. Set width to match
-   the shell of the content below, so the heading lines up with it.
+/* The opening band of every top-level page. One shell, one padding, and one
+   text measure, so the heading holds still when navigating between pages.
+   The title spans the shell so it wraps only when it has to; the copy under
+   it is capped at --measure-text.
    Extra copy goes in the default slot; side buttons in the "actions" slot. */
 interface Props {
   eyebrow: string;
   title: string;
   lede: string;
-  width?: "full" | "md";
 }
 
-const { eyebrow, title, lede, width = "full" } = Astro.props;
+const { eyebrow, title, lede } = Astro.props;
 const hasActions = Astro.slots.has("actions");
 ---
 
 <section class="section section-subtle">
-  <div class:list={["shell", { "shell-md": width === "md" }, "page-header"]}>
+  <div class="shell page-header">
     <div class="page-header-copy">
       <p class="eyebrow">{eyebrow}</p>
       <h1>{title}</h1>
@@ -38,8 +38,9 @@ const hasActions = Astro.slots.has("actions");
     gap: 2rem;
   }
 
-  .page-header-copy {
-    max-width: 48rem;
+  /* Slotted copy is the caller's markup, so it needs :global to be reached. */
+  .page-header-copy > :global(:not(h1)) {
+    max-width: var(--measure-text);
   }
 
   .page-header-actions {
