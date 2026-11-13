@@ -185,9 +185,17 @@ const isCurrent = (href: string) =>
     }
   }
 
+  /* Six links need about 400px in a row, more than a phone has, and a wrapped
+     flex row strands the last link alone. Two even rows of three instead. */
   @media (max-width: 40rem) {
+    .nav-links {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
     .nav-link {
       font-size: 0.86rem;
+      justify-content: center;
       padding-inline: 0.48rem;
     }
   }
