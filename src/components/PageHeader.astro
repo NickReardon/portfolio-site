@@ -38,8 +38,9 @@ const hasActions = Astro.slots.has("actions");
     gap: 2rem;
   }
 
-  /* Slotted copy is the caller's markup, so it needs :global to be reached. */
-  .page-header-copy > :global(:not(h1)) {
+  /* Slotted copy is the caller's markup, so it needs :global to be reached.
+     :where keeps this a default: a page's own class on slotted copy wins. */
+  :where(.page-header-copy) > :global(:not(h1)) {
     max-width: var(--measure-text);
   }
 
