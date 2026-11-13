@@ -62,6 +62,12 @@ Always perform branch promotion and merging through GitHub pull requests. Do not
 directly push one branch ref over another, including `staging` to `main`, unless
 the user explicitly overrides this rule for a specific operation.
 
+- Agents may mark work-branch PRs ready and merge them into `staging` once CI
+  is green, without asking first.
+- Promotion from `staging` to `main` requires the user's manual validation of
+  `https://staging.nick-reardon.com` and their explicit confirmation in chat.
+  Agents never merge a production PR on their own initiative.
+
 The one standing exception is the `Sync discussions` workflow, which commits
 published discussion content directly to `main`. That is the authoring loop, not
 branch promotion: see [discussion publishing](docs/discussion-publishing.md).
